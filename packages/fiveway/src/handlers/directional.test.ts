@@ -2,35 +2,15 @@ import { test, expect } from "vitest";
 import { handleAction } from "../navigation.ts";
 import { horizontalHandler, verticalHandler } from "./directional.ts";
 import { createNode } from "../node.ts";
-import { createNavigationTree, insertNode, removeNode } from "../tree.ts";
+import { insertNode, removeNode } from "../tree.ts";
+import { createTreeFromSpec } from "../test/tree.ts";
 
 test("verticalHandler", async () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: verticalHandler,
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({
-      id: "item1",
-      parent: container.id,
-    }),
-  );
-
-  const item2 = insertNode(
-    tree,
-    createNode({
-      id: "item2",
-      parent: container.id,
-    }),
-  );
+  const { tree, item1, item2 } = createTreeFromSpec({
+    id: "container",
+    handler: verticalHandler,
+    children: [{ id: "item1" }, { id: "item2" }],
+  });
 
   expect(tree.focusedId).toBe(item1.id);
 
@@ -44,21 +24,11 @@ test("verticalHandler", async () => {
 });
 
 test("verticalHandler: wrong direction", async () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: verticalHandler,
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({ id: "item1", parent: container.id }),
-  );
+  const { tree, container, item1 } = createTreeFromSpec({
+    id: "container",
+    handler: verticalHandler,
+    children: [{ id: "item1" }, { id: "item2" }],
+  });
 
   insertNode(tree, createNode({ id: "item2", parent: container.id }));
 
@@ -78,40 +48,11 @@ test("verticalHandler: wrong direction", async () => {
 });
 
 test("verticalHandler: skip removed", async () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: verticalHandler,
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({
-      id: "item1",
-      parent: container.id,
-    }),
-  );
-
-  const item2 = insertNode(
-    tree,
-    createNode({
-      id: "item2",
-      parent: container.id,
-    }),
-  );
-
-  const item3 = insertNode(
-    tree,
-    createNode({
-      id: "item3",
-      parent: container.id,
-    }),
-  );
+  const { tree, item1, item2, item3 } = createTreeFromSpec({
+    id: "container",
+    handler: verticalHandler,
+    children: [{ id: "item1" }, { id: "item2" }, { id: "item3" }],
+  });
 
   removeNode(tree, item2.id);
 
@@ -127,49 +68,18 @@ test("verticalHandler: skip removed", async () => {
 });
 
 test("verticalHandler: focus direction", async () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: verticalHandler,
-    }),
-  );
-
-  const list = insertNode(
-    tree,
-    createNode({
-      id: "list",
-      parent: container.id,
-      handler: verticalHandler,
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({
-      id: "item1",
-      parent: list.id,
-    }),
-  );
-
-  const item2 = insertNode(
-    tree,
-    createNode({
-      id: "item2",
-      parent: list.id,
-    }),
-  );
-
-  const outside = insertNode(
-    tree,
-    createNode({
-      id: "outside",
-      parent: container.id,
-    }),
-  );
+  const { tree, item1, item2, outside } = createTreeFromSpec({
+    id: "container",
+    handler: verticalHandler,
+    children: [
+      {
+        id: "list",
+        handler: verticalHandler,
+        children: [{ id: "item1" }, { id: "item2" }],
+      },
+      { id: "outside" },
+    ],
+  });
 
   expect(tree.focusedId).toBe(item1.id);
 
@@ -184,32 +94,11 @@ test("verticalHandler: focus direction", async () => {
 });
 
 test("horizontalHandler", async () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: horizontalHandler,
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({
-      id: "item1",
-      parent: container.id,
-    }),
-  );
-
-  const item2 = insertNode(
-    tree,
-    createNode({
-      id: "item2",
-      parent: container.id,
-    }),
-  );
+  const { tree, item1, item2 } = createTreeFromSpec({
+    id: "container",
+    handler: horizontalHandler,
+    children: [{ id: "item1" }, { id: "item2" }],
+  });
 
   expect(tree.focusedId).toBe(item1.id);
 
@@ -223,21 +112,11 @@ test("horizontalHandler", async () => {
 });
 
 test("horizontalHandler: wrong direction", async () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: horizontalHandler,
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({ id: "item1", parent: container.id }),
-  );
+  const { tree, container, item1 } = createTreeFromSpec({
+    id: "container",
+    handler: horizontalHandler,
+    children: [{ id: "item1" }, { id: "item2" }],
+  });
 
   insertNode(tree, createNode({ id: "item2", parent: container.id }));
 
@@ -257,49 +136,18 @@ test("horizontalHandler: wrong direction", async () => {
 });
 
 test("horizontalHandler: focus direction", async () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: horizontalHandler,
-    }),
-  );
-
-  const list = insertNode(
-    tree,
-    createNode({
-      id: "list",
-      parent: container.id,
-      handler: horizontalHandler,
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({
-      id: "item1",
-      parent: list.id,
-    }),
-  );
-
-  const item2 = insertNode(
-    tree,
-    createNode({
-      id: "item2",
-      parent: list.id,
-    }),
-  );
-
-  const outside = insertNode(
-    tree,
-    createNode({
-      id: "outside",
-      parent: container.id,
-    }),
-  );
+  const { tree, item1, item2, outside } = createTreeFromSpec({
+    id: "container",
+    handler: horizontalHandler,
+    children: [
+      {
+        id: "list",
+        handler: horizontalHandler,
+        children: [{ id: "item1" }, { id: "item2" }],
+      },
+      { id: "outside" },
+    ],
+  });
 
   expect(tree.focusedId).toBe(item1.id);
 
@@ -314,40 +162,11 @@ test("horizontalHandler: focus direction", async () => {
 });
 
 test("horizontal: skip removed", async () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: horizontalHandler,
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({
-      id: "item1",
-      parent: container.id,
-    }),
-  );
-
-  const item2 = insertNode(
-    tree,
-    createNode({
-      id: "item2",
-      parent: container.id,
-    }),
-  );
-
-  const item3 = insertNode(
-    tree,
-    createNode({
-      id: "item3",
-      parent: container.id,
-    }),
-  );
+  const { tree, item1, item2, item3 } = createTreeFromSpec({
+    id: "container",
+    handler: horizontalHandler,
+    children: [{ id: "item1" }, { id: "item2" }, { id: "item3" }],
+  });
 
   removeNode(tree, item2.id);
 

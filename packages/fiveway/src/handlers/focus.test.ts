@@ -1,68 +1,44 @@
 import { test, expect } from "vitest";
 import {
-  createNavigationTree,
   focusNode,
+  holdFocus,
   insertNode,
   isFocused,
   removeNode,
-  withHeldFocus,
 } from "../tree.ts";
 import { createNode } from "../node.ts";
 import { containerHandler, defaultHandler } from "./default.ts";
 import { captureHandler, initialHandler } from "./focus.ts";
 import { verticalHandler } from "./directional.ts";
 import { handleAction } from "../navigation.ts";
+import { createTreeFromSpec } from "../test/tree.ts";
 
 test("focusHandler: items themselves are focusable", async () => {
-  const tree = createNavigationTree();
-
-  const item = insertNode(
-    tree,
-    createNode({
-      id: "item",
-      parent: "#",
-    }),
-  );
+  const { tree, item } = createTreeFromSpec({
+    id: "item",
+  });
 
   expect(tree.focusedId).toBe(item.id);
 });
 
 test("focusHandler: skip empty containers", () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: containerHandler,
-    }),
-  );
+  const { tree, container } = createTreeFromSpec({
+    id: "container",
+    handler: containerHandler,
+  });
 
   expect(isFocused(tree, container.id)).toBe(false);
 });
 
-test("focusHandler: keep focus", async () => {
-  const tree = createNavigationTree();
+test("focusHandler: already inserted node keeps focus", async () => {
+  // already inserted node keeps focus even when another node
+  // that would be otherwise focused by initial focuses gets inserted later
 
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: containerHandler,
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({
-      id: "item1",
-      parent: container.id,
-      handler: defaultHandler,
-      order: 2,
-    }),
-  );
+  const { tree, container, item1 } = createTreeFromSpec({
+    id: "container",
+    handler: containerHandler,
+    children: [{ id: "item1", order: 2 }],
+  });
 
   insertNode(
     tree,
@@ -78,44 +54,38 @@ test("focusHandler: keep focus", async () => {
 });
 
 test("initialHandler", async () => {
-  const tree = createNavigationTree();
+  const { tree, container, item1, item2 } = createTreeFromSpec({
+    id: "container",
 
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: verticalHandler.prepend(initialHandler("item2")),
-    }),
-  );
-
-  const item1 = createNode({
-    id: "item1",
-    parent: container.id,
-    handler: defaultHandler,
+    handler: verticalHandler.prepend(initialHandler("item2")),
+    children: [
+      {
+        id: "item1",
+        handler: defaultHandler,
+      },
+      {
+        id: "item2",
+        handler: defaultHandler,
+      },
+    ],
   });
 
-  const item2 = createNode({
-    id: "item2",
-    parent: container.id,
-    handler: defaultHandler,
-  });
+  const releaseFocus = holdFocus(tree);
+  expect(releaseFocus).not.toBeNull();
 
-  withHeldFocus(tree, () => {
-    insertNode(tree, item1);
-    insertNode(tree, item2);
-  });
+  insertNode(tree, item1);
+  insertNode(tree, item2);
+
+  releaseFocus!();
 
   expect(tree.focusedId).toBe(item2.id);
 
-  const item3 = insertNode(
-    tree,
-    createNode({
-      id: "item3",
-      parent: container.id,
-      handler: defaultHandler,
-    }),
-  );
+  const item3 = createNode({
+    id: "item3",
+    parent: container.id,
+    handler: defaultHandler,
+  });
+  insertNode(tree, item3);
 
   expect(tree.focusedId).toBe(item2.id);
 
@@ -134,34 +104,18 @@ test("initialHandler", async () => {
 });
 
 test("captureHandler", async () => {
-  const tree = createNavigationTree();
-
-  const topContainer = insertNode(
-    tree,
-    createNode({
-      id: "topContainer",
-      parent: "#",
-      handler: verticalHandler,
-    }),
-  );
-
-  const containedList = createNode({
-    id: "containedList",
-    parent: topContainer.id,
-    order: 1,
-    handler: verticalHandler.prepend(captureHandler),
+  const { tree, item1, item2, outside } = createTreeFromSpec({
+    id: "container",
+    handler: verticalHandler,
+    children: [
+      {
+        id: "list",
+        handler: verticalHandler.prepend(captureHandler),
+        children: [{ id: "item1" }, { id: "item2" }],
+      },
+      { id: "outside" },
+    ],
   });
-  const item1 = createNode({ id: "item1", order: 1, parent: containedList.id });
-  const item2 = createNode({ id: "item2", order: 2, parent: containedList.id });
-
-  insertNode(tree, containedList);
-  insertNode(tree, item1);
-  insertNode(tree, item2);
-
-  const outside = insertNode(
-    tree,
-    createNode({ id: "outside", order: 2, parent: topContainer.id }),
-  );
 
   expect(tree.focusedId).toBe(item1.id);
 

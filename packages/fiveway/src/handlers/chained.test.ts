@@ -29,10 +29,8 @@ test("chainedHandler", () => {
     .prepend(subChain)
     .prepend(logHandler("1"));
 
-  const node = insertNode(
-    tree,
-    createNode({ id: "node1", parent: "#", handler: handler }),
-  );
+  const node = createNode({ id: "node1", parent: "#", handler: handler });
+  insertNode(tree, node);
 
   const result = runHandler(tree, node.id, {
     kind: "query",
@@ -55,23 +53,19 @@ test("chainedHandler: meta", () => {
 
   const meta = defineMetadata("test");
 
-  const node = insertNode(
-    tree,
-    createNode({
-      id: "node",
-      parent: "#",
-      handler: defaultHandler.prepend(meta.providerHandler("test-value")),
-    }),
-  );
+  const node = createNode({
+    id: "node",
+    parent: "#",
+    handler: defaultHandler.prepend(meta.providerHandler("test-value")),
+  });
+  insertNode(tree, node);
 
-  const node2 = insertNode(
-    tree,
-    createNode({
-      id: "node2",
-      parent: "#",
-      handler: defaultHandler.prepend(meta.providerHandler(() => "test-value")),
-    }),
-  );
+  const node2 = createNode({
+    id: "node2",
+    parent: "#",
+    handler: defaultHandler.prepend(meta.providerHandler(() => "test-value")),
+  });
+  insertNode(tree, node2);
 
   expect(meta.query(tree, node.id)).toBe("test-value");
   expect(meta.query(tree, node2.id)).toBe("test-value");

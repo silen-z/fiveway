@@ -9,14 +9,13 @@ test("selectHandler", async () => {
   const tree = createNavigationTree();
 
   const onSelect = vi.fn();
-  const node = insertNode(
-    tree,
-    createNode({
-      id: "test",
-      parent: "#",
-      handler: defaultHandler.prepend(selectHandler(onSelect)),
-    }),
-  );
+
+  const node = createNode({
+    id: "test",
+    parent: "#",
+    handler: defaultHandler.prepend(selectHandler(onSelect)),
+  });
+  insertNode(tree, node);
 
   expect(tree.focusedId).toBe(node.id);
 

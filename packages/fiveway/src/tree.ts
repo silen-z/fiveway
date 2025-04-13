@@ -14,7 +14,7 @@ export type NavigationTree = {
   focusedId: NodeId;
   orphans: Map<NodeId, NodeId[]>;
   listeners: ListenerTree;
-  focusLock: boolean | null;
+  focusLock: "released" | "held.clean" | "held.dirty";
 };
 
 export function createNavigationTree(): NavigationTree {
@@ -23,7 +23,7 @@ export function createNavigationTree(): NavigationTree {
     nodes: new Map(),
     orphans: new Map(),
     listeners: new Map(),
-    focusLock: null,
+    focusLock: "released",
   };
 
   tree.nodes.set("#", {
@@ -44,7 +44,7 @@ export function insertNode(tree: NavigationTree, node: CreatedNavtreeNode) {
     throw new Error("trying to insert root (or node without parent)");
   }
 
-  // if there is node with the same id replace it 
+  // if there is node with the same id replace it
   if (tree.nodes.has(node.id)) {
     removeNode(tree, node.id);
   }
@@ -165,8 +165,8 @@ function disconnectNode(tree: NavigationTree, nodeId: NodeId) {
 }
 
 function updateFocus(tree: NavigationTree) {
-  if (tree.focusLock !== null) {
-    tree.focusLock = true;
+  if (tree.focusLock !== "released") {
+    tree.focusLock = "held.dirty";
     return;
   }
 
@@ -185,29 +185,23 @@ function updateFocus(tree: NavigationTree) {
   return;
 }
 
-export function holdFocus(tree: NavigationTree) {
-  if (tree.focusLock !== null) {
+export function holdFocus(tree: NavigationTree): (() => void) | null {
+  if (tree.focusLock !== "released") {
     return null;
   }
 
-  tree.focusLock = false;
+  tree.focusLock = "held.clean";
   return () => {
-    if (tree.focusLock === null) {
+    if (tree.focusLock === "released") {
       throw new Error("trying to release focus lock without holding it");
     }
 
-    const shouldUpdate = tree.focusLock === true;
-    tree.focusLock = null;
+    const shouldUpdate = tree.focusLock === "held.dirty";
+    tree.focusLock = "released";
     if (shouldUpdate) {
       updateFocus(tree);
     }
   };
-}
-
-export function withHeldFocus(tree: NavigationTree, update: () => void) {
-  const releaseLock = holdFocus(tree);
-  update();
-  releaseLock?.();
 }
 
 export type FocusOptions = {
