@@ -4,25 +4,22 @@ import { createNode } from "../node.ts";
 import { getHandlerInfo } from "../introspection.ts";
 import { containerHandler } from "./default.ts";
 
+// TODO test behavior instead of internal properties
 test("defaultHandler", () => {
   const tree = createNavigationTree();
 
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "test",
-      parent: "#",
-      handler: containerHandler,
-    }),
-  );
+  const container = createNode({
+    id: "test",
+    parent: "#",
+    handler: containerHandler,
+  });
+  insertNode(tree, container);
 
-  const item = insertNode(
-    tree,
-    createNode({
-      id: "test",
-      parent: container.id,
-    }),
-  );
+  const item = createNode({
+    id: "test",
+    parent: container.id,
+  });
+  insertNode(tree, item);
 
   expect(getHandlerInfo(tree, container.id)).toEqual([
     { name: "core:focus", skipEmpty: true, direction: "default" },

@@ -2,20 +2,15 @@ import { expect, test } from "vitest";
 import { spatialHandler, NodePosition } from "./spatial.ts";
 import { handleAction } from "../navigation.ts";
 import { createNode } from "../node.ts";
-import { createNavigationTree, insertNode, removeNode } from "../tree.ts";
+import { insertNode, removeNode } from "../tree.ts";
 import { defaultHandler } from "./default.ts";
+import { createTreeFromSpec } from "../test/tree.ts";
 
 test("spatialHandler", async () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "spatial",
-      parent: "#",
-      handler: spatialHandler,
-    }),
-  );
+  const { tree, spatial } = createTreeFromSpec({
+    id: "spatial",
+    handler: spatialHandler,
+  });
 
   for (let row = 1; row <= 2; row++) {
     for (let col = 1; col <= 2; col++) {
@@ -35,14 +30,13 @@ test("spatialHandler", async () => {
         };
       });
 
-      insertNode(
-        tree,
-        createNode({
-          id: `item-${row}-${col}`,
-          parent: container.id,
-          handler: defaultHandler.prepend(position),
-        }),
-      );
+      const node = createNode({
+        id: `item-${row}-${col}`,
+        parent: spatial.id,
+        handler: defaultHandler.prepend(position),
+      });
+
+      insertNode(tree, node);
     }
   }
 

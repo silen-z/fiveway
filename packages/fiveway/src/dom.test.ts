@@ -3,47 +3,27 @@ import { test, expect } from "vitest";
 
 // imported from index files otherwise vitest errors on:
 // TypeError: defineMetadata is not a function
-import {
-  createNavigationTree,
-  createNode,
-  insertNode,
-  defaultHandler,
-  verticalHandler,
-  handleAction,
-} from "@fiveway/core";
+import { defaultHandler, verticalHandler, handleAction } from "@fiveway/core";
 import { defaultEventMapping } from "@fiveway/core/dom";
+import { createTreeFromSpec } from "./test/tree.ts";
 
 test("defaultKeyMapping", async () => {
   expect(defaultEventMapping(new MouseEvent("mouseover"))).toBeNull();
 
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "container",
-      parent: "#",
-      handler: verticalHandler,
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({
-      id: "item1",
-      parent: container.id,
-      handler: defaultHandler,
-    }),
-  );
-
-  const item2 = insertNode(
-    tree,
-    createNode({
-      id: "item2",
-      parent: container.id,
-      handler: defaultHandler,
-    }),
-  );
+  const { tree, item1, item2 } = createTreeFromSpec({
+    id: "container",
+    handler: verticalHandler,
+    children: [
+      {
+        id: "item1",
+        handler: defaultHandler,
+      },
+      {
+        id: "item2",
+        handler: defaultHandler,
+      },
+    ],
+  });
 
   expect(tree.focusedId).toBe(item1.id);
 

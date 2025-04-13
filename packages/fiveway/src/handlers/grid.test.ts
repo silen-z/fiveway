@@ -2,31 +2,24 @@ import { expect, test } from "vitest";
 import { gridHandler, gridItemHandler } from "./grid.ts";
 import { handleAction } from "../navigation.ts";
 import { createNode } from "../node.ts";
-import { createNavigationTree, insertNode, removeNode } from "../tree.ts";
+import { insertNode, removeNode } from "../tree.ts";
 import { defaultHandler } from "./default.ts";
+import { createTreeFromSpec } from "../test/tree.ts";
 
 test("gridHandler", async () => {
-  const tree = createNavigationTree();
-
-  const container = insertNode(
-    tree,
-    createNode({
-      id: "grid",
-      parent: "#",
-      handler: gridHandler(),
-    }),
-  );
+  const { tree, grid } = createTreeFromSpec({
+    id: "grid",
+    handler: gridHandler(),
+  });
 
   for (let row = 1; row <= 3; row++) {
     for (let col = 1; col <= 3; col++) {
-      insertNode(
-        tree,
-        createNode({
-          id: `item-${row}-${col}`,
-          parent: container.id,
-          handler: defaultHandler.prepend(gridItemHandler({ row, col })),
-        }),
-      );
+      const node = createNode({
+        id: `item-${row}-${col}`,
+        parent: grid.id,
+        handler: defaultHandler.prepend(gridItemHandler({ row, col })),
+      });
+      insertNode(tree, node);
     }
   }
 

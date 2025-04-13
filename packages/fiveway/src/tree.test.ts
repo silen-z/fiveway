@@ -9,6 +9,7 @@ import {
 import { createNode } from "./node.ts";
 import { itemHandler } from "./handlers/default.ts";
 import { selectNode } from "./handlers/select.ts";
+import { createTreeFromSpec } from "./test/tree.ts";
 
 test("insertNode", () => {
   const tree = createNavigationTree();
@@ -219,58 +220,17 @@ test("selectNode", async () => {
 });
 
 test("traverseNodes", () => {
-  const tree = createNavigationTree();
-
-  const container1 = insertNode(
-    tree,
-    createNode({
-      id: "container1",
-      parent: "#",
-    }),
-  );
-
-  const item1 = insertNode(
-    tree,
-    createNode({
-      id: "item1",
-      parent: container1.id,
-    }),
-  );
-
-  const item2 = insertNode(
-    tree,
-    createNode({
-      id: "item2",
-      parent: container1.id,
-    }),
-  );
-
-  const container2 = insertNode(
-    tree,
-    createNode({
-      id: "container2",
-      parent: "#",
-    }),
-  );
-
-  const item3 = insertNode(
-    tree,
-    createNode({
-      id: "item3",
-      parent: container2.id,
-    }),
-  );
-
-  const item4 = insertNode(
-    tree,
-    createNode({
-      id: "item4",
-      parent: container2.id,
-    }),
-  );
+  const { tree, container1, container2, item1, item2, item3, item4 } =
+    createTreeFromSpec({
+      id: "app",
+      children: [
+        { id: "container1", children: [{ id: "item1" }, { id: "item2" }] },
+        { id: "container2", children: [{ id: "item3" }, { id: "item4" }] },
+      ],
+    });
 
   const result: string[] = [];
-  traverseNodes(tree, "#", null, (id) => {
+  traverseNodes(tree, "#/app", null, (id) => {
     result.push(id);
   });
 
@@ -282,7 +242,7 @@ test("traverseNodes", () => {
   expect(result).toContain(item4.id);
 
   const shallowResult: string[] = [];
-  traverseNodes(tree, "#", 1, (id) => {
+  traverseNodes(tree, "#/app", 1, (id) => {
     shallowResult.push(id);
   });
 
