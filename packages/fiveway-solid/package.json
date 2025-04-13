@@ -6,12 +6,8 @@
     "build": "rm -rf ./dist/* && tsc --build --force",
     "build:watch": "tsc --build --watch"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.jsx",
   "types": "./dist/index.d.ts",
-  "exports": {
-    "types": "./dist/index.d.ts",
-    "solid": "./dist/index.jsx"
-  },
   "dependencies": {
     "@fiveway/core": "workspace:*"
   },

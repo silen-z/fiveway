@@ -16,6 +16,7 @@
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.15);
   border-radius: 9999px;
   cursor: pointer;
+  z-index: 9999;
 }
 
 .sidebar {
@@ -35,6 +36,7 @@
   font-family: monospace;
   font-size: 12px;
   white-space: nowrap;
+  z-index: 9999;
 }
 
 .sidebar[data-side="right"] {

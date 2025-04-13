@@ -3,7 +3,6 @@ import {
   type Component,
   type JSX,
   type ParentProps,
-  children,
   createEffect,
   createMemo,
   on,
@@ -17,20 +16,19 @@ import {
   insertNode,
   createNode,
   focusNode,
-  removeNode,
   scopedId,
   selectNode,
   updateNode,
   holdFocus,
+  createGlobalId,
 } from "@fiveway/core";
 import { useNavigationContext, NavigationContext } from "./context.jsx";
-
-import { useIsFocused } from "./hooks.js";
+import { useIsFocused, useOnFocus } from "./hooks.jsx";
 
 export type NodeOptions = {
   id: NodeId | Accessor<NodeId>;
-  parent?: NodeId | Accessor<NodeId>;
-  order?: number | Accessor<number>;
+  parent?: NodeId | Accessor<NodeId | undefined>;
+  order?: number | Accessor<number | undefined>;
   handler?: NavigationHandler;
 };
 
@@ -39,28 +37,36 @@ export type NodeHandle = {
   focus: (nodeId?: NodeId) => void;
   select: () => void;
   isFocused: Accessor<boolean>;
+  onFocus: (fn: () => void) => void;
   Context: Component<ParentProps>;
 };
 
 export function createNavigationNode(options: NodeOptions): NodeHandle {
   const { tree, parentNode } = useNavigationContext();
 
-  const parent = createMemo(() => {
-    return typeof options.parent === "function"
-      ? options.parent()
-      : (options.parent ?? parentNode());
-  });
+  const id = () =>
+    typeof options.id === "function" ? options.id() : options.id;
 
-  const order = createMemo(() => {
-    return typeof options.order === "function"
-      ? options.order()
-      : options.order;
-  });
+  const parent = () => {
+    const fromContext = parentNode();
+    // if (fromContext == null) {
+    //   console.warn("parent node not found in context", id());
+    // }
+
+    if (typeof options.parent === "function") {
+      return options.parent() ?? fromContext;
+    }
+
+    return options.parent ?? fromContext;
+  };
+
+  const order = () =>
+    typeof options.order === "function" ? options.order() : options.order;
 
   const node = createMemo(() => {
     return createNode({
       parent: parent(),
-      id: typeof options.id === "function" ? options.id() : options.id,
+      id: id(),
       handler: options.handler,
       order: untrack(order),
     });
@@ -72,25 +78,24 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
   });
 
   createEffect(() => {
-    // to resolve initial focus correctly focus need to be held while child nodes get inserted via effects
-    // child effects should run synchronously after this one
-    // and Promise.resolve() should release the focus when they are done
+    // to resolve initial focus correctly, it needs to be held while child nodes get inserted
+    // child (and sibling) effects should run synchronously after this one
+    // after they are done Promise.resolve() should release the focus
     const releaseFocus = holdFocus(tree);
-    if (releaseFocus) {
-      Promise.resolve().then(releaseFocus);
-    }
 
     const n = node();
-    insertNode(tree, n);
 
     // prettier-ignore
     createEffect(on(updatable, (options) => {
       updateNode(n, options);
     }, { defer: true }));
 
-    onCleanup(() => {
-      removeNode(tree, n.id);
-    });
+    const cleanupNode = insertNode(tree, n);
+    onCleanup(cleanupNode);
+
+    if (releaseFocus) {
+      Promise.resolve().then(releaseFocus);
+    }
   });
 
   const focus = (nodeId?: NodeId, options?: FocusOptions) => {
@@ -103,15 +108,17 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
     selectNode(tree, id);
   };
 
-  const handle = () => node().id;
+  // workaround https://github.com/solidjs/solid/issues/2352
+  const handle = () => createGlobalId(parent(), id());
+
   handle.focus = focus;
   handle.select = select;
-  handle.isFocused = useIsFocused(() => node().id);
-  handle.Context = (props: ParentProps) => {
-    const value = { tree, parentNode: () => node().id };
+  handle.isFocused = useIsFocused(handle);
+  handle.onFocus = (fn: () => void) => useOnFocus(handle, fn);
 
+  handle.Context = (props: ParentProps) => {
     return (
-      <NavigationContext.Provider value={value}>
+      <NavigationContext.Provider value={{ tree, parentNode: handle }}>
         {props.children}
       </NavigationContext.Provider>
     );
@@ -121,22 +128,11 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
 }
 
 export type NodeProps = NodeOptions & {
-  children?: ((node: NodeHandle) => JSX.Element) | JSX.Element;
+  children?: JSX.Element;
 };
 
 export function NavigationNode(props: NodeProps) {
-  const context = useNavigationContext();
   const node = createNavigationNode(props);
 
-  return (
-    <NavigationContext.Provider
-      value={{ ...context, parentNode: () => node() }}
-    >
-      {children(() => {
-        const child = props.children;
-
-        return typeof child === "function" ? child(node) : child;
-      })()}
-    </NavigationContext.Provider>
-  );
+  return <node.Context>{props.children}</node.Context>;
 }
