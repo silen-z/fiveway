@@ -14,8 +14,7 @@ export type NavigationTree = {
   focusedId: NodeId;
   orphans: Map<NodeId, NodeId[]>;
   listeners: ListenerTree;
-  pendingFocusUpdate: Promise<NodeId> | null;
-  locked: boolean;
+  focusLock: boolean | null;
 };
 
 export function createNavigationTree(): NavigationTree {
@@ -24,8 +23,7 @@ export function createNavigationTree(): NavigationTree {
     nodes: new Map(),
     orphans: new Map(),
     listeners: new Map(),
-    pendingFocusUpdate: null,
-    locked: false,
+    focusLock: null,
   };
 
   tree.nodes.set("#", {
@@ -46,8 +44,9 @@ export function insertNode(tree: NavigationTree, node: CreatedNavtreeNode) {
     throw new Error("trying to insert root (or node without parent)");
   }
 
+  // if there is node with the same id replace it 
   if (tree.nodes.has(node.id)) {
-    throw new Error(`trying to insert existing node: ${node.id}`);
+    removeNode(tree, node.id);
   }
 
   node.tree = tree;
@@ -60,7 +59,9 @@ export function insertNode(tree: NavigationTree, node: CreatedNavtreeNode) {
     markOrphan(tree, node.parent, node.id);
   }
 
-  return node;
+  return () => {
+    removeNode(tree, node as NavtreeNode);
+  };
 }
 
 function connectNode(
@@ -96,25 +97,31 @@ function connectNode(
   tree.orphans.delete(node.id);
 }
 
-export function removeNode(tree: NavigationTree, nodeId: NodeId) {
-  if (nodeId === "#") {
+export function removeNode(tree: NavigationTree, node: NodeId | NavtreeNode) {
+  const id = typeof node === "string" ? node : node.id;
+  if (id === "#") {
     throw new Error("cannot remove root node");
   }
 
-  const node = tree.nodes.get(nodeId);
-  if (node == null) {
+  const existingNode = tree.nodes.get(id);
+  if (existingNode == null) {
     return;
   }
 
-  if (node.connected) {
-    disconnectNode(tree, nodeId);
+  // if node is not the same instance consider it removed
+  if (typeof node !== "string" && node !== existingNode) {
+    return;
   }
 
-  tree.nodes.delete(nodeId);
-  clearOrphan(tree, node.parent!, nodeId);
+  if (existingNode.connected) {
+    disconnectNode(tree, id);
+  }
 
-  if (isFocused(tree, node.id)) {
-    tree.focusedId = node.parent ?? "#";
+  tree.nodes.delete(id);
+  clearOrphan(tree, existingNode.parent!, id);
+
+  if (isFocused(tree, existingNode.id)) {
+    tree.focusedId = existingNode.parent ?? "#";
     updateFocus(tree);
   }
 }
@@ -158,8 +165,9 @@ function disconnectNode(tree: NavigationTree, nodeId: NodeId) {
 }
 
 function updateFocus(tree: NavigationTree) {
-  if (tree.locked) {
-    return tree.focusedId;
+  if (tree.focusLock !== null) {
+    tree.focusLock = true;
+    return;
   }
 
   const focusedNode = tree.nodes.get(tree.focusedId);
@@ -174,18 +182,25 @@ function updateFocus(tree: NavigationTree) {
     focusNode(tree, focusedNode.id, { direction: "initial" });
   }
 
-  return tree.focusedId;
+  return;
 }
 
 export function holdFocus(tree: NavigationTree) {
-  if (tree.locked) {
+  if (tree.focusLock !== null) {
     return null;
   }
 
-  tree.locked = true;
+  tree.focusLock = false;
   return () => {
-    tree.locked = false;
-    updateFocus(tree);
+    if (tree.focusLock === null) {
+      throw new Error("trying to release focus lock without holding it");
+    }
+
+    const shouldUpdate = tree.focusLock === true;
+    tree.focusLock = null;
+    if (shouldUpdate) {
+      updateFocus(tree);
+    }
   };
 }
 

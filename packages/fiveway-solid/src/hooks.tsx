@@ -16,29 +16,31 @@ import {
 } from "@fiveway/core";
 import { useNavigationContext } from "./context.jsx";
 
-export function useIsFocused(
-  nodeId: NodeId | Accessor<NodeId>,
-): Accessor<boolean> {
+export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
   const { tree, parentNode } = useNavigationContext();
-  const globalId = createMemo(() => {
-    const id = typeof nodeId === "function" ? nodeId() : nodeId;
-    return scopedId(parentNode(), id);
-  });
 
-  const [isNodeFocused, setFocused] = createSignal<boolean | null>(null);
+  const watchedId = createMemo(() =>
+    scopedId(parentNode(), typeof id === "function" ? id() : id),
+  );
+
+  const [isNodeFocused, setFocused] = createSignal<boolean>(false);
 
   let subscription: (() => void) | null = null;
-  const subscribe = (id: NodeId) =>
-    registerListener(tree, id, "focuschange", () => {
-      setFocused(isFocused(tree, id));
-    });
-
-  createEffect(() => {
-    const id = globalId();
-
+  const subscribe = (id: NodeId) => {
     if (subscription !== null) {
       subscription();
-      subscription = subscribe(id);
+    }
+
+    setFocused(isFocused(tree, id));
+    subscription = registerListener(tree, id, "focuschange", () => {
+      setFocused(isFocused(tree, id));
+    });
+  };
+
+  createEffect(() => {
+    const id = watchedId();
+    if (subscription !== null) {
+      subscribe(id);
     }
   });
 
@@ -47,29 +49,51 @@ export function useIsFocused(
   });
 
   const getter = () => {
-    const id = globalId();
-
     if (subscription === null) {
-      subscription = subscribe(id);
+      subscribe(watchedId());
     }
-
-    return isNodeFocused() ?? isFocused(tree, id);
+    return isNodeFocused();
   };
 
   return getter;
 }
 
 export function useOnFocus(
-  nodeId: NodeId,
+  nodeId: NodeId | Accessor<NodeId>,
+  handler: () => void,
+) {
+  const { tree, parentNode } = useNavigationContext();
+  const id = () =>
+    scopedId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
+
+  createEffect(() => {
+    const subscribedId = id();
+    let focused = isFocused(tree, subscribedId);
+    const cleanup = registerListener(tree, subscribedId, "focuschange", () => {
+      const lastFocused = focused;
+      focused = isFocused(tree, subscribedId);
+      if (!lastFocused && focused) {
+        handler();
+      }
+    });
+
+    onCleanup(cleanup);
+  });
+}
+
+export function useOnFocusChange(
+  nodeId: NodeId | Accessor<NodeId>,
   handler: (id: NodeId | null) => void,
 ) {
   const { tree, parentNode } = useNavigationContext();
-  const globalId = scopedId(parentNode(), nodeId);
+  const id = () =>
+    scopedId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
 
   createEffect(() => {
-    const cleanup = registerListener(tree, globalId, "focuschange", () => {
-      const id = isFocused(tree, globalId) ? tree.focusedId : null;
-      handler(id);
+    const subscribedId = id();
+    const cleanup = registerListener(tree, subscribedId, "focuschange", () => {
+      const focusedId = isFocused(tree, subscribedId) ? tree.focusedId : null;
+      handler(focusedId);
     });
 
     onCleanup(cleanup);
