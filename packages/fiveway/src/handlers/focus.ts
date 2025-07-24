@@ -1,7 +1,7 @@
 import type { NavigationDirection, NavigationHandler } from "../navigation.js";
 import { type NodeId, isParent } from "../id.js";
 import { describeHandler } from "../introspection.js";
-import { defineMetadata } from "../metadata.js";
+import { metaHandler } from "../metadata.js";
 import type { NavtreeNode } from "../node.js";
 
 export type FocusDirection = "front" | "back";
@@ -13,9 +13,7 @@ export type FocusHandlerConfig = {
   ) => FocusDirection | null;
 };
 
-const InitialFocus = defineMetadata<NodeId>("core:initial");
-
-export const initialHandler = InitialFocus.providerHandler;
+export const initialHandler = metaHandler<NodeId>("core:initial");
 
 function createFocusHandler(config: FocusHandlerConfig = {}) {
   const skipEmpty = config.skipEmpty ?? false;
@@ -87,7 +85,7 @@ function createFocusHandler(config: FocusHandlerConfig = {}) {
 }
 
 function findInitialChild(node: NavtreeNode): NodeId | null {
-  const initialItem = InitialFocus.query(node.tree, node.id);
+  const initialItem = initialHandler.query(node.tree, node.id);
   if (initialItem === null) {
     return null;
   }

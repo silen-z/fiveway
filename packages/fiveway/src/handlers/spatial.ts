@@ -4,11 +4,11 @@ import { type ChainedHandler, chainedHandler } from "./chained.js";
 import { traverseNodes } from "../tree.js";
 import { parentHandler } from "./default.js";
 import { focusHandler } from "./focus.js";
-import { type Metadata, defineMetadata } from "../metadata.js";
+import { type MetaHandler, metaHandler } from "../metadata.js";
 import { describeHandler } from "../introspection.js";
 
-export const NodePosition: Metadata<DOMRect> =
-  defineMetadata("core:node-position");
+export const spatialItemHandler: MetaHandler<DOMRect> =
+  metaHandler("core:node-position");
 
 /**
  * @category Handler
@@ -22,7 +22,7 @@ export const spatialMovement: NavigationHandler = (node, action, next) => {
     return next();
   }
 
-  const focusedPos = NodePosition.query(node.tree, node.tree.focusedId);
+  const focusedPos = spatialItemHandler.query(node.tree, node.tree.focusedId);
   if (focusedPos == null) {
     return next();
   }
@@ -33,7 +33,7 @@ export const spatialMovement: NavigationHandler = (node, action, next) => {
   let shortestDistance: number | null = null;
 
   traverseNodes(node.tree, node.id, 1, (id) => {
-    const pos = NodePosition.query(node.tree, id);
+    const pos = spatialItemHandler.query(node.tree, id);
     if (pos === null) {
       return;
     }

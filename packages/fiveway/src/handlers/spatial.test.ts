@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { spatialHandler, NodePosition } from "./spatial.ts";
+import { spatialHandler, spatialItemHandler } from "./spatial.ts";
 import { handleAction } from "../navigation.ts";
 import { createNode } from "../node.ts";
 import { insertNode, removeNode } from "../tree.ts";
@@ -14,7 +14,7 @@ test("spatialHandler", async () => {
 
   for (let row = 1; row <= 2; row++) {
     for (let col = 1; col <= 2; col++) {
-      const position = NodePosition.providerHandler(() => {
+      const position = spatialItemHandler(() => {
         return {
           top: row * 100,
           y: row * 100,

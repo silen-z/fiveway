@@ -6,10 +6,10 @@ import {
   handleAction,
   chainedHandler,
   registerListener,
-  NodePosition,
+  spatialItemHandler,
   type FocusChangeEvent,
 } from "@fiveway/core";
-import { defaultEventMapping, NodeElement } from "@fiveway/core/dom";
+import { defaultEventMapping, elementHandler } from "@fiveway/core/dom";
 
 export type ElementHandler = ChainedHandler & {
   register: (e: HTMLElement | null) => void;
@@ -20,8 +20,8 @@ export function useElementHandler() {
 
   return useMemo(() => {
     const handler = chainedHandler([
-      NodeElement.providerHandler(() => elementRef.current),
-      NodePosition.providerHandler(() => {
+      elementHandler(() => elementRef.current),
+      spatialItemHandler(() => {
         return elementRef.current?.getBoundingClientRect() ?? null;
       }),
     ]) as ElementHandler;
@@ -67,7 +67,7 @@ export function useActionHandler(
 export function useSyncFocus(tree: NavigationTree) {
   useEffect(() => {
     const handler = (e: FocusChangeEvent) => {
-      const el = NodeElement.query(tree, e.focused);
+      const el = elementHandler.query(tree, e.focused);
       if (el != null) {
         el.focus();
       }
