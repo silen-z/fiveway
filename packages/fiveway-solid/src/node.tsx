@@ -44,8 +44,10 @@ export type NodeHandle = {
 export function createNavigationNode(options: NodeOptions): NodeHandle {
   const { tree, parentNode } = useNavigationContext();
 
-  const id = () =>
+  const localId = () =>
     typeof options.id === "function" ? options.id() : options.id;
+
+  const globalId = () => createGlobalId(parent(), localId());
 
   const parent = () => {
     const fromContext = parentNode();
@@ -66,7 +68,7 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
   const node = createMemo(() => {
     return createNode({
       parent: parent(),
-      id: id(),
+      id: localId(),
       handler: options.handler,
       order: untrack(order),
     });
@@ -108,8 +110,9 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
     selectNode(tree, id);
   };
 
-  // workaround https://github.com/solidjs/solid/issues/2352
-  const handle = () => createGlobalId(parent(), id());
+  // workaround for: https://github.com/solidjs/solid/issues/2352
+  // reding from node() was returning undefined
+  const handle = () => globalId();
 
   handle.focus = focus;
   handle.select = select;
