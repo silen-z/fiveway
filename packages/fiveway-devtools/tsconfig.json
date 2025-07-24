@@ -5,7 +5,10 @@
     "outDir": "dist",
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "declarationMap": false
+    "declarationMap": false,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["./src/**/*"],
   "exclude": ["./src/**/*.test.ts"],

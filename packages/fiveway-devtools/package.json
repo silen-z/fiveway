@@ -10,16 +10,17 @@
   "types": "./dist/devtools.d.ts",
   "dependencies": {
     "@fiveway/core": "workspace:*",
-    "clsx": "^2.0.0",
-    "solid-js": "^1.8.21"
+    "clsx": "^2.1.1",
+    "lucide-solid": "0.511.0",
+    "solid-js": "^1.9.7"
   },
   "devDependencies": {
-    "@iconify-icon/solid": "^2.1.1",
-    "typescript": "^5.4.3",
-    "vite": "^4.4.5",
-    "vite-plugin-css-injected-by-js": "^3.5.1",
-    "vite-plugin-dts": "^3.5.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vite-bundle-analyzer": "^0.22.0",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "vite-plugin-dts": "^4.5.4",
     "vite-plugin-libcss": "^1.1.1",
-    "vite-plugin-solid": "^2.8.2"
+    "vite-plugin-solid": "^2.11.6"
   }
 }

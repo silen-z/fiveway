@@ -8,15 +8,15 @@ import {
   useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { render } from "solid-js/web";
+import { Dynamic, render } from "solid-js/web";
 import {
-  type NavigationNode,
+  type NavtreeNode,
   type NavigationTree,
   type NodeId,
   isParent,
   registerListener,
 } from "@fiveway/core";
-import { Icon } from "@iconify-icon/solid";
+import * as Icon from "lucide-solid";
 import { clsx } from "clsx";
 import css from "./devtools.module.css";
 import {
@@ -95,7 +95,7 @@ function OpenButton() {
       class={css.openButton}
       onClick={() => devtools.dispatch({ type: "openPanel" })}
     >
-      <Icon icon="ic:round-terminal" /> fiveway
+      <Icon.SquareTerminal /> fiveway
     </button>
   );
 }
@@ -117,20 +117,17 @@ function Sidebar() {
     <div class={css.sidebar} data-side={side()}>
       <header class={css.sidebarToolbar}>
         <span class={css.title}>
-          <Icon icon="ic:round-terminal" /> fiveway: devtools
+          <Icon.SquareTerminal /> fiveway: devtools
         </span>
-        <Icon
-          onClick={() => setSide((s) => (s === "left" ? "right" : "left"))}
-          icon={
-            side() === "left"
-              ? "fluent:panel-right-32-filled"
-              : "fluent:panel-left-32-filled"
+
+        <Dynamic
+          component={
+            side() === "left" ? Icon.PanelRightDashed : Icon.PanelLeftDashed
           }
+          onClick={() => setSide((s) => (s === "left" ? "right" : "left"))}
         />
-        <Icon
-          icon="ic:round-close"
-          onClick={() => devtools.dispatch({ type: "closePanel" })}
-        />
+
+        <Icon.XIcon onClick={() => devtools.dispatch({ type: "closePanel" })} />
       </header>
 
       <div class={css.tree}>
@@ -138,11 +135,9 @@ function Sidebar() {
           class={css.nodeTag}
           onClick={() => devtools.dispatch({ type: "toggleExpand" })}
         >
-          <Icon
-            icon={
-              devtools.state.expandAll
-                ? "bx:collapse-vertical"
-                : "bx:expand-vertical"
+          <Dynamic
+            component={
+              devtools.state.expandAll ? Icon.FoldVertical : Icon.UnfoldVertical
             }
           />
         </button>
@@ -162,7 +157,7 @@ function Sidebar() {
   );
 }
 
-function VisualizeNode(props: { node: NavigationNode }) {
+function VisualizeNode(props: { node: NavtreeNode }) {
   const devtools = useContext(DevtoolsContext)!;
 
   const isNodeFocused = useIsFocused(devtools.tree, props.node.id);
@@ -195,18 +190,12 @@ function VisualizeNode(props: { node: NavigationNode }) {
           }}
           class={clsx(css.nodeTag, css.nodeTagSuccess)}
         >
-          <Icon icon="heroicons:viewfinder-dot-solid" /> focus
+          <Icon.Focus /> focus
         </span>
 
         <Show when={!isNodeFocused() && hasChildren()}>
           <div onClick={() => setOpen((o) => !o)} class={css.nodeTag}>
-            <Icon
-              icon={
-                isOpen()
-                  ? "heroicons:chevron-up"
-                  : "heroicons:ellipsis-horizontal"
-              }
-            />
+            <Dynamic component={isOpen() ? Icon.ChevronUp : Icon.Ellipsis} />
           </div>
         </Show>
       </div>
@@ -227,7 +216,7 @@ function VisualizeNode(props: { node: NavigationNode }) {
 }
 
 function useNode(tree: NavigationTree, id: () => NodeId) {
-  const [node, setNode] = createSignal<NavigationNode | undefined>(
+  const [node, setNode] = createSignal<NavtreeNode | undefined>(
     tree.nodes.get(id()),
     { equals: () => false },
   );

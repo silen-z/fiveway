@@ -2,28 +2,25 @@ import { createMemo, Show, For } from "solid-js";
 import {
   getHandlerInfo,
   type HandlerInfo,
-  type NavigationNode,
+  type NavtreeNode,
 } from "@fiveway/core";
 import { useDevtoolContext } from "./context.js";
-import { Icon } from "@iconify-icon/solid";
+import * as Icon from "lucide-solid";
 import css from "./devtools.module.css";
+import { Dynamic } from "solid-js/web";
 
-export function NodeDetail(props: { node: NavigationNode; inspect: boolean }) {
+export function NodeDetail(props: { node: NavtreeNode; inspect: boolean }) {
   const devtools = useDevtoolContext();
 
   const nodeHandlers = createMemo(() =>
     getHandlerInfo(devtools.tree, props.node.id),
   );
 
-  const modeIcon = props.inspect
-    ? "heroicons:eye"
-    : "heroicons:viewfinder-dot-solid";
-
   return (
     <div class={css.inspectedNode}>
       <div class={css.sidebarToolbar} data-variant="alt">
         <div style={{ display: "flex", gap: "6px", "align-items": "center" }}>
-          <Icon icon={modeIcon} />
+          <Dynamic component={props.inspect ? Icon.Eye : Icon.Focus} />
           {props.inspect ? "inspecting" : "focused"}
         </div>
         <Show when={devtools.state.inspectedNode}>
