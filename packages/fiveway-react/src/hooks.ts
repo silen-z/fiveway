@@ -37,7 +37,7 @@ export function useOnFocus(
       const id = isFocused(tree, globalId) ? e.focused : null;
       handlerRef.current(id);
     });
-  }, [globalId]);
+  }, [globalId, tree]);
 }
 
 export function useFocusedId(scope: NodeId) {

@@ -8,19 +8,16 @@
     "build:watch": "pnpm --filter \"@fiveway/core\" --filter \"@fiveway/react\" --filter \"@fiveway/solid\" --filter \"@fiveway/devtools\" --parallel run build:watch",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "check": "eslint",
+    "check": "oxlint packages/",
     "format": "prettier --write **/src/**/*",
     "format:check": "prettier --check **/src/**/*",
     "docs:dev": "pnpm --filter \"@fiveway/docs\" run dev",
     "docs:build": "pnpm --filter \"@fiveway/docs\" run build"
   },
   "devDependencies": {
-    "@eslint/js": "^9.31.0",
     "@vitest/coverage-v8": "^3.2.4",
-    "eslint": "^9.31.0",
-    "eslint-plugin-solid": "^0.14.5",
+    "oxlint": "^1.8.0",
     "prettier": "^3.6.2",
-    "typescript-eslint": "^8.38.0",
     "vitest": "^3.2.4"
   }
 }
