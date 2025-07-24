@@ -1,3 +1,8 @@
+#fiveway-devtools {
+  position: relative;
+  z-index: 999;
+}
+
 .openButton {
   appearance: none;
   border: none;
