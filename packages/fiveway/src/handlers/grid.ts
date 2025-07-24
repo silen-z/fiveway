@@ -3,18 +3,19 @@ import { traverseNodes } from "../tree.js";
 import type { NavigationHandler, NavigationDirection } from "../navigation.js";
 import { parentHandler } from "./default.js";
 import { focusHandler } from "./focus.js";
-import { type Metadata, defineMetadata } from "../metadata.js";
+import { type MetaHandler, metaHandler } from "../metadata.js";
 import { type ChainedHandler, chainedHandler } from "./chained.js";
 import { describeHandler } from "../introspection.js";
 
-export type GridItem = {
+export type GridPos = {
   row: number;
   col: number;
 };
 
-export const GridItem: Metadata<GridItem> = defineMetadata("core:grid-item");
+export const gridItemHandler: MetaHandler<GridPos> =
+  metaHandler("core:grid-item");
 
-const defaultDistanceDown = (current: GridItem, potential: GridItem) => {
+const defaultDistanceDown = (current: GridPos, potential: GridPos) => {
   const rowDistance = potential.row - current.row;
   if (rowDistance <= 0) {
     return null;
@@ -28,7 +29,7 @@ const defaultDistanceDown = (current: GridItem, potential: GridItem) => {
   return rowDistance + Math.abs(colDistance);
 };
 
-const defaultDistanceUp = (current: GridItem, potential: GridItem) => {
+const defaultDistanceUp = (current: GridPos, potential: GridPos) => {
   const rowDistance = current.row - potential.row;
   if (rowDistance <= 0) {
     return null;
@@ -42,7 +43,7 @@ const defaultDistanceUp = (current: GridItem, potential: GridItem) => {
   return rowDistance + Math.abs(colDistance);
 };
 
-const defaultDistanceLeft = (current: GridItem, potential: GridItem) => {
+const defaultDistanceLeft = (current: GridPos, potential: GridPos) => {
   const colDistance = current.col - potential.col;
   if (colDistance <= 0) {
     return null;
@@ -56,7 +57,7 @@ const defaultDistanceLeft = (current: GridItem, potential: GridItem) => {
   return colDistance + Math.abs(rowDistance);
 };
 
-const defaultDistanceRight = (current: GridItem, potential: GridItem) => {
+const defaultDistanceRight = (current: GridPos, potential: GridPos) => {
   const colDistance = potential.col - current.col;
   if (colDistance <= 0) {
     return null;
@@ -88,7 +89,7 @@ const defaultDistance: DistanceFunction = (direction: NavigationDirection) => {
 
 type DistanceFunction = (
   direction: NavigationDirection,
-) => (a: GridItem, b: GridItem) => number | null;
+) => (a: GridPos, b: GridPos) => number | null;
 
 type GridHandlerConfig = {
   distance?: DistanceFunction;
@@ -112,7 +113,7 @@ function createGridMovement(config: GridHandlerConfig = {}) {
       return next();
     }
 
-    const focusedPos = GridItem.query(node.tree, focusedId);
+    const focusedPos = gridItemHandler.query(node.tree, focusedId);
     if (focusedPos == null) {
       return next();
     }
@@ -126,7 +127,7 @@ function createGridMovement(config: GridHandlerConfig = {}) {
     let shortestDistance: number | null = null;
 
     traverseNodes(node.tree, node.id, 1, (id) => {
-      const pos = GridItem.query(node.tree, id);
+      const pos = gridItemHandler.query(node.tree, id);
       if (pos === null) {
         return;
       }
@@ -166,5 +167,3 @@ export const gridHandler = (config: GridHandlerConfig = {}): ChainedHandler =>
     createGridMovement(config),
     parentHandler,
   ]);
-
-export const gridItemHandler = GridItem.providerHandler;

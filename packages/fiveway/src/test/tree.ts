@@ -11,9 +11,11 @@ type NodeSpec = Omit<NodeConfig, "parent"> & {
   children?: NodeSpec[];
 };
 
-export function createTreeFromSpec(spec: NodeSpec): {
+export type TreeSpecResult = { tree: NavigationTree } & {
   [key: NodeId]: NavtreeNode;
-} & { tree: NavigationTree } {
+};
+
+export function createTreeFromSpec(spec: NodeSpec): TreeSpecResult {
   const tree = createNavigationTree();
   const nodes: { [key: NodeId]: NavtreeNode } = {};
 
@@ -23,7 +25,7 @@ export function createTreeFromSpec(spec: NodeSpec): {
 
   releaseFocus();
 
-  return { tree, ...nodes };
+  return { tree, ...nodes } as TreeSpecResult;
 }
 
 function proccessSpec(
@@ -32,7 +34,7 @@ function proccessSpec(
   nodes: { [key: NodeId]: NavtreeNode },
 ) {
   if (spec.id === "tree") {
-    throw new Error(`invalid  test node ID: ${spec.id}`);
+    throw new Error(`invalid test node ID: ${spec.id}`);
   }
 
   if (spec.id in nodes) {

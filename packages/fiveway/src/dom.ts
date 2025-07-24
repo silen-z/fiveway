@@ -1,5 +1,5 @@
 import type { NavigationAction } from "./navigation.js";
-import { defineMetadata, type Metadata } from "./metadata.js";
+import { metaHandler, type MetaHandler } from "./metadata.js";
 
 const eventKeyToAction: Record<string, NavigationAction> = {
   ArrowUp: { kind: "move", direction: "up" },
@@ -19,5 +19,5 @@ export function defaultEventMapping(e: Event): NavigationAction | null {
   return null;
 }
 
-export const NodeElement: Metadata<HTMLElement> =
-  defineMetadata("core:node-element");
+export const elementHandler: MetaHandler<HTMLElement> =
+  metaHandler("core:node-element");

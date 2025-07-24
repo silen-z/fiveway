@@ -2,13 +2,13 @@ import { createEffect, createSignal, onCleanup } from "solid-js";
 import {
   chainedHandler,
   handleAction,
-  NodePosition,
+  spatialItemHandler,
   registerListener,
   type ChainedHandler,
   type NavigationAction,
   type NavigationTree,
 } from "@fiveway/core";
-import { defaultEventMapping, NodeElement } from "@fiveway/core/dom";
+import { defaultEventMapping, elementHandler } from "@fiveway/core/dom";
 
 export type ElementHandler = ChainedHandler & {
   register: (e: HTMLElement | null) => void;
@@ -21,9 +21,9 @@ export function createElementHandler() {
   // handlers doen't need to be reactive
   const handler = chainedHandler([
     // eslint-disable-next-line solid/reactivity
-    NodeElement.providerHandler(element),
+    elementHandler(element),
     // eslint-disable-next-line solid/reactivity
-    NodePosition.providerHandler(position),
+    spatialItemHandler(position),
   ]) as ElementHandler;
 
   handler.register = setElement;
@@ -63,7 +63,7 @@ export function createActionHandler(
 export function useSyncFocus(tree: NavigationTree) {
   createEffect(() => {
     const cleanup = registerListener(tree, "#", "focuschange", () => {
-      const el = NodeElement.query(tree, tree.focusedId);
+      const el = elementHandler.query(tree, tree.focusedId);
       if (el !== null) {
         el.focus();
       } else if (document.activeElement instanceof HTMLElement) {
