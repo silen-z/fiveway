@@ -28,9 +28,7 @@ export function NavItem(props: NavItemProps) {
   const nav = useNavigationNode({
     id: props.navId,
     order: props.order,
-    handler: (props.handler ?? itemHandler())
-      .prepend(goBackHandler)
-      .prepend(elementHandler),
+    handler: (props.handler ?? itemHandler()).prepend(goBackHandler).prepend(elementHandler),
   });
 
   return (

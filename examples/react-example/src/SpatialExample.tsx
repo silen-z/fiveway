@@ -13,11 +13,7 @@ export function SpatialExample() {
   return (
     <nav.Context>
       <div className={css.container}>
-        <SpatialItem
-          navId="item1"
-          style={{ left: "10%", top: "10%" }}
-          isMoving
-        />
+        <SpatialItem navId="item1" style={{ left: "10%", top: "10%" }} isMoving />
         <SpatialItem navId="item2" style={{ left: "20%", bottom: "10%" }} />
         <SpatialItem navId="item3" style={{ right: "20%", bottom: "10%" }} />
       </div>
@@ -25,11 +21,7 @@ export function SpatialExample() {
   );
 }
 
-function SpatialItem(props: {
-  navId: string;
-  style: CSSProperties;
-  isMoving?: boolean;
-}) {
+function SpatialItem(props: { navId: string; style: CSSProperties; isMoving?: boolean }) {
   return (
     <div className={css.item} data-moving={props.isMoving} style={props.style}>
       <NavItem navId={props.navId} label={props.navId} />

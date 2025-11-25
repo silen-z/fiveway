@@ -1,9 +1,5 @@
 import { createContext, useContext, type JSX } from "solid-js";
-import {
-  type NavigationAction,
-  type NavigationTree,
-  type NodeId,
-} from "@fiveway/core";
+import { type NavigationAction, type NavigationTree, type NodeId } from "@fiveway/core";
 
 export type NavigationContext = {
   tree: NavigationTree;

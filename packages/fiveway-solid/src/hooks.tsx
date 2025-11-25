@@ -1,10 +1,4 @@
-import {
-  type Accessor,
-  createEffect,
-  createMemo,
-  createSignal,
-  onCleanup,
-} from "solid-js";
+import { type Accessor, createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 import {
   type NodeId,
   type FocusOptions,
@@ -19,9 +13,7 @@ import { useNavigationContext } from "./context.jsx";
 export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
   const { tree, parentNode } = useNavigationContext();
 
-  const watchedId = createMemo(() =>
-    scopedId(parentNode(), typeof id === "function" ? id() : id),
-  );
+  const watchedId = createMemo(() => scopedId(parentNode(), typeof id === "function" ? id() : id));
 
   const [isNodeFocused, setFocused] = createSignal<boolean>(false);
 
@@ -58,13 +50,9 @@ export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
   return getter;
 }
 
-export function useOnFocus(
-  nodeId: NodeId | Accessor<NodeId>,
-  handler: () => void,
-) {
+export function useOnFocus(nodeId: NodeId | Accessor<NodeId>, handler: () => void) {
   const { tree, parentNode } = useNavigationContext();
-  const id = () =>
-    scopedId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
+  const id = () => scopedId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
 
   createEffect(() => {
     const subscribedId = id();
@@ -86,8 +74,7 @@ export function useOnFocusChange(
   handler: (id: NodeId | null) => void,
 ) {
   const { tree, parentNode } = useNavigationContext();
-  const id = () =>
-    scopedId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
+  const id = () => scopedId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
 
   createEffect(() => {
     const subscribedId = id();
@@ -103,9 +90,7 @@ export function useOnFocusChange(
 export function useFocusedId(scope: NodeId) {
   const { tree, parentNode } = useNavigationContext();
   const globalId = scopedId(parentNode(), scope);
-  const [focusedId, setFocusedId] = createSignal(
-    isFocused(tree, globalId) ? tree.focusedId : null,
-  );
+  const [focusedId, setFocusedId] = createSignal(isFocused(tree, globalId) ? tree.focusedId : null);
 
   createEffect(() => {
     const cleanup = registerListener(tree, globalId, "focuschange", () => {

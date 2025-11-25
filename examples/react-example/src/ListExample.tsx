@@ -12,8 +12,7 @@ export function ListExample(props: {
   direction: "vertical" | "horizontal";
   handler?: (h: ChainedHandler) => NavigationHandler;
 }) {
-  const handler =
-    props.direction === "vertical" ? verticalHandler : horizontalHandler;
+  const handler = props.direction === "vertical" ? verticalHandler : horizontalHandler;
 
   const nav = useNavigationNode({
     id: "list",
@@ -32,12 +31,7 @@ export function ListExample(props: {
     >
       <nav.Context>
         {range(5).map((i: number) => (
-          <NavItem
-            key={`item${i}`}
-            navId={`item${i}`}
-            label={`Item ${i}`}
-            order={i}
-          />
+          <NavItem key={`item${i}`} navId={`item${i}`} label={`Item ${i}`} order={i} />
         ))}
       </nav.Context>
     </div>

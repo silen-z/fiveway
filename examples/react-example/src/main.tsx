@@ -1,11 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createNavigationTree } from "@fiveway/core";
-import {
-  NavigationProvider,
-  useActionHandler,
-  useSyncFocus,
-} from "@fiveway/react";
+import { NavigationProvider, useActionHandler, useSyncFocus } from "@fiveway/react";
 import { enableDevtools } from "@fiveway/devtools";
 import { Showcase } from "./Showcase.tsx";
 import "./styles.css";

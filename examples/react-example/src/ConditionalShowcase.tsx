@@ -1,8 +1,4 @@
-import {
-  horizontalHandler,
-  itemHandler,
-  containerHandler,
-} from "@fiveway/core";
+import { horizontalHandler, itemHandler, containerHandler } from "@fiveway/core";
 import { useNavigationNode, NavigationNode } from "@fiveway/react";
 import { useState } from "react";
 import { flushSync } from "react-dom";
@@ -48,10 +44,7 @@ export function ConditionalShowcase() {
                 })}
               >
                 {(node) => (
-                  <button
-                    className={css.item}
-                    data-is-focused={node.isFocused()}
-                  >
+                  <button className={css.item} data-is-focused={node.isFocused()}>
                     remove
                   </button>
                 )}

@@ -63,9 +63,7 @@ export function useNavigationNode(options: NodeOptions): NodeHandle {
       };
 
       return (
-        <NavigationContext.Provider value={context}>
-          {props.children}
-        </NavigationContext.Provider>
+        <NavigationContext.Provider value={context}>{props.children}</NavigationContext.Provider>
       );
     },
     [tree, nodeId],
@@ -93,9 +91,5 @@ export type NodeProps = NodeOptions & {
 export function NavigationNode({ children, ...props }: NodeProps) {
   const { Context, ...node } = useNavigationNode(props);
 
-  return (
-    <Context>
-      {typeof children === "function" ? children(node) : children}
-    </Context>
-  );
+  return <Context>{typeof children === "function" ? children(node) : children}</Context>;
 }

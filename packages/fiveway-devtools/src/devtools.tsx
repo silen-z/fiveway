@@ -1,12 +1,4 @@
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  For,
-  onCleanup,
-  Show,
-  useContext,
-} from "solid-js";
+import { createEffect, createMemo, createSignal, For, onCleanup, Show, useContext } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Dynamic, render } from "solid-js/web";
 import {
@@ -29,8 +21,7 @@ import { NodeDetail } from "./detail.jsx";
 
 export function enableDevtools(tree: NavigationTree) {
   const devtoolElement =
-    document.querySelector("#fiveway-devtools") ??
-    document.createElement("div");
+    document.querySelector("#fiveway-devtools") ?? document.createElement("div");
 
   const dispose = render(() => <DevtoolPanel tree={tree} />, devtoolElement);
 
@@ -75,9 +66,7 @@ function DevtoolPanel(props: { tree: NavigationTree }) {
   };
 
   return (
-    <DevtoolsContext.Provider
-      value={{ tree: props.tree, state, dispatch: handleAction }}
-    >
+    <DevtoolsContext.Provider value={{ tree: props.tree, state, dispatch: handleAction }}>
       <OpenButton />
       <Show when={state.panelOpen}>
         <Sidebar />
@@ -108,10 +97,7 @@ function Sidebar() {
 
   const focusedId = useFocusedId(devtools.tree);
 
-  const detailedNode = useNode(
-    devtools.tree,
-    () => devtools.state.inspectedNode ?? focusedId(),
-  );
+  const detailedNode = useNode(devtools.tree, () => devtools.state.inspectedNode ?? focusedId());
 
   return (
     <div class={css.sidebar} data-side={side()}>
@@ -121,9 +107,7 @@ function Sidebar() {
         </span>
 
         <Dynamic
-          component={
-            side() === "left" ? Icon.PanelRightDashed : Icon.PanelLeftDashed
-          }
+          component={side() === "left" ? Icon.PanelRightDashed : Icon.PanelLeftDashed}
           onClick={() => setSide((s) => (s === "left" ? "right" : "left"))}
         />
 
@@ -131,27 +115,15 @@ function Sidebar() {
       </header>
 
       <div class={css.tree}>
-        <button
-          class={css.nodeTag}
-          onClick={() => devtools.dispatch({ type: "toggleExpand" })}
-        >
-          <Dynamic
-            component={
-              devtools.state.expandAll ? Icon.FoldVertical : Icon.UnfoldVertical
-            }
-          />
+        <button class={css.nodeTag} onClick={() => devtools.dispatch({ type: "toggleExpand" })}>
+          <Dynamic component={devtools.state.expandAll ? Icon.FoldVertical : Icon.UnfoldVertical} />
         </button>
 
         <VisualizeNode node={root()!} />
       </div>
 
       <Show keyed when={detailedNode()}>
-        {(node) => (
-          <NodeDetail
-            node={node}
-            inspect={devtools.state.inspectedNode != null}
-          />
-        )}
+        {(node) => <NodeDetail node={node} inspect={devtools.state.inspectedNode != null} />}
       </Show>
     </div>
   );
@@ -163,12 +135,8 @@ function VisualizeNode(props: { node: NavtreeNode }) {
   const isNodeFocused = useIsFocused(devtools.tree, props.node.id);
   const [isNodeOpen, setOpen] = createSignal(false);
 
-  const isOpen = createMemo(
-    () => isNodeOpen() || isNodeFocused() || devtools.state.expandAll,
-  );
-  const hasChildren = createMemo(() =>
-    props.node.children.some((c) => c.active),
-  );
+  const isOpen = createMemo(() => isNodeOpen() || isNodeFocused() || devtools.state.expandAll);
+  const hasChildren = createMemo(() => props.node.children.some((c) => c.active));
 
   const isRoot = () => props.node.id === "#";
   return (
@@ -177,9 +145,7 @@ function VisualizeNode(props: { node: NavtreeNode }) {
         <span
           class={css.nodeLabel}
           title={props.node.id}
-          onClick={() =>
-            devtools.dispatch({ type: "inspectNode", id: props.node.id })
-          }
+          onClick={() => devtools.dispatch({ type: "inspectNode", id: props.node.id })}
         >
           {isRoot() ? "# (root)" : getLocalId(props.node.id)}
         </span>
@@ -204,9 +170,7 @@ function VisualizeNode(props: { node: NavtreeNode }) {
           <For each={props.node.children}>
             {(child) => {
               const node = useNode(devtools.tree, () => child.id);
-              return (
-                <Show when={node()}>{(n) => <VisualizeNode node={n()} />}</Show>
-              );
+              return <Show when={node()}>{(n) => <VisualizeNode node={n()} />}</Show>;
             }}
           </For>
         </div>
@@ -216,10 +180,9 @@ function VisualizeNode(props: { node: NavtreeNode }) {
 }
 
 function useNode(tree: NavigationTree, id: () => NodeId) {
-  const [node, setNode] = createSignal<NavtreeNode | undefined>(
-    tree.nodes.get(id()),
-    { equals: () => false },
-  );
+  const [node, setNode] = createSignal<NavtreeNode | undefined>(tree.nodes.get(id()), {
+    equals: () => false,
+  });
 
   createEffect(() => {
     const watchedId = id();
