@@ -8,7 +8,7 @@ import {
   insertNode,
   removeNode,
   defaultHandler,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("gridHandler", async () => {
   const { tree, grid } = createTreeFromSpec({

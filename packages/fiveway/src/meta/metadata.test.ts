@@ -5,7 +5,7 @@ import {
   createNode,
   createNavigationTree,
   insertNode,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("don't look for metadata in parent", () => {
   const tree = createNavigationTree();

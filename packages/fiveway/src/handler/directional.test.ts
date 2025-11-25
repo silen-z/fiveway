@@ -7,7 +7,7 @@ import {
   createNode,
   insertNode,
   removeNode,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("verticalHandler", async () => {
   const { tree, item1, item2 } = createTreeFromSpec({

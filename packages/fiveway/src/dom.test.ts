@@ -5,8 +5,8 @@ import { test, expect } from "vitest";
 // import first to avoid circular dependency errors
 import { createTreeFromSpec } from "../test/treeSpec.ts";
 
-import { verticalHandler, defaultHandler, handleAction } from "@fiveway/core";
-import { defaultEventMapping } from "@fiveway/core/dom";
+import { verticalHandler, defaultHandler, handleAction } from "./index.ts";
+import { defaultEventMapping } from "./dom.ts";
 
 test("defaultKeyMapping", async () => {
   expect(defaultEventMapping(new MouseEvent("mouseover"))).toBeNull();

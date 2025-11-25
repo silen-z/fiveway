@@ -6,7 +6,7 @@ import {
   insertNode,
   isFocused,
   createNode,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("listeners", async () => {
   const tree = createNavigationTree();
