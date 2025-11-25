@@ -9,7 +9,7 @@ import {
   createNode,
   itemHandler,
   selectNode,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("insertNode", () => {
   const tree = createNavigationTree();

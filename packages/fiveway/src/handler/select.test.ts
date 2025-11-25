@@ -6,7 +6,7 @@ import {
   defaultHandler,
   selectHandler,
   handleAction,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("selectHandler", async () => {
   const tree = createNavigationTree();

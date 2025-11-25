@@ -7,7 +7,7 @@ import {
   updateNode,
   type NavigationHandler,
   defaultHandler,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("createNode", () => {
   const node = createNode({

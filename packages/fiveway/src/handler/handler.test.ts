@@ -6,7 +6,7 @@ import {
   type NavigationHandler,
   getHandlerInfo,
   containerHandler,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("runHandler", async () => {
   const tree = createNavigationTree();

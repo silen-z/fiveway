@@ -117,8 +117,8 @@ importers:
         version: 1.9.7
     devDependencies:
       typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
+        specifier: ^5.9.3
+        version: 5.9.3
       vite:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@20.6.3)(yaml@2.8.0)
@@ -130,7 +130,7 @@ importers:
         version: 3.5.2(vite@6.3.5(@types/node@20.6.3)(yaml@2.8.0))
       vite-plugin-dts:
         specifier: ^4.5.4
-        version: 4.5.4(@types/node@20.6.3)(rollup@4.53.3)(typescript@5.8.3)(vite@6.3.5(@types/node@20.6.3)(yaml@2.8.0))
+        version: 4.5.4(@types/node@20.6.3)(rollup@4.53.3)(typescript@5.9.3)(vite@6.3.5(@types/node@20.6.3)(yaml@2.8.0))
       vite-plugin-libcss:
         specifier: ^1.1.1
         version: 1.1.1(vite@6.3.5(@types/node@20.6.3)(yaml@2.8.0))
@@ -182,8 +182,8 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1
       typescript:
-        specifier: ^5.4.5
-        version: 5.4.5
+        specifier: ^5.9.3
+        version: 5.9.3
 
   packages/fiveway-solid:
     dependencies:
@@ -195,8 +195,8 @@ importers:
         version: 1.9.3
     devDependencies:
       typescript:
-        specifier: ^5.4.3
-        version: 5.4.3
+        specifier: ^5.9.3
+        version: 5.9.3
 
 packages:
 
@@ -4868,11 +4868,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.4.5:
-    resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   typescript@5.5.4:
     resolution: {integrity: sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==}
     engines: {node: '>=14.17'}
@@ -4880,11 +4875,6 @@ packages:
 
   typescript@5.8.2:
     resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
-  typescript@5.8.3:
-    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -7489,7 +7479,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.4.3
 
-  '@vue/language-core@2.2.0(typescript@5.8.3)':
+  '@vue/language-core@2.2.0(typescript@5.9.3)':
     dependencies:
       '@volar/language-core': 2.4.14
       '@vue/compiler-dom': 3.5.16
@@ -7500,7 +7490,7 @@ snapshots:
       muggle-string: 0.4.1
       path-browserify: 1.0.1
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.3
 
   '@vue/reactivity@3.3.4':
     dependencies:
@@ -10220,13 +10210,9 @@ snapshots:
 
   typescript@5.4.3: {}
 
-  typescript@5.4.5: {}
-
   typescript@5.5.4: {}
 
   typescript@5.8.2: {}
-
-  typescript@5.8.3: {}
 
   typescript@5.9.3: {}
 
@@ -10365,18 +10351,18 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-dts@4.5.4(@types/node@20.6.3)(rollup@4.53.3)(typescript@5.8.3)(vite@6.3.5(@types/node@20.6.3)(yaml@2.8.0)):
+  vite-plugin-dts@4.5.4(@types/node@20.6.3)(rollup@4.53.3)(typescript@5.9.3)(vite@6.3.5(@types/node@20.6.3)(yaml@2.8.0)):
     dependencies:
       '@microsoft/api-extractor': 7.52.8(@types/node@20.6.3)
       '@rollup/pluginutils': 5.1.4(rollup@4.53.3)
       '@volar/typescript': 2.4.14
-      '@vue/language-core': 2.2.0(typescript@5.8.3)
+      '@vue/language-core': 2.2.0(typescript@5.9.3)
       compare-versions: 6.1.1
       debug: 4.4.1
       kolorist: 1.8.0
       local-pkg: 1.1.1
       magic-string: 0.30.17
-      typescript: 5.8.3
+      typescript: 5.9.3
     optionalDependencies:
       vite: 6.3.5(@types/node@20.6.3)(yaml@2.8.0)
     transitivePeerDependencies:

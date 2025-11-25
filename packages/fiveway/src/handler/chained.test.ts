@@ -8,7 +8,7 @@ import {
   chainedHandler,
   defaultHandler,
   metaHandler,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("chainedHandler", () => {
   const tree = createNavigationTree();

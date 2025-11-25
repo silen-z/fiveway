@@ -13,7 +13,7 @@ import {
   initialHandler,
   verticalHandler,
   handleAction,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("focusHandler: items themselves are focusable", async () => {
   const { tree, item } = createTreeFromSpec({

@@ -7,7 +7,7 @@ import {
   createNode,
   defaultHandler,
   type NavigationHandler,
-} from "@fiveway/core";
+} from "../index.ts";
 
 test("handlerInfo", () => {
   const tree = createNavigationTree();

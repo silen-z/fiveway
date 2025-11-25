@@ -1,11 +1,9 @@
-import { defineConfig, coverageConfigDefaults } from "vitest/config";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
     projects: ["packages/*"],
     coverage: {
-      include: ["packages/fiveway"],
-      exclude: ["**/dist/**", ...coverageConfigDefaults.exclude],
       reporter: ["text", "json", "json-summary"],
       reportOnFailure: true,
     },
