@@ -59,12 +59,7 @@ export function VirtualListExample() {
     >
       <nav.Context>
         {mapRange(items, windowRange, (item) => (
-          <NavItem
-            key={item.id}
-            navId={item.id}
-            label={item.label}
-            order={item.order}
-          />
+          <NavItem key={item.id} navId={item.id} label={item.label} order={item.order} />
         ))}
       </nav.Context>
     </ul>

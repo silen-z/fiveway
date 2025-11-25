@@ -12,16 +12,14 @@ function isAcceptedMessage(msg: unknown): msg is IncomingMessage {
   return msg != null && typeof msg === "object" && "type" in msg;
 }
 
-backgroundPageConnection.onMessage.addListener(
-  (message: IncomingMessage | unknown) => {
-    if (!isAcceptedMessage(message)) {
-      return;
-    }
+backgroundPageConnection.onMessage.addListener((message: IncomingMessage | unknown) => {
+  if (!isAcceptedMessage(message)) {
+    return;
+  }
 
-    switch (message.type) {
-    }
-  },
-);
+  switch (message.type) {
+  }
+});
 
 backgroundPageConnection.postMessage({
   name: "init",

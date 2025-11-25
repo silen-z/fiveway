@@ -1,10 +1,5 @@
 import { type CSSProperties, useState } from "react";
-import {
-  directChildId,
-  gridHandler,
-  gridItemHandler,
-  itemHandler,
-} from "@fiveway/core";
+import { directChildId, gridHandler, gridItemHandler, itemHandler } from "@fiveway/core";
 import { useNavigationNode, useOnFocus } from "@fiveway/react";
 import css from "./VirtualGridExample.module.css";
 import { NavItem } from "../NavItem.tsx";
@@ -23,10 +18,7 @@ export function VirtualGridExample() {
   const itemRowIndex = Math.floor(listPosition / cols);
 
   const windowRange = offsetWindow(rows, itemRowIndex, 1, 2);
-  const gridRange: [number, number] = [
-    windowRange[0] * cols,
-    (windowRange[1] + 1) * cols - 1,
-  ];
+  const gridRange: [number, number] = [windowRange[0] * cols, (windowRange[1] + 1) * cols - 1];
 
   const nav = useNavigationNode({
     id: "virtual-grid",

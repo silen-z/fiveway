@@ -21,17 +21,9 @@ export function offsetWindow(
   return [start, end];
 }
 
-export function mapRange<T, U>(
-  array: T[],
-  [start, end]: [number, number],
-  mapFn: (e: T) => U,
-) {
+export function mapRange<T, U>(array: T[], [start, end]: [number, number], mapFn: (e: T) => U) {
   const mapped = [];
-  for (
-    let index = Math.max(start, 0);
-    index <= end && index < array.length;
-    index++
-  ) {
+  for (let index = Math.max(start, 0); index <= end && index < array.length; index++) {
     mapped.push(mapFn(array[index]!));
   }
 

@@ -1,9 +1,5 @@
 import { useState, useMemo } from "react";
-import {
-  type NodeId,
-  type NavigationHandler,
-  directChildId,
-} from "@fiveway/core";
+import { type NodeId, type NavigationHandler, directChildId } from "@fiveway/core";
 
 export type RememberHandler = NavigationHandler & {
   lastFocused: NodeId | null;
@@ -25,10 +21,7 @@ export function useRememberHandler() {
 
       const nextId = next();
       const idToSave = nextId !== null ? directChildId(node.id, nextId) : null;
-      if (
-        idToSave !== null &&
-        !(action.kind === "focus" && action.direction === "initial")
-      ) {
+      if (idToSave !== null && !(action.kind === "focus" && action.direction === "initial")) {
         setLastFocused(idToSave);
       }
 

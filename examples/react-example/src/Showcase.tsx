@@ -7,11 +7,7 @@ import {
   itemHandler,
 } from "@fiveway/core";
 import { NodeElement } from "@fiveway/core/dom";
-import {
-  useNavigationContext,
-  useNavigationNode,
-  useOnFocus,
-} from "@fiveway/react";
+import { useNavigationContext, useNavigationNode, useOnFocus } from "@fiveway/react";
 import { NavItem } from "./NavItem.tsx";
 import { ExampleBox } from "./ExampleBox.tsx";
 import { ListExample } from "./ListExample.tsx";
@@ -67,23 +63,21 @@ export function Showcase() {
 
         <div className={css.infoBox}>
           <p>
-            <strong>fiveway</strong> is a TypeScript library for rich web
-            applications that want to support keyboard navigation and have
-            precise control over what is focused{" "}
+            <strong>fiveway</strong> is a TypeScript library for rich web applications that want to
+            support keyboard navigation and have precise control over what is focused{" "}
             <a href="https://fiveway.io/what-is-fiveway">Get to know more</a>
           </p>
 
           <p>
-            From now on let go of your mouse. This demo is controlled by
-            keyboard. Arrow buttons work as expected, press enter to select and
-            backspace works as back button. Pressing back resets you to start.
+            From now on let go of your mouse. This demo is controlled by keyboard. Arrow buttons
+            work as expected, press enter to select and backspace works as back button. Pressing
+            back resets you to start.
           </p>
 
           <p>
-            If you are curious how does the navigation tree for this page looks
-            open the devtools by clicking the "fiveway" button in bottom right
-            corner. There you can see the tree structure and inspect specific
-            nodes by clicking on them.
+            If you are curious how does the navigation tree for this page looks open the devtools by
+            clicking the "fiveway" button in bottom right corner. There you can see the tree
+            structure and inspect specific nodes by clicking on them.
           </p>
 
           <NavItem

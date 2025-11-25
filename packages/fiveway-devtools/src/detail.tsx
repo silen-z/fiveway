@@ -1,9 +1,5 @@
 import { createMemo, Show, For } from "solid-js";
-import {
-  getHandlerInfo,
-  type HandlerInfo,
-  type NavtreeNode,
-} from "@fiveway/core";
+import { getHandlerInfo, type HandlerInfo, type NavtreeNode } from "@fiveway/core";
 import { useDevtoolContext } from "./context.js";
 import * as Icon from "lucide-solid";
 import css from "./devtools.module.css";
@@ -12,9 +8,7 @@ import { Dynamic } from "solid-js/web";
 export function NodeDetail(props: { node: NavtreeNode; inspect: boolean }) {
   const devtools = useDevtoolContext();
 
-  const nodeHandlers = createMemo(() =>
-    getHandlerInfo(devtools.tree, props.node.id),
-  );
+  const nodeHandlers = createMemo(() => getHandlerInfo(devtools.tree, props.node.id));
 
   return (
     <div class={css.inspectedNode}>
@@ -24,9 +18,7 @@ export function NodeDetail(props: { node: NavtreeNode; inspect: boolean }) {
           {props.inspect ? "inspecting" : "focused"}
         </div>
         <Show when={devtools.state.inspectedNode}>
-          <button
-            onClick={() => devtools.dispatch({ type: "inspectNode", id: null })}
-          >
+          <button onClick={() => devtools.dispatch({ type: "inspectNode", id: null })}>
             stop inspecting
           </button>
         </Show>

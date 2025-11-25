@@ -9,8 +9,8 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "check": "oxlint packages/",
-    "format": "prettier --write **/src/**/*",
-    "format:check": "prettier --check **/src/**/*",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "docs:dev": "pnpm --filter \"@fiveway/docs\" run dev",
     "docs:build": "pnpm --filter \"@fiveway/docs\" run build"
   },
@@ -18,7 +18,6 @@
     "@vitest/coverage-v8": "^4.0.14",
     "oxfmt": "^0.15.0",
     "oxlint": "^1.30.0",
-    "prettier": "^3.6.2",
     "vitest": "^4.0.14"
   }
 }

@@ -1,10 +1,5 @@
 import { useState, useCallback, useSyncExternalStore } from "react";
-import {
-  type NavigationTree,
-  type NodeId,
-  registerListener,
-  isFocused,
-} from "@fiveway/core";
+import { type NavigationTree, type NodeId, registerListener, isFocused } from "@fiveway/core";
 
 function noopSubscribe() {
   return () => {};
@@ -21,9 +16,8 @@ export function useLazyIsFocused(tree: NavigationTree, nodeId: NodeId) {
     [tree, nodeId],
   );
 
-  const subscribedValue = useSyncExternalStore(
-    subscribed ? subscribe : noopSubscribe,
-    () => isFocused(tree, nodeId),
+  const subscribedValue = useSyncExternalStore(subscribed ? subscribe : noopSubscribe, () =>
+    isFocused(tree, nodeId),
   );
 
   return () => {

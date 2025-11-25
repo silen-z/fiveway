@@ -10,11 +10,7 @@ import {
   gridItemHandler,
   itemHandler,
 } from "@fiveway/core";
-import {
-  NavigationNode,
-  createElementHandler,
-  createNavigationNode,
-} from "@fiveway/solid";
+import { NavigationNode, createElementHandler, createNavigationNode } from "@fiveway/solid";
 import css from "./Showcase.module.css";
 
 export function Showcase() {
@@ -44,27 +40,21 @@ export function Showcase() {
         <nav.Context>
           <NavigationNode
             id="verticalList"
-            handler={containerHandler.prepend(
-              gridItemHandler({ row: 1, col: 1 }),
-            )}
+            handler={containerHandler.prepend(gridItemHandler({ row: 1, col: 1 }))}
           >
             <ListShowcase type="vertical" />
           </NavigationNode>
 
           <NavigationNode
             id="horizontalList"
-            handler={containerHandler.prepend(
-              gridItemHandler({ row: 1, col: 2 }),
-            )}
+            handler={containerHandler.prepend(gridItemHandler({ row: 1, col: 2 }))}
           >
             <ListShowcase type="horizontal" />
           </NavigationNode>
 
           <NavigationNode
             id="spatial"
-            handler={containerHandler.prepend(
-              gridItemHandler({ row: 1, col: 3 }),
-            )}
+            handler={containerHandler.prepend(gridItemHandler({ row: 1, col: 3 }))}
           >
             <SpatialShowcase />
           </NavigationNode>
@@ -136,11 +126,7 @@ function SpatialShowcase() {
           }).prepend(toggleHandler)}
         >
           {(node) => (
-            <li
-              class={css.item}
-              ref={toggleHandler.register}
-              data-is-focused={node.isFocused()}
-            >
+            <li class={css.item} ref={toggleHandler.register} data-is-focused={node.isFocused()}>
               toggle spatial
             </li>
           )}
@@ -180,11 +166,7 @@ function SpatialShowcase() {
   );
 }
 
-function SpatialItem(props: {
-  navId: string;
-  focusable: boolean;
-  style: JSX.CSSProperties;
-}) {
+function SpatialItem(props: { navId: string; focusable: boolean; style: JSX.CSSProperties }) {
   const elementHandler = createElementHandler();
   const nav = createNavigationNode({
     id: () => props.navId,

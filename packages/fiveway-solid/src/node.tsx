@@ -44,8 +44,7 @@ export type NodeHandle = {
 export function createNavigationNode(options: NodeOptions): NodeHandle {
   const { tree, parentNode } = useNavigationContext();
 
-  const localId = () =>
-    typeof options.id === "function" ? options.id() : options.id;
+  const localId = () => (typeof options.id === "function" ? options.id() : options.id);
 
   const globalId = () => createGlobalId(parent(), localId());
 
@@ -62,8 +61,7 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
     return options.parent ?? fromContext;
   };
 
-  const order = () =>
-    typeof options.order === "function" ? options.order() : options.order;
+  const order = () => (typeof options.order === "function" ? options.order() : options.order);
 
   const node = createMemo(() => {
     return createNode({

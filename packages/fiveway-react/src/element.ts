@@ -39,10 +39,7 @@ export type ActionHandlerOptions = {
   eventToAction?: (e: Event) => NavigationAction | null;
 };
 
-export function useActionHandler(
-  tree: NavigationTree,
-  options: ActionHandlerOptions = {},
-) {
+export function useActionHandler(tree: NavigationTree, options: ActionHandlerOptions = {}) {
   const eventToAction = options.eventToAction ?? defaultEventMapping;
   const target = options.target ?? window;
 
