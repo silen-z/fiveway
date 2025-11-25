@@ -1,8 +1,14 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "isolatedDeclarations": true,
+
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "dist",
+    "types": ["vitest/importMeta"]
   },
   "include": ["./src/**/*"],
   "exclude": ["./src/**/*.test.ts"]
