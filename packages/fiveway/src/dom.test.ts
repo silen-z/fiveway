@@ -1,11 +1,12 @@
-/** @vitest-environment jsdom */
+// @vitest-environment jsdom
+
 import { test, expect } from "vitest";
 
-// imported from index files otherwise vitest errors on:
-// TypeError: defineMetadata is not a function
-import { defaultHandler, verticalHandler, handleAction } from "@fiveway/core";
+// import first to avoid circular dependency errors
+import { createTreeFromSpec } from "../test/treeSpec.ts";
+
+import { verticalHandler, defaultHandler, handleAction } from "@fiveway/core";
 import { defaultEventMapping } from "@fiveway/core/dom";
-import { createTreeFromSpec } from "./test/tree.ts";
 
 test("defaultKeyMapping", async () => {
   expect(defaultEventMapping(new MouseEvent("mouseover"))).toBeNull();
@@ -27,9 +28,7 @@ test("defaultKeyMapping", async () => {
 
   expect(tree.focusedId).toBe(item1.id);
 
-  const action = defaultEventMapping(
-    new KeyboardEvent("keydown", { key: "ArrowDown" }),
-  );
+  const action = defaultEventMapping(new KeyboardEvent("keydown", { key: "ArrowDown" }));
   expect(action).not.toBeNull();
   handleAction(tree, action!);
   expect(tree.focusedId).toBe(item2.id);
