@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
-import { GridItem, containerHandler, gridItemHandler, type NodeId } from "@fiveway/core";
+import { type GridPos, containerHandler, gridItemHandler, type NodeId } from "@fiveway/core";
 import { useNavigationNode } from "@fiveway/react";
 import css from "./ExampleBox.module.css";
 
 type ExampleBoxProps = {
   navId: NodeId;
-  gridPos: GridItem;
+  gridPos: GridPos;
   label: string;
   description: string;
   children: ReactNode;

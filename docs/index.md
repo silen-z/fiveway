@@ -29,8 +29,6 @@ features:
   - title: "🔌 Extensible"
     details: "Fully customize behavior via advanced middleware-like handler system"
 
-  - title:  "🌈 Framework agnostic"
+  - title: "🌈 Framework agnostic"
     details: "Available for React and SolidJS (more coming in the future)"
 ---
-
-

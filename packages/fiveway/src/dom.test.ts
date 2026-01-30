@@ -1,4 +1,4 @@
-// @vitest-environment jsdom
+// @vitest-environment happy-dom
 
 import { test, expect } from "vitest";
 
@@ -15,14 +15,8 @@ test("defaultKeyMapping", async () => {
     id: "container",
     handler: verticalHandler,
     children: [
-      {
-        id: "item1",
-        handler: defaultHandler,
-      },
-      {
-        id: "item2",
-        handler: defaultHandler,
-      },
+      { id: "item1", handler: defaultHandler },
+      { id: "item2", handler: defaultHandler },
     ],
   });
 

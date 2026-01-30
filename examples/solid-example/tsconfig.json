@@ -13,8 +13,5 @@
     "types": ["vite/client"]
   },
   "include": ["./src/**/*"],
-  "references": [
-    { "path": "../../packages/fiveway-solid" },
-    { "path": "../../packages/fiveway" }
-  ]
+  "references": [{ "path": "../../packages/fiveway-solid" }, { "path": "../../packages/fiveway" }]
 }

@@ -12,8 +12,5 @@
     "types": ["vite/client"]
   },
   "include": ["./src/**/*"],
-  "references": [
-    { "path": "../../packages/fiveway-react" },
-    { "path": "../../packages/fiveway" }
-  ]
+  "references": [{ "path": "../../packages/fiveway-react" }, { "path": "../../packages/fiveway" }]
 }
