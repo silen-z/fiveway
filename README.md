@@ -4,7 +4,6 @@
 support keyboard navigation and require precise control over what is focused.
 It comes with a set of default behaviors and allows for extensive customization.
 
-
 ## Features
 
 - 🚀 **Ready to go** — Rich set of premade behaviors for common scenarios and robust defaults
@@ -34,11 +33,7 @@ function App() {
   // register keyboard listeners (by default on window)
   useActionHandler(navtree);
 
-  return (
-    <NavigationProvider tree={navtree}>
-      {/* rest of your app */}
-    </NavigationProvider>
-  );
+  return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
 }
 
 ReactDOM.createRoot(rootElement).render(<App />);

@@ -10,7 +10,7 @@
     "./dom": "./dist/dom.js"
   },
   "scripts": {
-    "build": " tsc --build --force",
+    "build": "rimraf ./dist && tsc --build --force",
     "build:watch": "tsc --build --watch",
     "test": "vitest"
   },

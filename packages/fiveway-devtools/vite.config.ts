@@ -17,5 +17,12 @@ export default defineConfig({
     },
   },
 
-  plugins: [solid({ hot: false }), cssInjectedByJsPlugin(), dts({ rollupTypes: true }), analyzer()],
+  plugins: [
+    solid({ hot: false }),
+    cssInjectedByJsPlugin(),
+    dts({ rollupTypes: true }),
+    analyzer({
+      analyzerMode: "static",
+    }),
+  ],
 });
