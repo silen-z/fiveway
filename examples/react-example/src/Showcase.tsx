@@ -6,7 +6,7 @@ import {
   initialHandler,
   itemHandler,
 } from "@fiveway/core";
-import { NodeElement } from "@fiveway/core/dom";
+import { elementHandler } from "@fiveway/core/dom";
 import { useNavigationContext, useNavigationNode, useOnFocus } from "@fiveway/react";
 import { NavItem } from "./NavItem.tsx";
 import { ExampleBox } from "./ExampleBox.tsx";
@@ -27,7 +27,7 @@ export function Showcase() {
     if (id === null) {
       return;
     }
-    const el = NodeElement.query(tree, id);
+    const el = elementHandler.query(tree, id);
     if (el != null) {
       el.scrollIntoView({ block: "center", behavior: "smooth" });
     }

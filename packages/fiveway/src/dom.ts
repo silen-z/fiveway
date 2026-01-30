@@ -12,7 +12,7 @@ const eventKeyToAction: Record<string, NavigationAction> = {
 };
 
 export function defaultEventMapping(e: Event): NavigationAction | null {
-  if (e instanceof KeyboardEvent) {
+  if ("key" in e && typeof e.key === "string") {
     return eventKeyToAction[e.key] ?? null;
   }
 

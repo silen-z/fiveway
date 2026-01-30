@@ -4,16 +4,15 @@ TypeScript library for keyboard navigation.
 
 ### Features
 
- - **configurable** - pick focus handler for your specific use-case, attach callbacks, enable/disable nodes, specify order and capture focus inside specific nodes
+- **configurable** - pick focus handler for your specific use-case, attach callbacks, enable/disable nodes, specify order and capture focus inside specific nodes
 
- - **extensible** - handlers are designed to be further extended and chained together via sofisticated middleware system
+- **extensible** - handlers are designed to be further extended and chained together via sofisticated middleware system
 
- - **framework agnostic** - seamlesly and consistently usable in any framework and even works across different ones at the same time 
+- **framework agnostic** - seamlesly and consistently usable in any framework and even works across different ones at the same time
 
- - **robust** - consistent with predictable defaults, tries its hardest to not lose focus, works with framework lifecycles and hot-module-reloading
+- **robust** - consistent with predictable defaults, tries its hardest to not lose focus, works with framework lifecycles and hot-module-reloading
 
- - **performance** - performant while not sacrificing functionality and maintainability
-
+- **performance** - performant while not sacrificing functionality and maintainability
 
 ## @fiveway/react
 

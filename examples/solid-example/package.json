@@ -1,7 +1,7 @@
 {
   "name": "@fiveway/solid-example",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

@@ -32,11 +32,7 @@ function App() {
   // register keyboard listeners (by default on window)
   useActionHandler(navtree);
 
-  return (
-    <NavigationProvider tree={navtree}>
-      {/* rest of your app */}
-    </NavigationProvider>
-  );
+  return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
 }
 
 ReactDOM.createRoot(rootElement).render(<App />);
