@@ -130,11 +130,15 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
 }
 
 export type NodeProps = NodeOptions & {
-  children?: JSX.Element;
+  children?: JSX.Element | ((node: NodeHandle) => JSX.Element);
 };
 
 export function NavigationNode(props: NodeProps) {
   const node = createNavigationNode(props);
 
-  return <node.Context>{props.children}</node.Context>;
+  return (
+    <node.Context>
+      {typeof props.children === "function" ? props.children(node) : props.children}
+    </node.Context>
+  );
 }
