@@ -16,7 +16,7 @@
     "@fiveway/core": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^19.2.10",
+    "@types/react": "^19.2.14",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {

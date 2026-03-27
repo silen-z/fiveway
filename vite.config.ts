@@ -12,6 +12,10 @@ export default defineConfig({
           "@fiveway/devtools#build",
         ],
       },
+      dev: {
+        command:
+          "pnpm run --parallel --filter @fiveway/core --filter @fiveway/react --filter @fiveway/solid dev",
+      },
       "example:react": {
         command: "vp run @fiveway/react-example#dev",
         dependsOn: ["@fiveway/core#build", "@fiveway/react#build", "@fiveway/devtools#build"],

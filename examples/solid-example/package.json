@@ -11,13 +11,13 @@
     "@fiveway/core": "workspace:^",
     "@fiveway/devtools": "workspace:^",
     "@fiveway/solid": "workspace:^",
-    "solid-js": "^1.8.11"
+    "solid-js": "^1.9.12"
   },
   "devDependencies": {
-    "solid-devtools": "^0.29.2",
-    "typescript": "^5.4.3",
-    "vite": "catalog:",
-    "vite-plugin-solid": "^2.8.2",
+    "solid-devtools": "^0.34.5",
+    "typescript": "6.0.2",
+    "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.14",
+    "vite-plugin-solid": "^2.11.11",
     "vite-plus": "catalog:"
   }
 }
