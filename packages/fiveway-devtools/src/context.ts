@@ -1,5 +1,5 @@
-import { createContext, useContext } from "solid-js";
 import type { NodeId, NavigationTree } from "@fiveway/core";
+import { createContext, useContext } from "solid-js";
 
 export type DevtoolsAction =
   | { type: "openPanel" }

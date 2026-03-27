@@ -3,19 +3,19 @@
   "version": "1.0.0-beta.1",
   "repository": "github:silen-z/fiveway",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": "./dist/index.js",
-    "./dom": "./dist/dom.js"
+    "./dom": "./dist/dom.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "rimraf ./dist && tsc --build --force",
-    "build:watch": "tsc --build --watch",
-    "test": "vitest"
+    "build": "vp pack",
+    "dev": "vp pack --watch"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
-    "vitest": "^4.0.14"
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   }
 }

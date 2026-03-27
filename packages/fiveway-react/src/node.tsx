@@ -1,4 +1,3 @@
-import { type ReactNode, useRef, useEffect, useCallback } from "react";
 import {
   type NodeId,
   type NavigationHandler,
@@ -9,6 +8,8 @@ import {
   removeNode,
   createNode,
 } from "@fiveway/core";
+import { type ReactNode, useRef, useEffect, useCallback } from "react";
+
 import { NavigationContext, useNavigationContext } from "./context.js";
 import { useFocus, useSelect } from "./hooks.js";
 import { useLazyIsFocused } from "./internal.js";

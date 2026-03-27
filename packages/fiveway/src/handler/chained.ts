@@ -1,7 +1,7 @@
 import type { NavigationAction } from "../action.ts";
-import type { NavigationHandler } from "./handler.ts";
-import type { NodeId } from "../tree/id.ts";
 import { defaultHandlerInfo } from "../meta/introspection.ts";
+import type { NodeId } from "../tree/id.ts";
+import type { NavigationHandler } from "./handler.ts";
 
 export type ChainedHandler = NavigationHandler & {
   chain: ChainLink | null;

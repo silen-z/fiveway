@@ -11,7 +11,7 @@ export interface NavigationActions {
   select: { kind: "select" };
   move: { kind: "move"; direction: NavigationDirection | "back" };
   focus: { kind: "focus"; direction: NavigationDirection | "initial" | null };
-  query: { kind: "query"; key: string; value: unknown | null };
+  query: { kind: "query"; key: string; value: unknown };
 }
 
 export type NavigationAction = NavigationActions[keyof NavigationActions];

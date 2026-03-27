@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useSyncExternalStore, useRef } from "react";
 import {
   type NodeId,
   type FocusOptions,
@@ -8,6 +7,8 @@ import {
   focusNode,
   scopedId,
 } from "@fiveway/core";
+import { useCallback, useEffect, useSyncExternalStore, useRef } from "react";
+
 import { useNavigationContext } from "./context.js";
 
 export function useIsFocused(nodeId: NodeId) {

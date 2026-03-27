@@ -1,5 +1,5 @@
-import { useState, useCallback, useSyncExternalStore } from "react";
 import { type NavigationTree, type NodeId, registerListener, isFocused } from "@fiveway/core";
+import { useState, useCallback, useSyncExternalStore } from "react";
 
 function noopSubscribe() {
   return () => {};

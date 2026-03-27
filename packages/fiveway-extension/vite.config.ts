@@ -1,8 +1,9 @@
-import { defineConfig } from "vite";
+import path from "node:path";
+
+import dts from "vite-plugin-dts";
 import solid from "vite-plugin-solid";
 import webExtension, { readJsonFile } from "vite-plugin-web-extension";
-import dts from "vite-plugin-dts";
-import path from "node:path";
+import { defineConfig } from "vite-plus";
 
 function generateManifest() {
   const manifest = readJsonFile("src/manifest.json");

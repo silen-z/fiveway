@@ -1,10 +1,5 @@
 {
-  "name": "@fiveway/docs",
-  "version": "1.0.0",
-  "description": "",
-  "keywords": [],
-  "license": "ISC",
-  "author": "",
+  "name": "docs",
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",
@@ -12,6 +7,6 @@
     "preview": "vitepress preview"
   },
   "devDependencies": {
-    "vitepress": "^1.3.4"
+    "vitepress": "2.0.0-alpha.17"
   }
 }

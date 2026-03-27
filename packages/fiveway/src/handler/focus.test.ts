@@ -1,4 +1,5 @@
-import { test, expect } from "vitest";
+import { test, expect } from "vite-plus/test";
+
 import { createTreeFromSpec } from "../../test/treeSpec.ts";
 import {
   focusNode,

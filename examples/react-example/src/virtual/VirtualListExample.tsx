@@ -1,10 +1,11 @@
-import { useState } from "react";
 import { verticalHandler, directChildId } from "@fiveway/core";
 import { useNavigationNode, useOnFocus } from "@fiveway/react";
+import { useState } from "react";
+
 import { NavItem } from "../NavItem.tsx";
 import { offsetWindow, mapRange } from "./virtual.ts";
 
-const items = [...new Array(21)].map((_, i) => {
+const items = Array.from({ length: 21 }, (_, i) => {
   return { id: `item-${i + 1}`, order: i, label: `Item ${i + 1}` };
 });
 

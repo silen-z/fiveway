@@ -1,9 +1,9 @@
 import type { NavigationDirection } from "../action.ts";
-import type { NavigationHandler } from "./handler.ts";
-import { type NodeId, isParent } from "../tree/id.ts";
 import { describeHandler } from "../meta/introspection.ts";
 import { type MetaHandler, metaHandler } from "../meta/metadata.ts";
+import { type NodeId, isParent } from "../tree/id.ts";
 import type { NavtreeNode } from "../tree/node.ts";
+import type { NavigationHandler } from "./handler.ts";
 
 export type FocusDirection = "front" | "back";
 
