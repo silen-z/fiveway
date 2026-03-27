@@ -27,10 +27,7 @@ export default defineConfig({
     },
   },
   lint: {
-    ignorePatterns: [
-      "packages/fiveway-extension",
-      "examples/solid-example", // TODO: fix <NavigationNode>
-    ],
+    ignorePatterns: ["packages/fiveway-extension"],
     plugins: ["unicorn", "typescript", "oxc", "import", "react", "vitest"],
     options: {
       typeAware: true,
