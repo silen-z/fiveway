@@ -2,25 +2,31 @@
   "name": "@fiveway/devtools",
   "version": "0.1.0",
   "type": "module",
-  "main": "./dist/devtools.js",
   "types": "./dist/devtools.d.ts",
+  "exports": {
+    ".": "./dist/devtools.js"
+  },
   "scripts": {
-    "build": "vite build",
-    "build:watch": "vite build --watch"
+    "build": "vp pack",
+    "dev": "vp pack --watch"
   },
   "dependencies": {
-    "@fiveway/core": "workspace:*",
-    "clsx": "^2.1.1",
-    "lucide-solid": "0.563.0",
-    "solid-js": "^1.9.11"
+    "@fiveway/core": "workspace:*"
   },
   "devDependencies": {
+    "clsx": "^2.1.1",
+    "lucide-solid": "0.563.0",
+    "solid-js": "^1.9.11",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1",
-    "vite-bundle-analyzer": "^1.3.2",
-    "vite-plugin-css-injected-by-js": "^3.5.2",
-    "vite-plugin-dts": "^4.5.4",
-    "vite-plugin-libcss": "^1.1.2",
-    "vite-plugin-solid": "^2.11.10"
+    "vite": "catalog:",
+    "vite-plugin-solid": "^2.11.10",
+    "vite-plus": "catalog:"
+  },
+  "inlinedDependencies": {
+    "clsx": "2.1.1",
+    "lucide-solid": "0.563.0",
+    "seroval": "1.5.0",
+    "seroval-plugins": "1.5.0",
+    "solid-js": "1.9.11"
   }
 }

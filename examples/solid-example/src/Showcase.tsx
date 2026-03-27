@@ -1,4 +1,3 @@
-import { createSignal, type JSX } from "solid-js";
 import {
   gridHandler,
   horizontalHandler,
@@ -11,6 +10,8 @@ import {
   itemHandler,
 } from "@fiveway/core";
 import { NavigationNode, createElementHandler, createNavigationNode } from "@fiveway/solid";
+import { createSignal, type JSX } from "solid-js";
+
 import css from "./Showcase.module.css";
 
 export function Showcase() {

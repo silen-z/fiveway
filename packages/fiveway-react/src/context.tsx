@@ -1,5 +1,5 @@
-import { createContext, useContext, type PropsWithChildren } from "react";
 import { type NavigationTree, type NodeId } from "@fiveway/core";
+import { createContext, useContext, type PropsWithChildren } from "react";
 
 export type NavigationContext = {
   tree: NavigationTree;

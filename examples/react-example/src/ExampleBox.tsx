@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
 import { type GridPos, containerHandler, gridItemHandler, type NodeId } from "@fiveway/core";
 import { useNavigationNode } from "@fiveway/react";
+import type { ReactNode } from "react";
+
 import css from "./ExampleBox.module.css";
 
 type ExampleBoxProps = {

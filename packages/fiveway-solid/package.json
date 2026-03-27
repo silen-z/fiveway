@@ -2,11 +2,14 @@
   "name": "@fiveway/solid",
   "version": "1.0.0-beta.1",
   "type": "module",
-  "main": "./dist/index.jsx",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
   "scripts": {
-    "build": "rimraf ./dist && tsc --build --force",
-    "build:watch": "tsc --build --watch"
+    "build": "vp pack",
+    "dev": "vp pack --watch"
   },
   "dependencies": {
     "@fiveway/core": "workspace:*"

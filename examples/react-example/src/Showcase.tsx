@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   captureHandler,
   gridHandler,
@@ -8,12 +7,15 @@ import {
 } from "@fiveway/core";
 import { elementHandler } from "@fiveway/core/dom";
 import { useNavigationContext, useNavigationNode, useOnFocus } from "@fiveway/react";
-import { NavItem } from "./NavItem.tsx";
+import { useEffect } from "react";
+
 import { ExampleBox } from "./ExampleBox.tsx";
 import { ListExample } from "./ListExample.tsx";
+import { NavItem } from "./NavItem.tsx";
+import { SpatialExample } from "./SpatialExample.tsx";
 import { VirtualGridExample } from "./virtual/VirtualGridExample.tsx";
 import { VirtualListExample } from "./virtual/VirtualListExample.tsx";
-import { SpatialExample } from "./SpatialExample.tsx";
+
 import css from "./Showcase.module.css";
 
 export function Showcase() {

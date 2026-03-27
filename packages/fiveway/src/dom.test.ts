@@ -1,12 +1,11 @@
 // @vitest-environment happy-dom
 
-import { test, expect } from "vitest";
+import { test, expect } from "vite-plus/test";
 
 // import first to avoid circular dependency errors
 import { createTreeFromSpec } from "../test/treeSpec.ts";
-
-import { verticalHandler, defaultHandler, handleAction } from "./index.ts";
 import { defaultEventMapping } from "./dom.ts";
+import { verticalHandler, defaultHandler, handleAction } from "./index.ts";
 
 test("defaultKeyMapping", async () => {
   expect(defaultEventMapping(new MouseEvent("mouseover"))).toBeNull();

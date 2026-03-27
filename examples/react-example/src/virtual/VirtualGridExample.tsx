@@ -1,11 +1,13 @@
-import { type CSSProperties, useState } from "react";
 import { directChildId, gridHandler, gridItemHandler, itemHandler } from "@fiveway/core";
 import { useNavigationNode, useOnFocus } from "@fiveway/react";
-import css from "./VirtualGridExample.module.css";
+import { type CSSProperties, useState } from "react";
+
 import { NavItem } from "../NavItem.tsx";
 import { offsetWindow, mapRange } from "./virtual.ts";
 
-const items = [...new Array(42)].map((_, i) => {
+import css from "./VirtualGridExample.module.css";
+
+const items = Array.from({ length: 42 }, (_, i) => {
   return { id: `item-${i + 1}`, order: i, label: `Item ${i + 1}` };
 });
 

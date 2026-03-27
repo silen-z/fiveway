@@ -1,6 +1,3 @@
-import { createEffect, createMemo, createSignal, For, onCleanup, Show, useContext } from "solid-js";
-import { createStore } from "solid-js/store";
-import { Dynamic, render } from "solid-js/web";
 import {
   type NavtreeNode,
   type NavigationTree,
@@ -8,9 +5,12 @@ import {
   isParent,
   registerListener,
 } from "@fiveway/core";
-import * as Icon from "lucide-solid";
 import { clsx } from "clsx";
-import css from "./devtools.module.css";
+import * as Icon from "lucide-solid";
+import { createEffect, createMemo, createSignal, For, onCleanup, Show, useContext } from "solid-js";
+import { createStore } from "solid-js/store";
+import { Dynamic, render } from "solid-js/web";
+
 import {
   DevtoolsContext,
   useDevtoolContext,
@@ -18,6 +18,8 @@ import {
   type DevtoolsState,
 } from "./context.js";
 import { NodeDetail } from "./detail.jsx";
+
+import css from "./devtools.module.css";
 
 export function enableDevtools(tree: NavigationTree) {
   const devtoolElement =

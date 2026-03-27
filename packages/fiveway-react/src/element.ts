@@ -1,4 +1,3 @@
-import { useRef, useMemo, useEffect } from "react";
 import {
   type NavigationTree,
   type NavigationAction,
@@ -10,6 +9,7 @@ import {
   type FocusChangeEvent,
 } from "@fiveway/core";
 import { defaultEventMapping, elementHandler } from "@fiveway/core/dom";
+import { useRef, useMemo, useEffect } from "react";
 
 export type ElementHandler = ChainedHandler & {
   register: (e: HTMLElement | null) => void;

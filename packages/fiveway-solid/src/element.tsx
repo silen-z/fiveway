@@ -1,4 +1,3 @@
-import { createEffect, createSignal, onCleanup } from "solid-js";
 import {
   chainedHandler,
   handleAction,
@@ -9,6 +8,7 @@ import {
   type NavigationTree,
 } from "@fiveway/core";
 import { defaultEventMapping, elementHandler } from "@fiveway/core/dom";
+import { createEffect, createSignal, onCleanup } from "solid-js";
 
 export type ElementHandler = ChainedHandler & {
   register: (e: HTMLElement | null) => void;

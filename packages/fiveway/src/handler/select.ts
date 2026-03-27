@@ -1,7 +1,7 @@
-import { type NavigationHandler, runHandler } from "./handler.ts";
 import { describeHandler } from "../meta/introspection.ts";
 import type { NodeId } from "../tree/id.ts";
 import { type NavigationTree, focusNode } from "../tree/tree.ts";
+import { type NavigationHandler, runHandler } from "./handler.ts";
 
 /**
  * @category Handler

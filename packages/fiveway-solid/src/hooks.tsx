@@ -1,4 +1,3 @@
-import { type Accessor, createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 import {
   type NodeId,
   type FocusOptions,
@@ -8,6 +7,8 @@ import {
   isFocused,
   registerListener,
 } from "@fiveway/core";
+import { type Accessor, createEffect, createMemo, createSignal, onCleanup } from "solid-js";
+
 import { useNavigationContext } from "./context.jsx";
 
 export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {

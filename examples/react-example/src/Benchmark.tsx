@@ -1,7 +1,7 @@
 import { verticalHandler } from "@fiveway/core";
 import { NavigationNode, useNavigationNode } from "@fiveway/react";
 
-const items = [...new Array(10)].map((_, i) => {
+const items = Array.from({ length: 10 }, (_, i) => {
   return { id: `item-${i + 1}`, order: i, label: `Item ${i + 1}` };
 });
 
@@ -34,7 +34,7 @@ export function Items(props: { id: string; order: number; depth: number }) {
     <div>
       <nav.Context>
         {items.map((item) => (
-          <Items id={item.id} order={item.order} depth={props.depth - 1} />
+          <Items key={item.id} id={item.id} order={item.order} depth={props.depth - 1} />
         ))}
       </nav.Context>
     </div>

@@ -1,4 +1,5 @@
-import { test, expect, vi } from "vitest";
+import { test, expect, vi } from "vite-plus/test";
+
 import {
   createNavigationTree,
   insertNode,

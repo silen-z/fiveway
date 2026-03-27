@@ -1,8 +1,8 @@
-import { createGlobalId, type NodeId } from "./id.ts";
-import type { NavigationTree } from "./tree.ts";
 import type { NavigationHandler } from "../handler/handler.ts";
 import { defaultHandler } from "../handler/handler.ts";
 import { binarySearch } from "../lib/array.ts";
+import { createGlobalId, type NodeId } from "./id.ts";
+import type { NavigationTree } from "./tree.ts";
 
 export type CreatedNavtreeNode = {
   tree: NavigationTree | null;

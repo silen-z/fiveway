@@ -1,10 +1,10 @@
-import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
-import type { CreatedNavtreeNode, NavtreeNode } from "./node.ts";
-import { type ListenerTree, type NavtreeEvent, callListeners } from "./events.ts";
 import { type NavigationAction, type NavigationDirection } from "../action.ts";
 import { focusHandler } from "../handler/focus.ts";
-import { binarySearch } from "../lib/array.ts";
 import { runHandler } from "../handler/handler.ts";
+import { binarySearch } from "../lib/array.ts";
+import { type ListenerTree, type NavtreeEvent, callListeners } from "./events.ts";
+import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
+import type { CreatedNavtreeNode, NavtreeNode } from "./node.ts";
 
 export type NavigationTree = {
   nodes: Map<NodeId, NavtreeNode>;

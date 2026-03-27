@@ -1,11 +1,11 @@
+import type { NavigationDirection } from "../action.ts";
+import { describeHandler } from "../meta/introspection.ts";
+import { type MetaHandler, metaHandler } from "../meta/metadata.ts";
 import { type NodeId, directChildId } from "../tree/id.ts";
 import { traverseNodes } from "../tree/tree.ts";
-import type { NavigationDirection } from "../action.ts";
-import { type NavigationHandler, parentHandler } from "./handler.ts";
-import { focusHandler } from "./focus.ts";
-import { type MetaHandler, metaHandler } from "../meta/metadata.ts";
 import { type ChainedHandler, chainedHandler } from "./chained.ts";
-import { describeHandler } from "../meta/introspection.ts";
+import { focusHandler } from "./focus.ts";
+import { type NavigationHandler, parentHandler } from "./handler.ts";
 
 export type GridPos = {
   row: number;
