@@ -1,8 +1,9 @@
+import { createNavigationTree } from "@fiveway/core";
+import { enableDevtools } from "@fiveway/devtools";
+import { createActionHandler, NavigationProvider } from "@fiveway/solid";
 /* @refresh reload */
 import { render } from "solid-js/web";
-import { createNavigationTree } from "@fiveway/core";
-import { createActionHandler, NavigationProvider } from "@fiveway/solid";
-import { enableDevtools } from "@fiveway/devtools";
+
 import { Showcase } from "./Showcase.tsx";
 
 const root = document.getElementById("root");

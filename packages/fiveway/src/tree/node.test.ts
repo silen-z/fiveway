@@ -1,4 +1,5 @@
-import { expect, test } from "vitest";
+import { expect, test } from "vite-plus/test";
+
 import { createTreeFromSpec } from "../../test/treeSpec.ts";
 import {
   createNavigationTree,
@@ -75,13 +76,12 @@ test("updateNode: order on disconnected", () => {
 test("updateNode: order when parent is not connected", () => {
   const tree = createNavigationTree();
 
-  const node = insertNode(
-    tree,
-    createNode({
-      id: "test",
-      parent: "#/parent",
-    }),
-  );
+  const node = createNode({
+    id: "test",
+    parent: "#/parent",
+  });
+
+  insertNode(tree, node);
 
   updateNode(node, { order: 1 });
 

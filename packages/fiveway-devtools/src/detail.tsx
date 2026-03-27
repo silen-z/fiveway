@@ -1,9 +1,11 @@
-import { createMemo, Show, For } from "solid-js";
 import { getHandlerInfo, type HandlerInfo, type NavtreeNode } from "@fiveway/core";
-import { useDevtoolContext } from "./context.js";
 import * as Icon from "lucide-solid";
-import css from "./devtools.module.css";
+import { createMemo, Show, For } from "solid-js";
 import { Dynamic } from "solid-js/web";
+
+import { useDevtoolContext } from "./context.js";
+
+import css from "./devtools.module.css";
 
 export function NodeDetail(props: { node: NavtreeNode; inspect: boolean }) {
   const devtools = useDevtoolContext();

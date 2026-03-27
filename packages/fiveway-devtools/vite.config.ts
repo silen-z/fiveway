@@ -1,9 +1,10 @@
-import { defineConfig } from "vite";
 import { resolve } from "path";
-import solid from "vite-plugin-solid";
+
+import { analyzer } from "vite-bundle-analyzer";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import dts from "vite-plugin-dts";
-import { analyzer } from "vite-bundle-analyzer";
+import solid from "vite-plugin-solid";
+import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   build: {

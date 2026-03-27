@@ -1,15 +1,4 @@
 import {
-  type Accessor,
-  type Component,
-  type JSX,
-  type ParentProps,
-  createEffect,
-  createMemo,
-  on,
-  onCleanup,
-  untrack,
-} from "solid-js";
-import {
   type FocusOptions,
   type NavigationHandler,
   type NodeId,
@@ -22,6 +11,18 @@ import {
   holdFocus,
   createGlobalId,
 } from "@fiveway/core";
+import {
+  type Accessor,
+  type Component,
+  type JSX,
+  type ParentProps,
+  createEffect,
+  createMemo,
+  on,
+  onCleanup,
+  untrack,
+} from "solid-js";
+
 import { useNavigationContext, NavigationContext } from "./context.jsx";
 import { useIsFocused, useOnFocus } from "./hooks.jsx";
 
@@ -94,7 +95,7 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
     onCleanup(cleanupNode);
 
     if (releaseFocus) {
-      Promise.resolve().then(releaseFocus);
+      void Promise.resolve().then(releaseFocus);
     }
   });
 

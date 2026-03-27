@@ -1,7 +1,9 @@
-import type { CSSProperties } from "react";
 import { spatialHandler, captureHandler } from "@fiveway/core";
 import { useNavigationNode } from "@fiveway/react";
+import type { CSSProperties } from "react";
+
 import { NavItem } from "./NavItem.tsx";
+
 import css from "./SpatialExample.module.css";
 
 export function SpatialExample() {

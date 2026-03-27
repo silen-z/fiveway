@@ -2,6 +2,7 @@ import { horizontalHandler, itemHandler, containerHandler } from "@fiveway/core"
 import { useNavigationNode, NavigationNode } from "@fiveway/react";
 import { useState } from "react";
 import { flushSync } from "react-dom";
+
 import css from "./Showcase.module.css";
 
 export function ConditionalShowcase() {

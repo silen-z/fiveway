@@ -1,6 +1,6 @@
-import browser from "webextension-polyfill";
-import { render } from "solid-js/web";
 import { NavigationTree } from "@fiveway/core";
+import { render } from "solid-js/web";
+import browser from "webextension-polyfill";
 
 const backgroundPageConnection = browser.runtime.connect({
   name: "panel",
@@ -12,7 +12,7 @@ function isAcceptedMessage(msg: unknown): msg is IncomingMessage {
   return msg != null && typeof msg === "object" && "type" in msg;
 }
 
-backgroundPageConnection.onMessage.addListener((message: IncomingMessage | unknown) => {
+backgroundPageConnection.onMessage.addListener((message: unknown) => {
   if (!isAcceptedMessage(message)) {
     return;
   }

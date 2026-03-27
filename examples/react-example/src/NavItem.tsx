@@ -5,6 +5,7 @@ import {
   type NodeId,
 } from "@fiveway/core";
 import { useElementHandler, useNavigationNode } from "@fiveway/react";
+
 import css from "./NavItem.module.css";
 
 type NavItemProps = {

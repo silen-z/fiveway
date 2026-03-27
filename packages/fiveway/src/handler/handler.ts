@@ -1,11 +1,11 @@
-import type { NodeId } from "../tree/id.ts";
 import type { NavigationAction } from "../action.ts";
+import { describeHandler } from "../meta/introspection.ts";
+import type { NodeId } from "../tree/id.ts";
 import type { NavtreeNode } from "../tree/node.ts";
 import type { NavigationTree } from "../tree/tree.ts";
 import { chainedHandler, type ChainedHandler } from "./chained.ts";
 import { focusHandler } from "./focus.ts";
 import { selectHandler } from "./select.ts";
-import { describeHandler } from "../meta/introspection.ts";
 
 export type HandlerNext = (id?: NodeId, action?: NavigationAction) => NodeId | null;
 

@@ -4,22 +4,15 @@
   "scripts": {
     "example:react": "pnpm --filter \"@fiveway/react-example\" run dev",
     "example:solid": "pnpm --filter \"@fiveway/solid-example\" run dev",
-    "build": "pnpm --filter \"@fiveway/core\" --filter \"@fiveway/react\" --filter \"@fiveway/solid\" --filter \"@fiveway/devtools\" run build",
-    "build:watch": "pnpm --filter \"@fiveway/core\" --filter \"@fiveway/react\" --filter \"@fiveway/solid\" --filter \"@fiveway/devtools\" --parallel run build:watch",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "check": "oxlint packages/",
-    "format": "oxfmt",
-    "format:check": "oxfmt --check",
     "docs:dev": "pnpm --filter \"@fiveway/docs\" run dev",
     "docs:build": "pnpm --filter \"@fiveway/docs\" run build"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.18",
     "happy-dom": "^20.4.0",
-    "oxfmt": "^0.27.0",
-    "oxlint": "^1.42.0",
     "rimraf": "^6.1.2",
-    "vitest": "^4.0.18"
-  }
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
+  },
+  "packageManager": "pnpm@10.33.0"
 }
