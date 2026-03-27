@@ -1,9 +1,9 @@
-name: checks
+name: qa
 
 on: [pull_request]
 
 jobs:
-  check-all:
+  qa:
     runs-on: ubuntu-latest
 
     permissions:
