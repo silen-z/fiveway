@@ -4,7 +4,6 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev",
-    "build": "tsc && vp build",
     "preview": "vp preview"
   },
   "dependencies": {
