@@ -1,5 +1,5 @@
-import { type NavigationTree, type NodeId } from "@fiveway/core";
-import { createContext, useContext, type PropsWithChildren } from "react";
+import { type NavigationTree, type NodeId, inspector } from "@fiveway/core";
+import { type PropsWithChildren, createContext, useContext, useEffect } from "react";
 
 export type NavigationContext = {
   tree: NavigationTree;
@@ -13,6 +13,13 @@ export type NavigationProviderProps = PropsWithChildren<{
 }>;
 
 export function NavigationProvider(props: NavigationProviderProps) {
+  useEffect(() => {
+    inspector.emit("tree-update", { tree: props.tree });
+    return () => {
+      inspector.emit("tree-unmount", { tree: props.tree });
+    };
+  }, [props.tree]);
+
   return (
     <NavigationContext.Provider value={{ tree: props.tree, parentNode: "#" }}>
       {props.children}

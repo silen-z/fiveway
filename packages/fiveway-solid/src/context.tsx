@@ -1,5 +1,5 @@
-import { type NavigationAction, type NavigationTree, type NodeId } from "@fiveway/core";
-import { createContext, useContext, type JSX } from "solid-js";
+import { inspector, type NavigationAction, type NavigationTree, type NodeId } from "@fiveway/core";
+import { createContext, createEffect, useContext, type JSX } from "solid-js";
 
 export type NavigationContext = {
   tree: NavigationTree;
@@ -18,6 +18,13 @@ export function NavigationProvider(props: NavigationProviderProps) {
   // reactive tree prop is not supported
   // eslint-disable-next-line solid/reactivity
   const tree = props.tree;
+
+  createEffect(() => {
+    inspector.emit("tree-update", { tree: props.tree });
+    return () => {
+      inspector.emit("tree-unmount", { tree: props.tree });
+    };
+  });
 
   return (
     <NavigationContext.Provider value={{ tree, parentNode: () => "#" }}>

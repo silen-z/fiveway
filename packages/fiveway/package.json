@@ -13,6 +13,9 @@
     "build": "vp pack",
     "dev": "vp pack --watch"
   },
+  "dependencies": {
+    "@tanstack/devtools-event-client": "^0.4.3"
+  },
   "devDependencies": {
     "typescript": "^5.9.3",
     "vite-plus": "catalog:",

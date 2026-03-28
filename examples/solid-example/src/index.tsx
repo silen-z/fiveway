@@ -1,32 +1,27 @@
 import { createNavigationTree } from "@fiveway/core";
-import { enableDevtools } from "@fiveway/devtools";
+import { fivewayDevtoolsPlugin } from "@fiveway/devtools/solid";
 import { createActionHandler, NavigationProvider } from "@fiveway/solid";
+import { TanStackDevtools } from "@tanstack/solid-devtools";
 /* @refresh reload */
 import { render } from "solid-js/web";
 
 import { Showcase } from "./Showcase.tsx";
 
-const root = document.getElementById("root");
-
-if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
-  throw new Error("Root element not found");
-}
-
 const fiveway = createNavigationTree();
-
-Object.defineProperties(window, {
-  FIVEWAY: { configurable: true, value: fiveway },
-});
-
-enableDevtools(fiveway);
 
 function App() {
   createActionHandler(fiveway);
   return (
     <NavigationProvider tree={fiveway}>
       <Showcase />
+      <TanStackDevtools plugins={[fivewayDevtoolsPlugin()]} />
     </NavigationProvider>
   );
 }
 
+const root = document.getElementById("root");
+
+if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
+  throw new Error("Root element not found");
+}
 render(App, root!);

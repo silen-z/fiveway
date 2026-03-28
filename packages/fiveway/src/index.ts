@@ -84,3 +84,5 @@ export {
   getHandlerInfo,
   defaultHandlerInfo,
 } from "./meta/introspection.ts";
+
+export { inspector } from "./inspector.js";

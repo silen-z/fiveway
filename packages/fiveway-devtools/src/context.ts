@@ -1,14 +1,9 @@
 import type { NodeId, NavigationTree } from "@fiveway/core";
 import { createContext, useContext } from "solid-js";
 
-export type DevtoolsAction =
-  | { type: "openPanel" }
-  | { type: "closePanel" }
-  | { type: "toggleExpand" }
-  | { type: "inspectNode"; id: NodeId | null };
+export type DevtoolsAction = { type: "toggleExpand" } | { type: "inspectNode"; id: NodeId | null };
 
 export type DevtoolsState = {
-  panelOpen: boolean;
   expandAll: boolean;
   inspectedNode: NodeId | null;
 };

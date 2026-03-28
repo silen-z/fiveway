@@ -12,6 +12,18 @@ import {
   selectNode,
 } from "../index.ts";
 
+test("createNavigationTree: default label is short hex id", () => {
+  vi.spyOn(Math, "random").mockReturnValue(0);
+  const tree = createNavigationTree();
+  expect(tree.label).toBe("0000000");
+  vi.mocked(Math.random).mockRestore();
+});
+
+test("createNavigationTree: explicit label", () => {
+  const tree = createNavigationTree({ label: "my-app" });
+  expect(tree.label).toBe("my-app");
+});
+
 test("insertNode", () => {
   const tree = createNavigationTree();
   const node = createNode({

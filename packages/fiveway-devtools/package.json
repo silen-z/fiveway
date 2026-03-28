@@ -4,14 +4,18 @@
   "type": "module",
   "types": "./dist/devtools.d.ts",
   "exports": {
-    ".": "./dist/devtools.js"
+    "./react": "./dist/react.js",
+    "./solid": "./dist/solid.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build": "vp pack",
     "dev": "vp pack --watch"
   },
   "dependencies": {
-    "@fiveway/core": "workspace:*"
+    "@fiveway/core": "workspace:*",
+    "@tanstack/devtools-ui": "^0.5.1",
+    "@tanstack/devtools-utils": "^0.4.0"
   },
   "devDependencies": {
     "clsx": "^2.1.1",
@@ -24,9 +28,8 @@
   },
   "inlinedDependencies": {
     "clsx": "2.1.1",
-    "lucide-solid": "0.563.0",
-    "seroval": "1.5.0",
-    "seroval-plugins": "1.5.0",
-    "solid-js": "1.9.11"
+    "csstype": "3.2.3",
+    "lucide-solid": "1.7.0",
+    "solid-js": "1.9.12"
   }
 }

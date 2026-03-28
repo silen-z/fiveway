@@ -11,6 +11,7 @@
     "@fiveway/core": "workspace:^",
     "@fiveway/devtools": "workspace:^",
     "@fiveway/solid": "workspace:^",
+    "@tanstack/solid-devtools": "^0.8.0",
     "solid-js": "^1.9.12"
   },
   "devDependencies": {

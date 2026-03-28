@@ -1,17 +1,16 @@
 import { createNavigationTree } from "@fiveway/core";
-import { enableDevtools } from "@fiveway/devtools";
+import { fivewayDevtoolsPlugin } from "@fiveway/devtools/react";
 import { NavigationProvider, useActionHandler, useSyncFocus } from "@fiveway/react";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+
+import "./styles.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
 import { Showcase } from "./Showcase.tsx";
-
-import "./styles.css";
 // import { Items } from "./Benchmark.tsx";
 
 const navigationTree = createNavigationTree();
-
-enableDevtools(navigationTree);
 
 Object.defineProperties(window, {
   FIVEWAY: { configurable: true, value: navigationTree },
@@ -30,5 +29,6 @@ function App() {
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[fivewayDevtoolsPlugin()]} />
   </React.StrictMode>,
 );

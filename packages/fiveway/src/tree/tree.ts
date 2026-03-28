@@ -1,12 +1,14 @@
 import { type NavigationAction, type NavigationDirection } from "../action.ts";
 import { focusHandler } from "../handler/focus.ts";
 import { runHandler } from "../handler/handler.ts";
+import { inspector } from "../inspector.ts";
 import { binarySearch } from "../lib/array.ts";
 import { type ListenerTree, type NavtreeEvent, callListeners } from "./events.ts";
 import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
 import type { CreatedNavtreeNode, NavtreeNode } from "./node.ts";
 
 export type NavigationTree = {
+  label: string;
   nodes: Map<NodeId, NavtreeNode>;
   focusedId: NodeId;
   orphans: Map<NodeId, NodeId[]>;
@@ -14,8 +16,9 @@ export type NavigationTree = {
   focusLock: "released" | "held.clean" | "held.dirty";
 };
 
-export function createNavigationTree(): NavigationTree {
+export function createNavigationTree(options: { label?: string } = {}): NavigationTree {
   const tree: NavigationTree = {
+    label: options.label ?? randomTreeLabel(),
     focusedId: "#",
     nodes: new Map(),
     orphans: new Map(),
@@ -70,9 +73,12 @@ function connectNode(tree: NavigationTree, parentNode: NavtreeNode, node: Navtre
     operation: "insert",
     id: node.id,
   };
+
   idsToRoot(node.id, (id) => {
     callListeners(tree, id, event);
   });
+
+  inspector.emit("tree-update", { tree, event });
 
   if (isParent(tree.focusedId, node.id)) {
     updateFocus(tree);
@@ -152,9 +158,12 @@ function disconnectNode(tree: NavigationTree, nodeId: NodeId) {
     operation: "removal",
     id: node.id,
   };
+
   idsToRoot(node.parent, (id) => {
     callListeners(tree, id, event);
   });
+
+  inspector.emit("tree-update", { tree, event });
 }
 
 function updateFocus(tree: NavigationTree) {
@@ -236,6 +245,8 @@ export function focusNode(
   convergingPaths(lastFocused, tree.focusedId, (id) => {
     callListeners(tree, id, event);
   });
+
+  inspector.emit("tree-update", { tree, event });
 
   return true;
 }
@@ -336,4 +347,11 @@ function clearOrphan(tree: NavigationTree, parent: NodeId, child: NodeId) {
       orphans.splice(index, 1);
     }
   }
+}
+
+/** 7 lowercase hex chars, similar to `git rev-parse --short` */
+function randomTreeLabel(): string {
+  return Math.floor(Math.random() * 0x1_00_00_00_0)
+    .toString(16)
+    .padStart(7, "0");
 }

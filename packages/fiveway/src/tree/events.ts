@@ -12,6 +12,7 @@ export type FocusChangeEvent = {
   focused: NodeId;
   previous: NodeId;
 };
+
 export type StructureChangeEvent = {
   type: "structurechange";
   operation: "insert" | "removal";
