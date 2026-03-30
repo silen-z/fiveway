@@ -21,7 +21,7 @@ test("selectHandler", async () => {
   });
   insertNode(tree, node);
 
-  expect(tree.focusedId).toBe(node.id);
+  expect(tree.focus).toBe(node.id);
 
   handleAction(tree, { kind: "select" });
 

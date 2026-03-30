@@ -2,13 +2,13 @@ import { test, expect } from "vite-plus/test";
 
 import {
   type NavigationHandler,
-  runHandler,
   createNode,
   createNavigationTree,
   insertNode,
   chainedHandler,
   defaultHandler,
   metaHandler,
+  handleAction,
 } from "../index.ts";
 
 test("chainedHandler", () => {
@@ -34,16 +34,11 @@ test("chainedHandler", () => {
     .prepend(subChain)
     .prepend(logHandler("1"));
 
-  const node = createNode({ id: "node1", parent: "#", handler: handler });
+  const node = createNode({ id: "node1", parent: "#", handler: defaultHandler.prepend(handler) });
   insertNode(tree, node);
 
-  const result = runHandler(tree, node.id, {
-    kind: "query",
-    key: "log",
-    value: null,
-  });
+  handleAction(tree, { kind: "query", key: "log", value: null });
 
-  expect(result).toBeNull();
   expect(logs).toEqual(["#/node1:1", "#/node1:2", "#/node1:3", "#/node1:4", "#/node1:5"]);
 });
 

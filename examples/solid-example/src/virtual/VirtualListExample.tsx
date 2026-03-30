@@ -1,6 +1,6 @@
 import {
   createNavigationNode,
-  directChildId,
+  childLocalId,
   useOnFocusChange,
   verticalHandler,
 } from "@fiveway/solid";
@@ -42,7 +42,7 @@ export function VirtualListExample() {
       return;
     }
 
-    const childId = directChildId(nav(), id)?.substring(nav().length + 1);
+    const childId = childLocalId(nav(), id)?.substring(nav().length + 1);
     if (childId === null) {
       return;
     }

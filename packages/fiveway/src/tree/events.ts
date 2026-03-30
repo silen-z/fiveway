@@ -25,8 +25,6 @@ export type NavtreeListener = {
   fn: (event: NavtreeEvent) => void;
 };
 
-export type ListenerTree = Map<NodeId, NavtreeListener[]>;
-
 export function registerListener<T extends keyof EventMap>(
   tree: NavigationTree,
   id: NodeId,

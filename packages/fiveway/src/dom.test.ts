@@ -19,10 +19,10 @@ test("defaultKeyMapping", async () => {
     ],
   });
 
-  expect(tree.focusedId).toBe(item1.id);
+  expect(tree.focus).toBe(item1.id);
 
   const action = defaultEventMapping(new KeyboardEvent("keydown", { key: "ArrowDown" }));
   expect(action).not.toBeNull();
   handleAction(tree, action!);
-  expect(tree.focusedId).toBe(item2.id);
+  expect(tree.focus).toBe(item2.id);
 });

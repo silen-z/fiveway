@@ -5,11 +5,10 @@ import {
   insertNode,
   createNode,
   focusNode,
-  scopedId,
+  joinId,
   selectNode,
   updateNode,
   holdFocus,
-  createGlobalId,
 } from "@fiveway/core";
 import {
   type Accessor,
@@ -47,7 +46,7 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
 
   const localId = () => (typeof options.id === "function" ? options.id() : options.id);
 
-  const globalId = () => createGlobalId(parent(), localId());
+  const id = () => joinId(parent(), localId());
 
   const parent = () => {
     const fromContext = parentNode();
@@ -100,18 +99,18 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
   });
 
   const focus = (nodeId?: NodeId, options?: FocusOptions) => {
-    const id = nodeId != null ? scopedId(node().id, nodeId) : node().id;
+    const id = nodeId != null ? joinId(node().id, nodeId) : node().id;
     return focusNode(tree, id, options);
   };
 
   const select = (nodeId?: NodeId) => {
-    const id = nodeId != null ? scopedId(node().id, nodeId) : node().id;
+    const id = nodeId != null ? joinId(node().id, nodeId) : node().id;
     selectNode(tree, id);
   };
 
   // workaround for: https://github.com/solidjs/solid/issues/2352
   // reding from node() was returning undefined
-  const handle = () => globalId();
+  const handle = () => id();
 
   handle.focus = focus;
   handle.select = select;

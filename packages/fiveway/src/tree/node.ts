@@ -1,7 +1,7 @@
 import type { NavigationHandler } from "../handler/handler.ts";
 import { defaultHandler } from "../handler/handler.ts";
 import { binarySearch } from "../lib/array.ts";
-import { createGlobalId, type NodeId } from "./id.ts";
+import { joinId, type NodeId } from "./id.ts";
 import type { NavigationTree } from "./tree.ts";
 
 export type CreatedNavtreeNode = {
@@ -28,10 +28,8 @@ export type NodeConfig = {
 };
 
 export function createNode(options: NodeConfig): CreatedNavtreeNode {
-  const globalId = createGlobalId(options.parent, options.id);
-
   return {
-    id: globalId,
+    id: joinId(options.parent, options.id),
     connected: false,
     tree: null,
     parent: options.parent,

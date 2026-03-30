@@ -2,25 +2,25 @@ import { type NavigationAction, type NavigationDirection } from "../action.ts";
 import { focusHandler } from "../handler/focus.ts";
 import { runHandler } from "../handler/handler.ts";
 import { binarySearch } from "../lib/array.ts";
-import { type ListenerTree, type NavtreeEvent, callListeners } from "./events.ts";
+import { type NavtreeEvent, type NavtreeListener, callListeners } from "./events.ts";
 import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
 import type { CreatedNavtreeNode, NavtreeNode } from "./node.ts";
 
 export type NavigationTree = {
   nodes: Map<NodeId, NavtreeNode>;
-  focusedId: NodeId;
+  focus: NodeId;
   orphans: Map<NodeId, NodeId[]>;
-  listeners: ListenerTree;
-  focusLock: "released" | "held.clean" | "held.dirty";
+  listeners: Map<NodeId, NavtreeListener[]>;
+  focusLock: "free" | "locked" | "updatePending";
 };
 
 export function createNavigationTree(): NavigationTree {
   const tree: NavigationTree = {
-    focusedId: "#",
+    focus: "#",
     nodes: new Map(),
     orphans: new Map(),
     listeners: new Map(),
-    focusLock: "released",
+    focusLock: "free",
   };
 
   tree.nodes.set("#", {
@@ -74,7 +74,7 @@ function connectNode(tree: NavigationTree, parentNode: NavtreeNode, node: Navtre
     callListeners(tree, id, event);
   });
 
-  if (isParent(tree.focusedId, node.id)) {
+  if (isParent(tree.focus, node.id)) {
     updateFocus(tree);
   }
 
@@ -114,7 +114,7 @@ export function removeNode(tree: NavigationTree, node: NodeId | NavtreeNode): vo
   clearOrphan(tree, existingNode.parent!, id);
 
   if (isFocused(tree, existingNode.id)) {
-    tree.focusedId = existingNode.parent ?? "#";
+    tree.focus = existingNode.parent ?? "#";
     updateFocus(tree);
   }
 }
@@ -158,14 +158,14 @@ function disconnectNode(tree: NavigationTree, nodeId: NodeId) {
 }
 
 function updateFocus(tree: NavigationTree) {
-  if (tree.focusLock !== "released") {
-    tree.focusLock = "held.dirty";
+  if (tree.focusLock !== "free") {
+    tree.focusLock = "updatePending";
     return;
   }
 
-  const focusedNode = tree.nodes.get(tree.focusedId);
+  const focusedNode = tree.nodes.get(tree.focus);
   if (focusedNode == null || !focusedNode.connected) {
-    idsToRoot(tree.focusedId, (id) => {
+    idsToRoot(tree.focus, (id) => {
       // if we managed to focus a node we can stop searching
       if (focusNode(tree, id, { direction: "initial" })) {
         return false;
@@ -179,19 +179,19 @@ function updateFocus(tree: NavigationTree) {
 }
 
 export function holdFocus(tree: NavigationTree): (() => void) | null {
-  if (tree.focusLock !== "released") {
+  if (tree.focusLock !== "free") {
     return null;
   }
 
-  tree.focusLock = "held.clean";
+  tree.focusLock = "locked";
   return () => {
-    if (tree.focusLock === "released") {
+    if (tree.focusLock === "free") {
       throw new Error("trying to release focus lock without holding it");
     }
 
-    const shouldUpdate = tree.focusLock === "held.dirty";
-    tree.focusLock = "released";
-    if (shouldUpdate) {
+    const updatePending = tree.focusLock === "updatePending";
+    tree.focusLock = "free";
+    if (updatePending) {
       updateFocus(tree);
     }
   };
@@ -220,20 +220,20 @@ export function focusNode(
     return false;
   }
 
-  if (tree.focusedId === resolvedId) {
+  if (tree.focus === resolvedId) {
     return true;
   }
 
-  const lastFocused = tree.focusedId;
-  tree.focusedId = resolvedId;
+  const lastFocused = tree.focus;
+  tree.focus = resolvedId;
 
   const event: NavtreeEvent = {
     type: "focuschange",
-    focused: tree.focusedId,
+    focused: tree.focus,
     previous: lastFocused,
   };
 
-  convergingPaths(lastFocused, tree.focusedId, (id) => {
+  convergingPaths(lastFocused, tree.focus, (id) => {
     callListeners(tree, id, event);
   });
 
@@ -241,18 +241,18 @@ export function focusNode(
 }
 
 export function handleAction(tree: NavigationTree, action: NavigationAction): void {
-  const targetId = runHandler(tree, tree.focusedId, action);
+  const targetId = runHandler(tree, tree.focus, action);
   if (targetId !== null) {
     focusNode(tree, targetId);
   }
 }
 
 export function isFocused(tree: NavigationTree, nodeId: NodeId): boolean {
-  if (tree.focusedId === nodeId) {
+  if (tree.focus === nodeId) {
     return true;
   }
 
-  return isParent(nodeId, tree.focusedId);
+  return isParent(nodeId, tree.focus);
 }
 
 export function traverseNodes(

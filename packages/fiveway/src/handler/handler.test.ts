@@ -5,7 +5,7 @@ import {
   createNavigationTree,
   createNode,
   type NavigationHandler,
-  getHandlerInfo,
+  queryHandlerInfo,
   containerHandler,
 } from "../index.ts";
 
@@ -50,12 +50,12 @@ test("defaultHandler", () => {
   });
   insertNode(tree, item);
 
-  expect(getHandlerInfo(tree, container.id)).toEqual([
+  expect(queryHandlerInfo(tree, container.id)).toEqual([
     { name: "core:focus", skipEmpty: true, direction: "default" },
     { name: "core:parent" },
   ]);
 
-  expect(getHandlerInfo(tree, item.id)).toEqual([
+  expect(queryHandlerInfo(tree, item.id)).toEqual([
     { name: "core:focus", skipEmpty: false, direction: "default" },
     { name: "core:parent" },
   ]);

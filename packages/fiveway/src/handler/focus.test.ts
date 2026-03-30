@@ -21,7 +21,7 @@ test("focusHandler: items themselves are focusable", async () => {
     id: "item",
   });
 
-  expect(tree.focusedId).toBe(item.id);
+  expect(tree.focus).toBe(item.id);
 });
 
 test("focusHandler: skip empty containers", () => {
@@ -53,7 +53,7 @@ test("focusHandler: already inserted node keeps focus", async () => {
     }),
   );
 
-  expect(tree.focusedId).toBe(item1.id);
+  expect(tree.focus).toBe(item1.id);
 });
 
 test("initialHandler", async () => {
@@ -81,7 +81,7 @@ test("initialHandler", async () => {
 
   releaseFocus!();
 
-  expect(tree.focusedId).toBe(item2.id);
+  expect(tree.focus).toBe(item2.id);
 
   const item3 = createNode({
     id: "item3",
@@ -90,20 +90,20 @@ test("initialHandler", async () => {
   });
   insertNode(tree, item3);
 
-  expect(tree.focusedId).toBe(item2.id);
+  expect(tree.focus).toBe(item2.id);
 
   removeNode(tree, item2.id);
 
-  expect(tree.focusedId).toBe(item1.id);
+  expect(tree.focus).toBe(item1.id);
 
   handleAction(tree, { kind: "move", direction: "down" });
 
-  expect(tree.focusedId).toBe(item3.id);
+  expect(tree.focus).toBe(item3.id);
 
   insertNode(tree, item2);
 
   // initialHandler resets focus back to initial node on insert
-  expect(tree.focusedId).toBe(item3.id);
+  expect(tree.focus).toBe(item3.id);
 });
 
 test("captureHandler", async () => {
@@ -120,17 +120,17 @@ test("captureHandler", async () => {
     ],
   });
 
-  expect(tree.focusedId).toBe(item1.id);
+  expect(tree.focus).toBe(item1.id);
 
   handleAction(tree, { kind: "move", direction: "down" });
 
-  expect(tree.focusedId).toBe(item2.id);
+  expect(tree.focus).toBe(item2.id);
 
   handleAction(tree, { kind: "move", direction: "down" });
 
-  expect(tree.focusedId).toBe(item2.id);
+  expect(tree.focus).toBe(item2.id);
 
   focusNode(tree, outside.id);
 
-  expect(tree.focusedId).toBe(outside.id);
+  expect(tree.focus).toBe(outside.id);
 });

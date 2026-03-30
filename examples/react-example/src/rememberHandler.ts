@@ -1,4 +1,4 @@
-import { type NodeId, type NavigationHandler, directChildId } from "@fiveway/react";
+import { type NodeId, type NavigationHandler, childLocalId } from "@fiveway/react";
 import { useState, useMemo } from "react";
 
 export type RememberHandler = NavigationHandler & {
@@ -20,7 +20,7 @@ export function useRememberHandler() {
       }
 
       const nextId = next();
-      const idToSave = nextId !== null ? directChildId(node.id, nextId) : null;
+      const idToSave = nextId !== null ? childLocalId(node.id, nextId) : null;
       if (idToSave !== null && !(action.kind === "focus" && action.direction === "initial")) {
         setLastFocused(idToSave);
       }

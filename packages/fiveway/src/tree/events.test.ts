@@ -15,7 +15,7 @@ test("listeners", async () => {
   insertNode(tree, createNode({ id: "one", parent: "#" }));
   insertNode(tree, createNode({ id: "two", parent: "#" }));
 
-  expect(tree.focusedId).toBe("#/one");
+  expect(tree.focus).toBe("#/one");
 
   const listener1 = vi.fn();
   const cleanupListener1 = registerListener(tree, "#", "focuschange", listener1);
