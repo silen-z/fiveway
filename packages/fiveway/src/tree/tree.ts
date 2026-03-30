@@ -47,17 +47,19 @@ export function insertNode(tree: NavigationTree, node: CreatedNavtreeNode): () =
   }
 
   node.tree = tree;
-  tree.nodes.set(node.id, node as NavtreeNode);
+  const insertedNode = node as NavtreeNode;
+
+  tree.nodes.set(node.id, insertedNode);
 
   const parentNode = tree.nodes.get(node.parent);
   if (parentNode != null && parentNode.connected) {
-    connectNode(tree, parentNode, node as NavtreeNode);
+    connectNode(tree, parentNode, insertedNode);
   } else {
     markOrphan(tree, node.parent, node.id);
   }
 
   return () => {
-    removeNode(tree, node as NavtreeNode);
+    removeNode(tree, insertedNode);
   };
 }
 

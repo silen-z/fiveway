@@ -39,11 +39,6 @@ export function createNode(options: NodeConfig): CreatedNavtreeNode {
   };
 }
 
-export type ContainerConfig = NodeConfig & {
-  initial?: NodeId;
-  rememberChildren?: boolean;
-};
-
 export function updateNode(
   node: CreatedNavtreeNode,
   options: Omit<NodeConfig, "id" | "parent">,

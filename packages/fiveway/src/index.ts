@@ -22,7 +22,6 @@ export {
   type NavtreeNode,
   type NodeChild,
   type NodeConfig,
-  type ContainerConfig,
   createNode,
   updateNode,
 } from "./tree/node.ts";
