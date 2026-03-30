@@ -4,4 +4,7 @@ import { defineConfig } from "vite-plus";
 export default defineConfig({
   build: { minify: false, sourcemap: true },
   plugins: [react()],
+  server: {
+    port: 3000,
+  },
 });
