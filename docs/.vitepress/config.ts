@@ -13,19 +13,45 @@ export default defineConfig({
     logo: { src: "/logo-small.png", width: 24, height: 24 },
 
     nav: [
-      { text: "Home", link: "/" },
+      { text: "Guide", link: "/what-is-fiveway" },
+      { text: "API", link: "/api/" },
       { text: "Demo", link: "https://react-demo.fiveway.io" },
     ],
 
-    sidebar: [
-      {
-        text: "Introduction",
-        items: [
-          { text: "What is fiveway?", link: "/what-is-fiveway" },
-          { text: "Getting started", link: "/getting-started" },
-        ],
-      },
-    ],
+    sidebar: {
+      "/api/": [
+        {
+          text: "API Reference",
+          items: [
+            { text: "Core API", link: "/api/" },
+            { text: "React", link: "/api/react" },
+            { text: "Solid", link: "/api/solid" },
+          ],
+        },
+      ],
+
+      "/": [
+        {
+          text: "Introduction",
+          items: [
+            { text: "What is fiveway?", link: "/what-is-fiveway" },
+            { text: "Getting started", link: "/getting-started" },
+          ],
+        },
+        {
+          text: "Guide",
+          items: [
+            { text: "Navigation tree", link: "/guide/navtree" },
+            { text: "Handlers", link: "/guide/handlers" },
+            { text: "Built-in handlers", link: "/guide/built-in-handlers" },
+          ],
+        },
+        {
+          text: "Reference",
+          items: [{ text: "Core API", link: "/api/" }],
+        },
+      ],
+    },
 
     socialLinks: [{ icon: "github", link: "https://github.com/silen-z/fiveway" }],
   },
