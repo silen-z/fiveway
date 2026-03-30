@@ -3,8 +3,8 @@ import {
   verticalHandler,
   type ChainedHandler,
   type NavigationHandler,
-} from "@fiveway/core";
-import { useNavigationNode } from "@fiveway/react";
+  useNavigationNode,
+} from "@fiveway/react";
 
 import { NavItem } from "./NavItem";
 import { range } from "./utils";

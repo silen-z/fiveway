@@ -45,9 +45,6 @@ importers:
 
   examples/react-example:
     dependencies:
-      '@fiveway/core':
-        specifier: workspace:^
-        version: link:../../packages/fiveway
       '@fiveway/devtools':
         specifier: workspace:^
         version: link:../../packages/fiveway-devtools
@@ -82,9 +79,6 @@ importers:
 
   examples/solid-example:
     dependencies:
-      '@fiveway/core':
-        specifier: workspace:^
-        version: link:../../packages/fiveway
       '@fiveway/devtools':
         specifier: workspace:^
         version: link:../../packages/fiveway-devtools

@@ -1,12 +1,14 @@
 import {
   captureHandler,
+  createNavigationNode,
+  elementHandler,
   gridHandler,
   gridItemHandler,
   initialHandler,
   itemHandler,
-} from "@fiveway/core";
-import { elementHandler } from "@fiveway/core/dom";
-import { createNavigationNode, useNavigationContext, useOnFocusChange } from "@fiveway/solid";
+  useNavigationContext,
+  useOnFocusChange,
+} from "@fiveway/solid";
 import { onCleanup, onMount } from "solid-js";
 
 import { ExampleBox } from "./ExampleBox.tsx";

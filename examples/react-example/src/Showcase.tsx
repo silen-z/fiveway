@@ -1,12 +1,14 @@
 import {
   captureHandler,
+  elementHandler,
   gridHandler,
   gridItemHandler,
   initialHandler,
   itemHandler,
-} from "@fiveway/core";
-import { elementHandler } from "@fiveway/core/dom";
-import { useNavigationContext, useNavigationNode, useOnFocus } from "@fiveway/react";
+  useNavigationContext,
+  useNavigationNode,
+  useOnFocus,
+} from "@fiveway/react";
 import { useEffect } from "react";
 
 import { ExampleBox } from "./ExampleBox.tsx";

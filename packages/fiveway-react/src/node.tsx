@@ -10,9 +10,9 @@ import {
 } from "@fiveway/core";
 import { type ReactNode, useRef, useEffect, useCallback } from "react";
 
-import { NavigationContext, useNavigationContext } from "./context.js";
-import { useFocus, useSelect } from "./hooks.js";
-import { useLazyIsFocused } from "./internal.js";
+import { NavigationContext, useNavigationContext } from "./context.tsx";
+import { useFocus, useSelect } from "./hooks.ts";
+import { useLazyIsFocused } from "./internal.ts";
 
 export type NodeOptions = {
   id: NodeId;

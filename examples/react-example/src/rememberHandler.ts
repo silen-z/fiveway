@@ -1,4 +1,4 @@
-import { type NodeId, type NavigationHandler, directChildId } from "@fiveway/core";
+import { type NodeId, type NavigationHandler, directChildId } from "@fiveway/react";
 import { useState, useMemo } from "react";
 
 export type RememberHandler = NavigationHandler & {

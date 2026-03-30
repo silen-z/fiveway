@@ -1,5 +1,10 @@
-import { type GridPos, containerHandler, gridItemHandler, type NodeId } from "@fiveway/core";
-import { createNavigationNode } from "@fiveway/solid";
+import {
+  type GridPos,
+  containerHandler,
+  createNavigationNode,
+  gridItemHandler,
+  type NodeId,
+} from "@fiveway/solid";
 import type { JSX } from "solid-js";
 
 import css from "./ExampleBox.module.css";

@@ -3,8 +3,9 @@ import {
   type ChainedHandler,
   type NavigationHandler,
   type NodeId,
-} from "@fiveway/core";
-import { useElementHandler, useNavigationNode } from "@fiveway/react";
+  useElementHandler,
+  useNavigationNode,
+} from "@fiveway/react";
 
 import css from "./NavItem.module.css";
 

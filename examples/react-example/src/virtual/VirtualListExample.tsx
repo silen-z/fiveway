@@ -1,5 +1,4 @@
-import { verticalHandler, directChildId } from "@fiveway/core";
-import { useNavigationNode, useOnFocus } from "@fiveway/react";
+import { directChildId, useNavigationNode, useOnFocus, verticalHandler } from "@fiveway/react";
 import { useState } from "react";
 
 import { NavItem } from "../NavItem.tsx";

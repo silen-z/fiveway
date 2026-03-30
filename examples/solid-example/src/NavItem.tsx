@@ -1,10 +1,11 @@
 import {
+  createElementHandler,
+  createNavigationNode,
   itemHandler,
   type ChainedHandler,
   type NavigationHandler,
   type NodeId,
-} from "@fiveway/core";
-import { createElementHandler, createNavigationNode } from "@fiveway/solid";
+} from "@fiveway/solid";
 
 import css from "./NavItem.module.css";
 

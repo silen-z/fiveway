@@ -1,5 +1,4 @@
-import { verticalHandler } from "@fiveway/core";
-import { NavigationNode, useNavigationNode } from "@fiveway/react";
+import { NavigationNode, useNavigationNode, verticalHandler } from "@fiveway/react";
 
 const items = Array.from({ length: 10 }, (_, i) => {
   return { id: `item-${i + 1}`, order: i, label: `Item ${i + 1}` };

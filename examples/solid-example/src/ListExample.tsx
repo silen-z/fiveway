@@ -1,10 +1,10 @@
 import {
+  createNavigationNode,
   horizontalHandler,
   verticalHandler,
   type ChainedHandler,
   type NavigationHandler,
-} from "@fiveway/core";
-import { createNavigationNode } from "@fiveway/solid";
+} from "@fiveway/solid";
 import { For } from "solid-js";
 
 import { NavItem } from "./NavItem.tsx";
