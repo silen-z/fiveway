@@ -1,10 +1,13 @@
+/* @refresh reload */
+
 import { createNavigationTree } from "@fiveway/core";
 import { enableDevtools } from "@fiveway/devtools";
-import { createActionHandler, NavigationProvider } from "@fiveway/solid";
-/* @refresh reload */
+import { createActionHandler, NavigationProvider, useSyncFocus } from "@fiveway/solid";
 import { render } from "solid-js/web";
 
 import { Showcase } from "./Showcase.tsx";
+
+import "./styles.css";
 
 const root = document.getElementById("root");
 
@@ -12,18 +15,19 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   throw new Error("Root element not found");
 }
 
-const fiveway = createNavigationTree();
+const navigationTree = createNavigationTree();
+
+enableDevtools(navigationTree);
 
 Object.defineProperties(window, {
-  FIVEWAY: { configurable: true, value: fiveway },
+  FIVEWAY: { configurable: true, value: navigationTree },
 });
 
-enableDevtools(fiveway);
-
 function App() {
-  createActionHandler(fiveway);
+  createActionHandler(navigationTree);
+  useSyncFocus(navigationTree);
   return (
-    <NavigationProvider tree={fiveway}>
+    <NavigationProvider tree={navigationTree}>
       <Showcase />
     </NavigationProvider>
   );
