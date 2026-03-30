@@ -60,7 +60,7 @@ export function createActionHandler(tree: NavigationTree, options: ActionHandler
 export function useSyncFocus(tree: NavigationTree) {
   createEffect(() => {
     const cleanup = registerListener(tree, "#", "focuschange", () => {
-      const el = elementHandler.query(tree, tree.focusedId);
+      const el = elementHandler.query(tree, tree.focus);
       if (el !== null) {
         el.focus();
       } else if (document.activeElement instanceof HTMLElement) {

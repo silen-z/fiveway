@@ -5,7 +5,7 @@ import {
   isFocused,
   registerListener,
   focusNode,
-  scopedId,
+  joinId,
 } from "@fiveway/core";
 import { useCallback, useEffect, useSyncExternalStore, useRef } from "react";
 
@@ -13,7 +13,7 @@ import { useNavigationContext } from "./context.tsx";
 
 export function useIsFocused(nodeId: NodeId) {
   const { tree, parentNode } = useNavigationContext();
-  const globalId = scopedId(parentNode, nodeId);
+  const globalId = joinId(parentNode, nodeId);
 
   const subscribe = useCallback(
     (cb: () => void) => registerListener(tree, globalId, "focuschange", cb),
@@ -25,7 +25,7 @@ export function useIsFocused(nodeId: NodeId) {
 
 export function useOnFocus(nodeId: NodeId, handler: (id: NodeId | null) => void) {
   const { tree, parentNode } = useNavigationContext();
-  const globalId = scopedId(parentNode, nodeId);
+  const globalId = joinId(parentNode, nodeId);
 
   const handlerRef = useRef(handler);
   handlerRef.current = handler;
@@ -40,14 +40,14 @@ export function useOnFocus(nodeId: NodeId, handler: (id: NodeId | null) => void)
 
 export function useFocusedId(scope: NodeId) {
   const { tree, parentNode } = useNavigationContext();
-  const globalId = scopedId(parentNode, scope);
+  const globalId = joinId(parentNode, scope);
 
   const subscribe = useCallback(
     (cb: () => void) => registerListener(tree, globalId, "focuschange", cb),
     [tree, globalId],
   );
 
-  return useSyncExternalStore(subscribe, () => (isFocused(tree, globalId) ? tree.focusedId : null));
+  return useSyncExternalStore(subscribe, () => (isFocused(tree, globalId) ? tree.focus : null));
 }
 
 export function useFocus(scope?: NodeId): (nodeId: NodeId, options?: FocusOptions) => boolean {
@@ -56,7 +56,7 @@ export function useFocus(scope?: NodeId): (nodeId: NodeId, options?: FocusOption
 
   return useCallback(
     (nodeId: NodeId, options?: FocusOptions) => {
-      return focusNode(tree, scopedId(scope, nodeId), options);
+      return focusNode(tree, joinId(scope, nodeId), options);
     },
     [tree, scope],
   );
@@ -68,7 +68,7 @@ export function useSelect(scope?: NodeId) {
 
   return useCallback(
     (nodeId: NodeId, focus?: boolean) => {
-      selectNode(tree, scopedId(scope, nodeId), focus);
+      selectNode(tree, joinId(scope, nodeId), focus);
     },
     [tree, scope],
   );

@@ -212,11 +212,11 @@ function useIsFocused(tree: NavigationTree, id: NodeId) {
 }
 
 function useFocusedId(tree: NavigationTree, listenOn: NodeId = "#") {
-  const [nodeId, setNodeId] = createSignal(tree.focusedId);
+  const [nodeId, setNodeId] = createSignal(tree.focus);
 
   createEffect(() => {
     const cleanup = registerListener(tree, listenOn, "focuschange", () => {
-      setNodeId(tree.focusedId);
+      setNodeId(tree.focus);
     });
     onCleanup(cleanup);
   });

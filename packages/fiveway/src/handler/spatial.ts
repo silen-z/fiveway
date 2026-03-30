@@ -22,7 +22,7 @@ export const spatialMovement: NavigationHandler = (node, action, next) => {
     return next();
   }
 
-  const focusedPos = spatialItemHandler.query(node.tree, node.tree.focusedId);
+  const focusedPos = spatialItemHandler.query(node.tree, node.tree.focus);
   if (focusedPos == null) {
     return next();
   }

@@ -1,22 +1,18 @@
 export type NodeId = string;
 
-export function createGlobalId(head: NodeId, ...tail: NodeId[]): NodeId {
-  return [head, ...tail].join("/");
-}
-
-export function scopedId(scope: NodeId, nodeId: NodeId): NodeId {
-  if (nodeId.startsWith("#")) {
+export function joinId(scope: NodeId, nodeId: NodeId): NodeId {
+  if (nodeId.startsWith("#/")) {
     return nodeId;
   }
 
-  return createGlobalId(scope, nodeId);
+  return scope + "/" + nodeId;
 }
 
 export function isParent(parentId: NodeId, childId: NodeId): boolean {
   return childId.startsWith(parentId + "/");
 }
 
-export function directChildId(parentId: NodeId, descendantId: NodeId): NodeId | null {
+export function childLocalId(parentId: NodeId, descendantId: NodeId): NodeId | null {
   if (!isParent(parentId, descendantId)) {
     return null;
   }
@@ -65,13 +61,9 @@ export function convergingPaths(node1: NodeId, node2: NodeId, cb: (id: NodeId) =
 if (import.meta.vitest) {
   const { expect, test, vi } = import.meta.vitest;
 
-  test("createGlobalId", () => {
-    expect(createGlobalId("#/container", "item")).toBe("#/container/item");
-  });
-
-  test("scopedId", () => {
-    expect(scopedId("#/container", "item")).toBe("#/container/item");
-    expect(scopedId("#/container", "#/item")).toBe("#/item");
+  test("joinId", () => {
+    expect(joinId("#/container", "item")).toBe("#/container/item");
+    expect(joinId("#/container", "#/item")).toBe("#/item");
   });
 
   test("isParent", () => {
@@ -83,10 +75,10 @@ if (import.meta.vitest) {
     expect(isParent("#/container", "#/containeri")).toBe(false);
   });
 
-  test("directChildId", () => {
-    expect(directChildId("#/container", "#/container/item/nested")).toBe("#/container/item");
-    expect(directChildId("#/container", "#/container/item")).toBe("#/container/item");
-    expect(directChildId("#/container", "#/another/item/nested")).toBeNull();
+  test("childLocalId", () => {
+    expect(childLocalId("#/container", "#/container/item/nested")).toBe("#/container/item");
+    expect(childLocalId("#/container", "#/container/item")).toBe("#/container/item");
+    expect(childLocalId("#/container", "#/another/item/nested")).toBeNull();
   });
 
   test("idsToRoot", () => {

@@ -1,7 +1,7 @@
 import type { NavigationDirection } from "../action.ts";
 import { describeHandler } from "../meta/introspection.ts";
 import { type MetaHandler, metaHandler } from "../meta/metadata.ts";
-import { type NodeId, directChildId } from "../tree/id.ts";
+import { type NodeId, childLocalId } from "../tree/id.ts";
 import { traverseNodes } from "../tree/tree.ts";
 import { type ChainedHandler, chainedHandler } from "./chained.ts";
 import { focusHandler } from "./focus.ts";
@@ -107,7 +107,7 @@ function createGridMovement(config: GridHandlerConfig = {}): NavigationHandler {
       return next();
     }
 
-    const focusedId = directChildId(node.id, node.tree.focusedId);
+    const focusedId = childLocalId(node.id, node.tree.focus);
     if (focusedId === null) {
       return next();
     }

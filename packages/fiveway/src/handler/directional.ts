@@ -1,6 +1,6 @@
 import type { NavigationAction, NavigationDirection } from "../action.ts";
 import { describeHandler } from "../meta/introspection.ts";
-import { type NodeId, directChildId } from "../tree/id.ts";
+import { type NodeId, childLocalId } from "../tree/id.ts";
 import type { NavtreeNode } from "../tree/node.ts";
 import { type ChainedHandler, chainedHandler } from "./chained.ts";
 import { focusHandler } from "./focus.ts";
@@ -113,7 +113,7 @@ export const horizontalHandler: ChainedHandler = chainedHandler([
 ]);
 
 function findNextChild(node: NavtreeNode, check: (id: NodeId) => NodeId | null) {
-  const currentChildId = directChildId(node.id, node.tree.focusedId);
+  const currentChildId = childLocalId(node.id, node.tree.focus);
   if (currentChildId === null) {
     return null;
   }
@@ -136,7 +136,7 @@ function findNextChild(node: NavtreeNode, check: (id: NodeId) => NodeId | null) 
 }
 
 function findPreviousChild(node: NavtreeNode, check: (id: NodeId) => NodeId | null) {
-  const currentChildId = directChildId(node.id, node.tree.focusedId);
+  const currentChildId = childLocalId(node.id, node.tree.focus);
   if (currentChildId === null) {
     return null;
   }

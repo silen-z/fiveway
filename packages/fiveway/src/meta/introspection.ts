@@ -16,7 +16,7 @@ export function describeHandler(action: NavigationAction, info: HandlerInfo): vo
   }
 }
 
-export function getHandlerInfo(tree: NavigationTree, id: NodeId): HandlerInfo[] {
+export function queryHandlerInfo(tree: NavigationTree, id: NodeId): HandlerInfo[] {
   const value = [] as HandlerInfo[];
   runHandler(tree, id, {
     kind: "query",

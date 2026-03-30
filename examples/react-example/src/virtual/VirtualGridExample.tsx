@@ -1,5 +1,5 @@
 import {
-  directChildId,
+  childLocalId,
   gridHandler,
   gridItemHandler,
   itemHandler,
@@ -53,7 +53,7 @@ export function VirtualGridExample() {
       return;
     }
 
-    const childId = directChildId(nav.id, id)?.substring(nav.id.length + 1);
+    const childId = childLocalId(nav.id, id)?.substring(nav.id.length + 1);
     if (childId === null) {
       return;
     }

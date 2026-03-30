@@ -1,6 +1,6 @@
 import {
   createNavigationNode,
-  directChildId,
+  childLocalId,
   gridHandler,
   gridItemHandler,
   itemHandler,
@@ -57,7 +57,7 @@ export function VirtualGridExample() {
       return;
     }
 
-    const childId = directChildId(nav(), id)?.substring(nav().length + 1);
+    const childId = childLocalId(nav(), id)?.substring(nav().length + 1);
     if (childId === null) {
       return;
     }

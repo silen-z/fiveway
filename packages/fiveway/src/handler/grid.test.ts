@@ -31,45 +31,45 @@ test("gridHandler", async () => {
   removeNode(tree, "#/grid/item-2-2");
   removeNode(tree, "#/grid/item-3-3");
 
-  expect(tree.focusedId).toBe("#/grid/item-1-1");
+  expect(tree.focus).toBe("#/grid/item-1-1");
 
   handleAction(tree, { kind: "move", direction: "down" });
 
-  expect(tree.focusedId).toBe("#/grid/item-2-1");
+  expect(tree.focus).toBe("#/grid/item-2-1");
 
   handleAction(tree, { kind: "move", direction: "down" });
 
-  expect(tree.focusedId).toBe("#/grid/item-3-1");
+  expect(tree.focus).toBe("#/grid/item-3-1");
 
   handleAction(tree, { kind: "move", direction: "right" });
 
-  expect(tree.focusedId).toBe("#/grid/item-3-2");
+  expect(tree.focus).toBe("#/grid/item-3-2");
 
   handleAction(tree, { kind: "move", direction: "up" });
 
-  expect(tree.focusedId).toBe("#/grid/item-2-3");
+  expect(tree.focus).toBe("#/grid/item-2-3");
 
   handleAction(tree, { kind: "move", direction: "right" });
 
-  expect(tree.focusedId).toBe("#/grid/item-2-3");
+  expect(tree.focus).toBe("#/grid/item-2-3");
 
   handleAction(tree, { kind: "move", direction: "left" });
 
-  expect(tree.focusedId).toBe("#/grid/item-1-2");
+  expect(tree.focus).toBe("#/grid/item-1-2");
 
   handleAction(tree, { kind: "move", direction: "down" });
 
-  expect(tree.focusedId).toBe("#/grid/item-2-1");
+  expect(tree.focus).toBe("#/grid/item-2-1");
 
   handleAction(tree, { kind: "move", direction: "right" });
 
-  expect(tree.focusedId).toBe("#/grid/item-3-2");
+  expect(tree.focus).toBe("#/grid/item-3-2");
 
   handleAction(tree, { kind: "move", direction: "up" });
 
-  expect(tree.focusedId).toBe("#/grid/item-2-3");
+  expect(tree.focus).toBe("#/grid/item-2-3");
 
   handleAction(tree, { kind: "move", direction: "down" });
 
-  expect(tree.focusedId).toBe("#/grid/item-3-2");
+  expect(tree.focus).toBe("#/grid/item-3-2");
 });

@@ -2,7 +2,7 @@ import { expect, test } from "vite-plus/test";
 
 import {
   describeHandler,
-  getHandlerInfo,
+  queryHandlerInfo,
   createNavigationTree,
   insertNode,
   createNode,
@@ -25,13 +25,13 @@ test("handlerInfo", () => {
     }),
   );
 
-  expect(getHandlerInfo(tree, "#/test")).toEqual([{ name: "test" }]);
+  expect(queryHandlerInfo(tree, "#/test")).toEqual([{ name: "test" }]);
 });
 
 test("defaultHandlerInfo", () => {
   const tree = createNavigationTree();
 
-  const handlerWithoutInfo: NavigationHandler = (_, action, next) => {
+  const handlerWithoutInfo: NavigationHandler = (_node, _action, next) => {
     return next();
   };
 
@@ -44,7 +44,7 @@ test("defaultHandlerInfo", () => {
     }),
   );
 
-  expect(getHandlerInfo(tree, "#/test")).toEqual(
+  expect(queryHandlerInfo(tree, "#/test")).toEqual(
     expect.arrayContaining([{ name: "handlerWithoutInfo" }]),
   );
 });
