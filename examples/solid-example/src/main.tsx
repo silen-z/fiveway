@@ -5,7 +5,7 @@ import {
   createActionHandler,
   createNavigationTree,
   NavigationProvider,
-  useSyncFocus,
+  useFocusSync,
 } from "@fiveway/solid";
 import { render } from "solid-js/web";
 
@@ -29,7 +29,7 @@ Object.defineProperties(window, {
 
 function App() {
   createActionHandler(navigationTree);
-  useSyncFocus(navigationTree);
+  useFocusSync(navigationTree);
   return (
     <NavigationProvider tree={navigationTree}>
       <Showcase />

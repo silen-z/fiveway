@@ -57,7 +57,7 @@ export function createActionHandler(tree: NavigationTree, options: ActionHandler
   });
 }
 
-export function useSyncFocus(tree: NavigationTree) {
+export function useFocusSync(tree: NavigationTree) {
   createEffect(() => {
     const cleanup = registerListener(tree, "#", "focuschange", () => {
       const el = elementHandler.query(tree, tree.focus);

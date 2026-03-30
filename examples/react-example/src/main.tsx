@@ -3,7 +3,7 @@ import {
   createNavigationTree,
   NavigationProvider,
   useActionHandler,
-  useSyncFocus,
+  useFocusSync,
 } from "@fiveway/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -23,7 +23,7 @@ Object.defineProperties(window, {
 
 function App() {
   useActionHandler(navigationTree);
-  useSyncFocus(navigationTree);
+  useFocusSync(navigationTree);
   return (
     <NavigationProvider tree={navigationTree}>
       <Showcase />
