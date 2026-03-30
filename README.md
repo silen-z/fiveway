@@ -15,17 +15,16 @@ It comes with a set of default behaviors and allows for extensive customization.
 
 ## Getting started
 
-Install the core library and React integration:
+Install the React version of the library:
 
 ```sh
-npm install @fiveway/core @fiveway/react
+npm install @fiveway/react
 ```
 
 Create a navigation tree and provide it to the application:
 
 ```tsx
-import { createNavigationTree } from "@fiveway/core";
-import { NavigationProvider, useActionHandler } from "@fiveway/react";
+import { createNavigationTree, NavigationProvider, useActionHandler } from "@fiveway/react";
 
 const navtree = createNavigationTree();
 

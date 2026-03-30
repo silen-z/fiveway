@@ -1,5 +1,11 @@
-import { directChildId, gridHandler, gridItemHandler, itemHandler } from "@fiveway/core";
-import { useNavigationNode, useOnFocus } from "@fiveway/react";
+import {
+  directChildId,
+  gridHandler,
+  gridItemHandler,
+  itemHandler,
+  useNavigationNode,
+  useOnFocus,
+} from "@fiveway/react";
 import { type CSSProperties, useState } from "react";
 
 import { NavItem } from "../NavItem.tsx";

@@ -1,5 +1,9 @@
-import { verticalHandler, directChildId } from "@fiveway/core";
-import { createNavigationNode, useOnFocusChange } from "@fiveway/solid";
+import {
+  createNavigationNode,
+  directChildId,
+  useOnFocusChange,
+  verticalHandler,
+} from "@fiveway/solid";
 import { createSignal } from "solid-js";
 
 import { NavItem } from "../NavItem.tsx";

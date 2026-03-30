@@ -1,5 +1,4 @@
-import { spatialHandler, captureHandler } from "@fiveway/core";
-import { useNavigationNode } from "@fiveway/react";
+import { captureHandler, spatialHandler, useNavigationNode } from "@fiveway/react";
 import type { CSSProperties } from "react";
 
 import { NavItem } from "./NavItem.tsx";

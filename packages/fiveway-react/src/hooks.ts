@@ -9,7 +9,7 @@ import {
 } from "@fiveway/core";
 import { useCallback, useEffect, useSyncExternalStore, useRef } from "react";
 
-import { useNavigationContext } from "./context.js";
+import { useNavigationContext } from "./context.tsx";
 
 export function useIsFocused(nodeId: NodeId) {
   const { tree, parentNode } = useNavigationContext();

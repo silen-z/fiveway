@@ -1,8 +1,12 @@
 /* @refresh reload */
 
-import { createNavigationTree } from "@fiveway/core";
 import { enableDevtools } from "@fiveway/devtools";
-import { createActionHandler, NavigationProvider, useSyncFocus } from "@fiveway/solid";
+import {
+  createActionHandler,
+  createNavigationTree,
+  NavigationProvider,
+  useSyncFocus,
+} from "@fiveway/solid";
 import { render } from "solid-js/web";
 
 import { Showcase } from "./Showcase.tsx";

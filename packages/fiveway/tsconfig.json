@@ -1,13 +1,21 @@
 {
-  "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,
+    "module": "preserve",
+    "declaration": true,
+    "composite": true,
+    "declarationMap": true,
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
     "isolatedDeclarations": true,
-
-    "rootDir": "src",
-    "outDir": "dist",
+    "lib": ["ES2023", "dom"],
     "types": ["vitest/importMeta"]
   },
   "include": ["./src/**/*"],

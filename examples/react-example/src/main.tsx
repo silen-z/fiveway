@@ -1,6 +1,10 @@
-import { createNavigationTree } from "@fiveway/core";
 import { enableDevtools } from "@fiveway/devtools";
-import { NavigationProvider, useActionHandler, useSyncFocus } from "@fiveway/react";
+import {
+  createNavigationTree,
+  NavigationProvider,
+  useActionHandler,
+  useSyncFocus,
+} from "@fiveway/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 

@@ -1,5 +1,11 @@
-import { directChildId, gridHandler, gridItemHandler, itemHandler } from "@fiveway/core";
-import { createNavigationNode, useOnFocusChange } from "@fiveway/solid";
+import {
+  createNavigationNode,
+  directChildId,
+  gridHandler,
+  gridItemHandler,
+  itemHandler,
+  useOnFocusChange,
+} from "@fiveway/solid";
 import { createSignal, type JSX } from "solid-js";
 
 import { NavItem } from "../NavItem.tsx";
