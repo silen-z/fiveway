@@ -1,5 +1,5 @@
 import type { NavigationAction, NavigationDirection } from "../action.ts";
-import { describeHandler } from "../meta/introspection.ts";
+import { describeHandler } from "../inspector.ts";
 import { type NodeId, childLocalId } from "../tree/id.ts";
 import type { NavtreeNode } from "../tree/node.ts";
 import { type ChainedHandler, chainedHandler } from "./chained.ts";
@@ -14,7 +14,7 @@ export function verticalMovementHandler(
   action: NavigationAction,
   next: HandlerNext,
 ): NodeId | null {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
     describeHandler(action, { name: "core:vertical-movement" });
   }
 
@@ -67,7 +67,7 @@ export function horizontalMovementHandler(
   action: NavigationAction,
   next: HandlerNext,
 ): NodeId | null {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
     describeHandler(action, { name: "core:horizontal-movement" });
   }
 

@@ -10,4 +10,7 @@ export default defineConfig({
   lint: {
     plugins: ["react"],
   },
+  define: {
+    "import.meta.env.FIVEWAY_INSPECTOR": "true",
+  },
 });

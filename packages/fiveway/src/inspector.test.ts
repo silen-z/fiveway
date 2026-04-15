@@ -8,7 +8,7 @@ import {
   createNode,
   defaultHandler,
   type NavigationHandler,
-} from "../index.ts";
+} from "./index.ts";
 
 test("handlerInfo", () => {
   const tree = createNavigationTree();
@@ -28,7 +28,7 @@ test("handlerInfo", () => {
   expect(queryHandlerInfo(tree, "#/test")).toEqual([{ name: "test" }]);
 });
 
-test("defaultHandlerInfo", () => {
+test("chain handler adds fallback info to link handlers", () => {
   const tree = createNavigationTree();
 
   const handlerWithoutInfo: NavigationHandler = (_node, _action, next) => {

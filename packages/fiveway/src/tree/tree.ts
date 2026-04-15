@@ -1,12 +1,18 @@
 import { type NavigationAction, type NavigationDirection } from "../action.ts";
 import { focusHandler } from "../handler/focus.ts";
 import { runHandler } from "../handler/handler.ts";
+import {
+  type InspectorCommand,
+  emitInspectorMessage,
+  subscribeToInspectorCommands,
+} from "../inspector.ts";
 import { binarySearch } from "../lib/array.ts";
 import { type NavtreeEvent, type NavtreeListener, callListeners } from "./events.ts";
 import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
-import type { CreatedNavtreeNode, NavtreeNode } from "./node.ts";
+import { toInspectorNode, type CreatedNavtreeNode, type NavtreeNode } from "./node.ts";
 
 export type NavigationTree = {
+  label: string;
   nodes: Map<NodeId, NavtreeNode>;
   focus: NodeId;
   orphans: Map<NodeId, NodeId[]>;
@@ -14,8 +20,9 @@ export type NavigationTree = {
   focusLock: "free" | "locked" | "updatePending";
 };
 
-export function createNavigationTree(): NavigationTree {
+export function createNavigationTree(options: { label?: string } = {}): NavigationTree {
   const tree: NavigationTree = {
+    label: options.label ?? randomLabel(),
     focus: "#",
     nodes: new Map(),
     orphans: new Map(),
@@ -32,6 +39,10 @@ export function createNavigationTree(): NavigationTree {
     handler: focusHandler(),
     children: [],
   });
+
+  if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
+    subscribeToInspectorCommands(tree, (cmd) => handleInspectorCommand(tree, cmd));
+  }
 
   return tree;
 }
@@ -81,15 +92,21 @@ function connectNode(tree: NavigationTree, parentNode: NavtreeNode, node: Navtre
   }
 
   const orphans = tree.orphans.get(node.id);
-  if (orphans == null) {
-    return;
+  if (orphans != null) {
+    for (const orphanId of orphans) {
+      connectNode(tree, node, tree.nodes.get(orphanId)!);
+    }
+
+    tree.orphans.delete(node.id);
   }
 
-  for (const orphanId of orphans) {
-    connectNode(tree, node, tree.nodes.get(orphanId)!);
+  if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
+    emitInspectorMessage({
+      type: "fiveway:treeState",
+      tree: tree.label,
+      nodes: [toInspectorNode(node), toInspectorNode(parentNode)],
+    });
   }
-
-  tree.orphans.delete(node.id);
 }
 
 export function removeNode(tree: NavigationTree, node: NodeId | NavtreeNode): void {
@@ -114,6 +131,17 @@ export function removeNode(tree: NavigationTree, node: NodeId | NavtreeNode): vo
 
   tree.nodes.delete(id);
   clearOrphan(tree, existingNode.parent!, id);
+
+  if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
+    const parentNode = tree.nodes.get(existingNode.parent!);
+
+    emitInspectorMessage({
+      type: "fiveway:treeState",
+      tree: tree.label,
+      nodes: parentNode != null ? [toInspectorNode(parentNode)] : undefined,
+      removedNodes: [id],
+    });
+  }
 
   if (isFocused(tree, existingNode.id)) {
     tree.focus = existingNode.parent ?? "#";
@@ -239,6 +267,10 @@ export function focusNode(
     callListeners(tree, id, event);
   });
 
+  if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
+    emitInspectorMessage({ type: "fiveway:treeState", tree: tree.label, focus: tree.focus });
+  }
+
   return true;
 }
 
@@ -338,4 +370,25 @@ function clearOrphan(tree: NavigationTree, parent: NodeId, child: NodeId) {
       orphans.splice(index, 1);
     }
   }
+}
+
+function handleInspectorCommand(tree: NavigationTree, command: InspectorCommand) {
+  if (command.kind === "focus") {
+    focusNode(tree, command.node);
+  }
+
+  if (command.kind === "requestCompleteSnapshot") {
+    const nodes = Array.from(tree.nodes.values(), toInspectorNode);
+
+    emitInspectorMessage({
+      type: "fiveway:treeState",
+      tree: tree.label,
+      focus: tree.focus,
+      nodes,
+    });
+  }
+}
+
+function randomLabel(): string {
+  return `${Math.random().toString(36).substring(2, 15)}`;
 }

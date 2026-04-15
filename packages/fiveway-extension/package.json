@@ -1,15 +1,18 @@
 {
-  "name": "@xfiveway/extension",
+  "name": "@fiveway/extension",
+  "version": "0.1.0",
   "private": true,
+  "description": "fiveway devtools browser extension",
   "type": "module",
-  "types": "./dist/hook.d.ts",
   "scripts": {
     "dev": "vp dev",
     "build": "vp build"
   },
   "dependencies": {
     "@fiveway/core": "workspace:^",
-    "solid-js": "^1.9.12"
+    "@fiveway/devtools": "workspace:^",
+    "solid-js": "^1.9.12",
+    "valibot": "^1.3.1"
   },
   "devDependencies": {
     "@types/webextension-polyfill": "^0.12.5",

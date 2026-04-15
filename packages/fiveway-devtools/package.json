@@ -2,9 +2,11 @@
   "name": "@fiveway/devtools",
   "version": "0.1.0",
   "type": "module",
-  "types": "./dist/devtools.d.ts",
+  "types": "./dist/inspector.d.ts",
   "exports": {
-    ".": "./dist/devtools.js"
+    ".": "./dist/inspector.js",
+    "./package.json": "./package.json",
+    "./style.css": "./dist/style.css"
   },
   "scripts": {
     "build": "vp pack",

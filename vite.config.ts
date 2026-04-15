@@ -12,22 +12,17 @@ export default defineConfig({
           "@fiveway/devtools#build",
         ],
       },
-      dev: {
-        command:
-          "pnpm run --parallel --filter @fiveway/core --filter @fiveway/react --filter @fiveway/solid dev",
-      },
       "example:react": {
         command: "vp run @fiveway/react-example#dev",
-        dependsOn: ["@fiveway/core#build", "@fiveway/react#build", "@fiveway/devtools#build"],
+        dependsOn: ["@fiveway/core#build", "@fiveway/react#build"],
       },
       "example:solid": {
         command: "vp run @fiveway/solid-example#dev",
-        dependsOn: ["@fiveway/core#build", "@fiveway/solid#build", "@fiveway/devtools#build"],
+        dependsOn: ["@fiveway/core#build", "@fiveway/solid#build"],
       },
     },
   },
   lint: {
-    ignorePatterns: ["packages/fiveway-extension"],
     plugins: ["unicorn", "typescript", "oxc", "import", "react", "vitest"],
     options: {
       typeAware: true,

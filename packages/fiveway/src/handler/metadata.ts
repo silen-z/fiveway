@@ -1,8 +1,8 @@
 import { type NavigationAction } from "../action.ts";
 import { runHandler, type NavigationHandler } from "../handler/handler.ts";
+import { describeHandler } from "../inspector.ts";
 import type { NodeId } from "../tree/id.ts";
 import type { NavigationTree } from "../tree/tree.ts";
-import { describeHandler } from "./introspection.ts";
 
 export type MetaHandler<T> = {
   key: string;
@@ -13,7 +13,7 @@ export type MetaHandler<T> = {
 export function metaHandler<T>(key: string): MetaHandler<T> {
   const handler = (value: unknown) => {
     const metaHandler: NavigationHandler = (_, action, next) => {
-      if (import.meta.env.DEV) {
+      if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
         describeHandler(action, { name: "core:metadata-provider", key });
       }
 

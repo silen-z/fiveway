@@ -1,4 +1,3 @@
-import { enableDevtools } from "@fiveway/devtools";
 import {
   createNavigationTree,
   NavigationProvider,
@@ -13,15 +12,9 @@ import { Showcase } from "./Showcase.tsx";
 import "./styles.css";
 // import { Items } from "./Benchmark.tsx";
 
-const navigationTree = createNavigationTree();
-
-enableDevtools(navigationTree);
-
-Object.defineProperties(window, {
-  FIVEWAY: { configurable: true, value: navigationTree },
-});
-
 function App() {
+  const navigationTree = createNavigationTree();
+
   useActionHandler(navigationTree);
   useFocusSync(navigationTree);
   return (
@@ -31,7 +24,12 @@ function App() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root");
+if (root == null) {
+  throw new Error("root element not found");
+}
+
+ReactDOM.createRoot(root).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
