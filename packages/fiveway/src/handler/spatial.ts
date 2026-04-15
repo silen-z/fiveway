@@ -1,12 +1,12 @@
 import type { NavigationDirection } from "../action.ts";
-import { describeHandler } from "../meta/introspection.ts";
-import { type MetaHandler, metaHandler } from "../meta/metadata.ts";
+import { describeHandler } from "../inspector.ts";
 import type { NodeId } from "../tree/id.ts";
 import { traverseNodes } from "../tree/tree.ts";
 import { type ChainedHandler, chainedHandler } from "./chained.ts";
 import { focusHandler } from "./focus.ts";
 import type { NavigationHandler } from "./handler.ts";
 import { parentHandler } from "./handler.ts";
+import { type MetaHandler, metaHandler } from "./metadata.ts";
 
 export const spatialItemHandler: MetaHandler<DOMRect> = metaHandler("core:node-position");
 
@@ -14,7 +14,7 @@ export const spatialItemHandler: MetaHandler<DOMRect> = metaHandler("core:node-p
  * @category Handler
  */
 export const spatialMovement: NavigationHandler = (node, action, next) => {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
     describeHandler(action, { name: "core:spatial" });
   }
 

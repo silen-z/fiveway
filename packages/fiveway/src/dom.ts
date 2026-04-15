@@ -1,5 +1,5 @@
 import type { NavigationAction } from "./action.ts";
-import { metaHandler, type MetaHandler } from "./meta/metadata.ts";
+import { metaHandler, type MetaHandler } from "./handler/metadata.ts";
 
 const eventKeyToAction: Record<string, NavigationAction> = {
   ArrowUp: { kind: "move", direction: "up" },

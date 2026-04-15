@@ -1,6 +1,5 @@
 /* @refresh reload */
 
-import { enableDevtools } from "@fiveway/devtools";
 import {
   createActionHandler,
   createNavigationTree,
@@ -13,23 +12,12 @@ import { Showcase } from "./Showcase.tsx";
 
 import "./styles.css";
 
-const root = document.getElementById("root");
-
-if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
-  throw new Error("Root element not found");
-}
-
-const navigationTree = createNavigationTree();
-
-enableDevtools(navigationTree);
-
-Object.defineProperties(window, {
-  FIVEWAY: { configurable: true, value: navigationTree },
-});
-
 function App() {
+  const navigationTree = createNavigationTree();
+
   createActionHandler(navigationTree);
   useFocusSync(navigationTree);
+
   return (
     <NavigationProvider tree={navigationTree}>
       <Showcase />
@@ -37,4 +25,9 @@ function App() {
   );
 }
 
-render(App, root!);
+const root = document.getElementById("root");
+if (root == null) {
+  throw new Error("root element not found");
+}
+
+render(App, root);

@@ -10,7 +10,7 @@
     "128": "icon/128.png"
   },
 
-  "permissions": ["<all_urls>", "devtools", "scripting"],
+  "permissions": ["<all_urls>", "devtools"],
 
   "background": {
     "{{chrome}}.service_worker": "src/background.ts",
@@ -33,10 +33,10 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["src/contentScript.ts"],
+      "js": ["src/fivewayDevtools.ts"],
       "run_at": "document_start"
     }
   ],
 
-  "devtools_page": "src/devtools-page.html"
+  "devtools_page": "src/devtools/devtools.html"
 }

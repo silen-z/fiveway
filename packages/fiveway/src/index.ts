@@ -1,6 +1,11 @@
 declare global {
+  interface ImportMetaEnv {
+    readonly FIVEWAY_INSPECTOR?: unknown;
+    readonly DEV?: unknown;
+  }
+
   interface ImportMeta {
-    env: { DEV?: boolean };
+    readonly env: ImportMetaEnv;
   }
 }
 
@@ -73,6 +78,13 @@ export { selectNode, selectHandler } from "./handler/select.ts";
 
 export { spatialItemHandler, spatialMovement, spatialHandler } from "./handler/spatial.ts";
 
-export { type MetaHandler, metaHandler } from "./meta/metadata.ts";
+export { type MetaHandler, metaHandler } from "./handler/metadata.ts";
 
-export { type HandlerInfo, describeHandler, queryHandlerInfo } from "./meta/introspection.ts";
+export {
+  type HandlerInfo,
+  type InspectorMessage,
+  type InspectorCommand,
+  type InspectorNode,
+  describeHandler,
+  queryHandlerInfo,
+} from "./inspector.ts";

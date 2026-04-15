@@ -1,4 +1,4 @@
-import { describeHandler } from "../meta/introspection.ts";
+import { describeHandler } from "../inspector.ts";
 import type { NodeId } from "../tree/id.ts";
 import { type NavigationTree, focusNode } from "../tree/tree.ts";
 import { type NavigationHandler, runHandler } from "./handler.ts";
@@ -8,7 +8,7 @@ import { type NavigationHandler, runHandler } from "./handler.ts";
  */
 function createSelectHandler(onSelect: () => void): NavigationHandler {
   const selectHandler: NavigationHandler = (_, action, next) => {
-    if (import.meta.env.DEV) {
+    if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
       describeHandler(action, { name: "core:select" });
     }
 

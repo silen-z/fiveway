@@ -1,70 +1,75 @@
+import * as v from "valibot";
 import browser from "webextension-polyfill";
 
-async function injectHook() {
-  await browser.scripting.registerContentScripts([
-    {
-      id: "@react-devtools/hook",
-      js: ["./src/hook.js"],
-      matches: ["<all_urls>"],
-      persistAcrossSessions: true,
-      runAt: "document_start",
-      // @ts-expect-error ExecutionWorld is not yet supported by Firefox
-      world: "MAIN",
-    },
-  ]);
-}
+import { DevtoolsPortMessage } from "./messages.js";
 
-injectHook();
-
-// background.js
-const connections: Record<string, browser.Runtime.Port> = {};
-
-type Message = {
-  name: "init";
-  tabId: string;
-};
+const contentScriptPorts: Map<number, browser.Runtime.Port> = new Map();
+const devtoolsPorts: Map<number, browser.Runtime.Port> = new Map();
 
 browser.runtime.onConnect.addListener((port) => {
-  const extensionListener = (message: Message) => {
-    // The original connection event doesn't include the tab ID of the
-    // DevTools page, so we need to send it explicitly.
-    if (message.name === "init") {
-      connections[message.tabId] = port;
+  if (port.name === "content-script") {
+    contentScriptConnected(port);
+  }
+
+  if (port.name === "devtools") {
+    devtoolsConnected(port);
+  }
+});
+
+function contentScriptConnected(port: browser.Runtime.Port): void {
+  const tabId = port.sender?.tab?.id;
+  if (tabId == null) {
+    throw new Error("content script does not have a tab id");
+  }
+
+  contentScriptPorts.set(tabId, port);
+
+  port.onDisconnect.addListener(() => {
+    contentScriptPorts.delete(tabId);
+  });
+
+  // forward messages from the content script to the devtools if they are connected
+  port.onMessage.addListener((msg) => {
+    const devtoolsPort = devtoolsPorts.get(tabId);
+    devtoolsPort?.postMessage(msg);
+  });
+}
+
+function devtoolsConnected(port: browser.Runtime.Port): void {
+  // since devtools ports do not contain `tabId` of a tab inspected by the devtool panel
+  // we have to send a custom `init` message from the devtool panel
+  // and only when the `init` message is received we can register the port
+  port.onMessage.addListener((message) => {
+    const { success, output: msg } = v.safeParse(DevtoolsPortMessage, message);
+    if (!success) {
+      console.error("unexpected message from devtools", message);
       return;
     }
 
-    // other message handling
-  };
+    if (msg.type === "init") {
+      devtoolsPorts.set(msg.tabId, port);
 
-  // Listen to messages sent from the DevTools page
-  port.onMessage.addListener(extensionListener);
+      port.onDisconnect.addListener(() => {
+        devtoolsPorts.delete(msg.tabId);
+      });
+    }
 
-  port.onDisconnect.addListener((port) => {
-    port.onMessage.removeListener(extensionListener);
-
-    const tabs = Object.keys(connections);
-    for (let i = 0, len = tabs.length; i < len; i++) {
-      if (connections[tabs[i]] == port) {
-        delete connections[tabs[i]];
-        break;
+    if (msg.type === "fiveway:command") {
+      const contentScriptPort = contentScriptPorts.get(msg.tabId);
+      if (contentScriptPort == null) {
+        console.error("content script port not found for tab id", msg.tabId);
+        return;
       }
+
+      contentScriptPort.postMessage(message);
     }
   });
-});
+}
 
-// Receive message from content script and relay to the devTools page for the
-// current tab
-browser.runtime.onMessage.addListener((request: unknown, sender) => {
-  // Messages from content scripts should have sender.tab set
-  if (sender.tab) {
-    const tabId = sender.tab.id;
-    if (tabId != null && tabId in connections) {
-      connections[tabId].postMessage(request);
-    } else {
-      console.log("Tab not found in connection list.");
-    }
-  } else {
-    console.log("sender.tab not defined.");
+// contentScripts and background service worker can suspend after 30 seconds
+// send ping every 15 seconds to keep them alive
+setInterval(() => {
+  for (const port of contentScriptPorts.values()) {
+    port.postMessage({ type: "ping" });
   }
-  return true;
-});
+}, 15 * 1000);

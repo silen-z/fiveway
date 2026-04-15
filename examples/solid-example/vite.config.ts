@@ -11,4 +11,7 @@ export default defineConfig({
   server: {
     port: 3001,
   },
+  define: {
+    "import.meta.env.FIVEWAY_INSPECTOR": "true",
+  },
 });

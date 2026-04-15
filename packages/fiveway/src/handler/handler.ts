@@ -1,5 +1,5 @@
 import type { NavigationAction } from "../action.ts";
-import { describeHandler } from "../meta/introspection.ts";
+import { describeHandler } from "../inspector.ts";
 import type { NodeId } from "../tree/id.ts";
 import type { NavtreeNode } from "../tree/node.ts";
 import type { NavigationTree } from "../tree/tree.ts";
@@ -40,7 +40,7 @@ export function runHandler(
  * @category Handler
  */
 export const parentHandler: NavigationHandler = (node, action, next) => {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
     describeHandler(action, { name: "core:parent" });
   }
 

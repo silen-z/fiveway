@@ -1,9 +1,9 @@
 import type { NavigationDirection } from "../action.ts";
-import { describeHandler } from "../meta/introspection.ts";
-import { type MetaHandler, metaHandler } from "../meta/metadata.ts";
+import { describeHandler } from "../inspector.ts";
 import { type NodeId, isParent } from "../tree/id.ts";
 import type { NavtreeNode } from "../tree/node.ts";
 import type { NavigationHandler } from "./handler.ts";
+import { type MetaHandler, metaHandler } from "./metadata.ts";
 
 export type FocusDirection = "front" | "back";
 
@@ -18,7 +18,7 @@ function createFocusHandler(config: FocusHandlerConfig = {}): NavigationHandler 
   const skipEmpty = config.skipEmpty ?? false;
 
   const focusHandler: NavigationHandler = (node, action, next) => {
-    if (import.meta.env.DEV) {
+    if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
       describeHandler(action, {
         name: "core:focus",
         skipEmpty,
@@ -99,7 +99,7 @@ function findInitialChild(node: NavtreeNode): NodeId | null {
 }
 
 export const captureHandler: NavigationHandler = (node, action, next) => {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
     describeHandler(action, { name: "core:capture" });
   }
 

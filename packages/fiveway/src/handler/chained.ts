@@ -1,6 +1,7 @@
 import type { NavigationAction } from "../action.ts";
-import { defaultHandlerInfo } from "../meta/introspection.ts";
+import { describeHandler, type HandlerInfo } from "../inspector.ts";
 import type { NodeId } from "../tree/id.ts";
+import type { NavtreeNode } from "../tree/node.ts";
 import type { NavigationHandler } from "./handler.ts";
 
 export type ChainedHandler = NavigationHandler & {
@@ -43,8 +44,8 @@ function createChainedHandler(
         return next();
       }
 
-      if (import.meta.env.DEV) {
-        defaultHandlerInfo(link.handler, node, action);
+      if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
+        describeLinkHandler(link.handler, node, action);
       }
 
       return link.handler(node, newAction ?? action, runLink.bind(null, link.next));
@@ -108,6 +109,24 @@ function cloneChain(original: ChainLink) {
   }
 
   return cloned;
+}
+
+export function describeLinkHandler(
+  handler: NavigationHandler,
+  node: NavtreeNode,
+  action: NavigationAction,
+): void {
+  if (action.kind !== "query" || action.key !== "core:handler-info") {
+    return;
+  }
+
+  const value: Array<HandlerInfo> = [];
+  handler(node, { kind: "query", key: "core:handler-info", value }, () => null);
+  if (value.length === 0) {
+    describeHandler(action, {
+      name: handler.name !== "" ? handler.name : "custom",
+    });
+  }
 }
 
 export { createChainedHandler as chainedHandler };
