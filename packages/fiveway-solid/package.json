@@ -15,8 +15,8 @@
     "@fiveway/core": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
-    "vite-plugin-solid": "^2.11.11"
+    "typescript": "catalog:",
+    "vite-plugin-solid": "^2.11.12"
   },
   "peerDependencies": {
     "solid-js": "^1.9.3"

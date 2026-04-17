@@ -13,11 +13,10 @@
   },
   "devDependencies": {
     "@types/webextension-polyfill": "^0.12.5",
-    "typescript": "^5.9.3",
-    "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.14",
-    "vite-plugin-dts": "^4.5.4",
-    "vite-plugin-solid": "^2.11.11",
-    "vite-plugin-web-extension": "^4.5.0",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-solid": "^2.11.12",
+    "vite-plugin-web-extension": "^4.5.1",
     "vite-plus": "catalog:",
     "webextension-polyfill": "^0.12.0"
   }

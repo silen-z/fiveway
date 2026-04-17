@@ -14,8 +14,8 @@
     "dev": "vp pack --watch"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
+    "typescript": "catalog:",
     "vite-plus": "catalog:",
-    "vitest": "npm:@voidzero-dev/vite-plus-test@^0.1.14"
+    "vitest": "catalog:"
   }
 }

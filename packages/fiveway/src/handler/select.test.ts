@@ -12,7 +12,7 @@ import {
 test("selectHandler", async () => {
   const tree = createNavigationTree();
 
-  const onSelect = vi.fn();
+  const onSelect = vi.fn<() => void>();
 
   const node = createNode({
     id: "test",
@@ -25,5 +25,5 @@ test("selectHandler", async () => {
 
   handleAction(tree, { kind: "select" });
 
-  expect(onSelect).toBeCalledTimes(1);
+  expect(onSelect).toHaveBeenCalledTimes(1);
 });

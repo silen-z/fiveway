@@ -12,7 +12,7 @@ import {
 test("runHandler", async () => {
   const tree = createNavigationTree();
 
-  const handler = vi.fn(() => null);
+  const handler = vi.fn<NavigationHandler>(() => null);
   insertNode(tree, createNode({ id: "one", parent: "#", handler }));
 
   expect(handler).toHaveBeenCalledWith(
