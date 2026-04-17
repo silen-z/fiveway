@@ -17,31 +17,31 @@ test("listeners", async () => {
 
   expect(tree.focus).toBe("#/one");
 
-  const listener1 = vi.fn();
+  const listener1 = vi.fn<() => void>();
   const cleanupListener1 = registerListener(tree, "#", "focuschange", listener1);
 
-  const listener2 = vi.fn();
+  const listener2 = vi.fn<() => void>();
   const cleanupListener2 = registerListener(tree, "#", "focuschange", listener2);
 
   focusNode(tree, "#/two");
 
   expect(isFocused(tree, "#/two")).toBe(true);
-  expect(listener1).toBeCalledTimes(1);
-  expect(listener2).toBeCalledTimes(1);
+  expect(listener1).toHaveBeenCalledTimes(1);
+  expect(listener2).toHaveBeenCalledTimes(1);
 
   cleanupListener1();
 
   focusNode(tree, "#/one");
   expect(isFocused(tree, "#/one")).toBe(true);
-  expect(listener1).toBeCalledTimes(1);
-  expect(listener2).toBeCalledTimes(2);
+  expect(listener1).toHaveBeenCalledTimes(1);
+  expect(listener2).toHaveBeenCalledTimes(2);
 
   cleanupListener2();
 
   focusNode(tree, "#/two");
   expect(isFocused(tree, "#/two")).toBe(true);
-  expect(listener1).toBeCalledTimes(1);
-  expect(listener2).toBeCalledTimes(2);
+  expect(listener1).toHaveBeenCalledTimes(1);
+  expect(listener2).toHaveBeenCalledTimes(2);
 });
 
 test("listeners: cleaning listener twice", () => {

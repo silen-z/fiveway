@@ -199,7 +199,7 @@ test("selectNode", async () => {
     parent: "#",
   });
 
-  const onSelect = vi.fn();
+  const onSelect = vi.fn<() => void>();
 
   const targetNode = createNode({
     id: "node",

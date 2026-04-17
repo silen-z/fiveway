@@ -10,15 +10,15 @@
   "dependencies": {
     "@fiveway/devtools": "workspace:^",
     "@fiveway/react": "workspace:^",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "typescript": "^5.9.3",
-    "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.14",
+    "typescript": "catalog:",
+    "vite": "catalog:",
     "vite-plus": "catalog:"
   }
 }
