@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import browser from "webextension-polyfill";
 
-import { NavtreeUpdateMessage } from "./messages.ts";
+import { InspectorMessage } from "./messages.ts";
 
 let port = browser.runtime.connect({ name: "content-script" });
 
@@ -28,8 +28,9 @@ window.addEventListener("message", (event) => {
   }
 
   // forward tree updates to devtools
-  const { success, output: message } = v.safeParse(NavtreeUpdateMessage, event.data);
+  const { success, output: message } = v.safeParse(InspectorMessage, event.data);
   if (success) {
+    console.log("contents script received message from page", message);
     port.postMessage(message);
   }
 });

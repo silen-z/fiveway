@@ -66,7 +66,7 @@ export function useFocusSync(tree: NavigationTree) {
     const handler = (e: FocusChangeEvent) => {
       const el = elementHandler.query(tree, e.focused);
       if (el != null) {
-        el.focus();
+        el.focus({ focusVisible: true });
       }
     };
 

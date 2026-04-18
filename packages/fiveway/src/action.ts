@@ -7,11 +7,32 @@ export type NavigationDirection = "up" | "down" | "left" | "right";
 //     custom: { kind: "my-custom-action", customValue: string };
 //   }
 // }
+
+export type SelectAction = {
+  kind: "select";
+};
+
+export type MoveAction = {
+  kind: "move";
+  direction: NavigationDirection | "back";
+};
+
+export type FocusAction = {
+  kind: "focus";
+  direction: NavigationDirection | "initial" | null;
+};
+
+export type QueryAction = {
+  kind: "query";
+  key: string;
+  value: unknown;
+};
+
 export interface NavigationActions {
-  select: { kind: "select" };
-  move: { kind: "move"; direction: NavigationDirection | "back" };
-  focus: { kind: "focus"; direction: NavigationDirection | "initial" | null };
-  query: { kind: "query"; key: string; value: unknown };
+  select: SelectAction;
+  move: MoveAction;
+  focus: FocusAction;
+  query: QueryAction;
 }
 
 export type NavigationAction = NavigationActions[keyof NavigationActions];

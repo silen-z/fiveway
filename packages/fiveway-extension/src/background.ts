@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import browser from "webextension-polyfill";
 
-import { DevtoolsPortMessage } from "./messages.js";
+import { InitMessage, InspectorCommand } from "./messages.js";
 
 const contentScriptPorts: Map<number, browser.Runtime.Port> = new Map();
 const devtoolsPorts: Map<number, browser.Runtime.Port> = new Map();
@@ -35,12 +35,14 @@ function contentScriptConnected(port: browser.Runtime.Port): void {
   });
 }
 
+export const AcceptedIncomingDevtoolsMessage = v.union([InitMessage, InspectorCommand]);
+
 function devtoolsConnected(port: browser.Runtime.Port): void {
   // since devtools ports do not contain `tabId` of a tab inspected by the devtool panel
   // we have to send a custom `init` message from the devtool panel
   // and only when the `init` message is received we can register the port
   port.onMessage.addListener((message) => {
-    const { success, output: msg } = v.safeParse(DevtoolsPortMessage, message);
+    const { success, output: msg } = v.safeParse(AcceptedIncomingDevtoolsMessage, message);
     if (!success) {
       console.error("unexpected message from devtools", message);
       return;
@@ -73,3 +75,15 @@ setInterval(() => {
     port.postMessage({ type: "ping" });
   }
 }, 15 * 1000);
+
+// Main-frame navigations (reload, link, typed URL, …) replace the document; clear devtools state
+// so stale trees are not shown until the new page sends snapshots. Does not use page unload hooks,
+// so it does not affect the page’s back-forward cache eligibility.
+browser.webNavigation.onCommitted.addListener((details) => {
+  if (details.frameId !== 0) {
+    return;
+  }
+
+  const devtoolsPort = devtoolsPorts.get(details.tabId);
+  devtoolsPort?.postMessage({ type: "fiveway:reload" });
+});

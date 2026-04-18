@@ -10,7 +10,7 @@
     "128": "icon/128.png"
   },
 
-  "permissions": ["<all_urls>", "devtools"],
+  "permissions": ["<all_urls>", "devtools", "webNavigation"],
 
   "background": {
     "{{chrome}}.service_worker": "src/background.ts",

@@ -1,9 +1,8 @@
 import * as v from "valibot";
 
 export type InitMessage = v.InferOutput<typeof InitMessage>;
-export type NavtreeUpdateMessage = v.InferOutput<typeof NavtreeUpdateMessage>;
-export type NavtreeCommandMessage = v.InferOutput<typeof NavtreeCommandMessage>;
-export type DevtoolsPortMessage = v.InferOutput<typeof DevtoolsPortMessage>;
+export type InspectorMessage = v.InferOutput<typeof InspectorMessage>;
+export type InspectorCommand = v.InferOutput<typeof InspectorCommand>;
 export type Command = v.InferOutput<typeof Command>;
 
 // send when devtools initializes
@@ -14,7 +13,7 @@ export const InitMessage = v.object({
 });
 
 // send from content script to devtools when a tree update happens
-export const NavtreeUpdateMessage = v.object({
+export const InspectorMessage = v.object({
   type: v.literal("fiveway:treeState"),
   tree: v.string(),
   focus: v.optional(v.string()),
@@ -37,19 +36,22 @@ export const Command = v.union([
   v.object({ kind: v.literal("requestCompleteSnapshot"), tree: v.string() }),
 
   // focus a specific node
-  v.object({ kind: v.literal("focus"), tree: v.string(), node: v.string() }),
+  v.object({
+    kind: v.literal("handleAction"),
+    tree: v.string(),
+    node: v.optional(v.string()),
+    action: v.unknown(),
+  }),
 ]);
 
 // send when devtools wants to execute a command on the content script
 // used for sending commands to content script
-export const NavtreeCommandMessage = v.object({
+export const InspectorCommand = v.object({
   type: v.literal("fiveway:command"),
   tabId: v.number(),
   command: Command,
 });
 
-export const DevtoolsPortMessage = v.union([
-  InitMessage,
-  NavtreeCommandMessage,
-  NavtreeUpdateMessage,
-]);
+export const ReloadMessage = v.object({
+  type: v.literal("fiveway:reload"),
+});

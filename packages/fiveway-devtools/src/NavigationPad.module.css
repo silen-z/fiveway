@@ -1,0 +1,58 @@
+.navPad {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(3, 28px);
+  grid-template-rows: repeat(3, 28px);
+  grid-template-areas:
+    ".    up     ."
+    "left select right"
+    ".    down   back";
+  gap: 4px;
+  justify-content: center;
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid #e4e4e7;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.navPadBack {
+  grid-area: back;
+}
+
+.navPadUp {
+  grid-area: up;
+}
+
+.navPadSelect {
+  grid-area: select;
+}
+
+.navPadLeft {
+  grid-area: left;
+}
+
+.navPadRight {
+  grid-area: right;
+}
+
+.navPadDown {
+  grid-area: down;
+}
+
+.navButton {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  background: #fafafa;
+  cursor: pointer;
+  color: #3f3f46;
+}
+
+.navButton:hover {
+  background: #f4f4f5;
+}

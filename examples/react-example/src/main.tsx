@@ -12,11 +12,12 @@ import { Showcase } from "./Showcase.tsx";
 import "./styles.css";
 // import { Items } from "./Benchmark.tsx";
 
-function App() {
-  const navigationTree = createNavigationTree();
+const navigationTree = createNavigationTree();
 
+function App() {
   useActionHandler(navigationTree);
   useFocusSync(navigationTree);
+
   return (
     <NavigationProvider tree={navigationTree}>
       <Showcase />
