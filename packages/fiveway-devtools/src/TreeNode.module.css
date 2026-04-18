@@ -1,0 +1,134 @@
+.nodeContainer {
+  display: none;
+  margin-top: 4px;
+
+  margin-left: 8px;
+  border-left: 1px solid #ccc;
+  padding-left: 8px;
+}
+
+.nodeContainer[data-open="true"] {
+  display: block;
+}
+
+.node {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.nodeLabel {
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  cursor: pointer;
+
+  padding: 2px 6px;
+}
+
+.nodeChevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  color: #71717a;
+}
+
+.nodeLabelText {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nodeKindIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  color: #71717a;
+}
+
+.node:hover .nodeLabelText {
+  text-decoration: underline;
+}
+
+.nodeActions {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.nodeActionButtonRevealOnHover {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 80ms ease;
+}
+
+.node:hover .nodeActionButtonRevealOnHover {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nodeActionButton {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  background: #fafafa;
+  cursor: pointer;
+  color: #3f3f46;
+}
+
+.nodeActionButton:hover {
+  background: #f4f4f5;
+}
+
+.nodeActionButton[aria-pressed="true"] {
+  background: #e4e4e7;
+  color: #18181b;
+}
+
+.node[data-inspected="true"] .nodeLabel {
+  background: #f4f4f5;
+}
+
+.node[data-root="false"]::before {
+  content: "";
+
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  width: 5px;
+  height: 1px;
+
+  background: #ccc;
+}
+
+.node[data-focused="true"] .nodeLabel {
+  font-weight: 700;
+}
+
+.node[data-focused="true"][data-children="false"] .nodeLabel {
+  background: #eeeeee;
+}
+
+.nodeFocusIndicator {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: #27272a;
+}

@@ -1,12 +1,13 @@
+import type { InspectorCommand } from "@fiveway/core";
 import { createInspector } from "@fiveway/devtools";
 import * as v from "valibot";
 import browser from "webextension-polyfill";
 
 import {
-  Command,
-  NavtreeCommandMessage,
-  NavtreeUpdateMessage,
   type InitMessage,
+  InspectorCommand as InspectorCommandMessage,
+  InspectorMessage,
+  ReloadMessage,
 } from "../messages.ts";
 
 const port = browser.runtime.connect({ name: "devtools" });
@@ -21,10 +22,12 @@ if (root === null) {
   throw new Error("root element not found");
 }
 
+export const AcceptedIncomingMessage = v.union([InspectorMessage, ReloadMessage]);
+
 createInspector(root, {
   subscribe: (callback) => {
     const handler = (message: unknown) => {
-      const { success, output } = v.safeParse(NavtreeUpdateMessage, message);
+      const { success, output } = v.safeParse(AcceptedIncomingMessage, message);
       if (success) {
         callback(output);
       }
@@ -35,11 +38,11 @@ createInspector(root, {
       port.onMessage.removeListener(handler);
     };
   },
-  sendCommand: (command: Command) => {
+  sendCommand: (command: InspectorCommand) => {
     port.postMessage({
       type: "fiveway:command",
       tabId: browser.devtools.inspectedWindow.tabId,
       command,
-    } satisfies NavtreeCommandMessage);
+    } satisfies InspectorCommandMessage);
   },
 });

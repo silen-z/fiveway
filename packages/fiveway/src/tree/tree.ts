@@ -274,8 +274,8 @@ export function focusNode(
   return true;
 }
 
-export function handleAction(tree: NavigationTree, action: NavigationAction): void {
-  const targetId = runHandler(tree, tree.focus, action);
+export function handleAction(tree: NavigationTree, action: NavigationAction, node?: NodeId): void {
+  const targetId = runHandler(tree, node ?? tree.focus, action);
   if (targetId !== null) {
     focusNode(tree, targetId);
   }
@@ -373,8 +373,8 @@ function clearOrphan(tree: NavigationTree, parent: NodeId, child: NodeId) {
 }
 
 function handleInspectorCommand(tree: NavigationTree, command: InspectorCommand) {
-  if (command.kind === "focus") {
-    focusNode(tree, command.node);
+  if (command.kind === "handleAction") {
+    handleAction(tree, command.action, command.node);
   }
 
   if (command.kind === "requestCompleteSnapshot") {

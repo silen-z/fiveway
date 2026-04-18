@@ -42,8 +42,11 @@ export {
 
 export {
   type NavigationDirection,
-  type NavigationActions,
   type NavigationAction,
+  type SelectAction,
+  type MoveAction,
+  type FocusAction,
+  type QueryAction,
 } from "./action.ts";
 
 export {

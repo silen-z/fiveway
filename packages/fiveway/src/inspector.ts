@@ -23,11 +23,19 @@ export function emitInspectorMessage(message: InspectorMessage): void {
     return;
   }
 
-  window.postMessage(message);
+  queue.push(message);
+
+  if (scheduledFlush == null) {
+    scheduledFlush = Promise.resolve()
+      .then(flushQueue)
+      .finally(() => {
+        scheduledFlush = null;
+      });
+  }
 }
 
 export type InspectorCommand =
-  | { kind: "focus"; tree: string; node: string }
+  | { kind: "handleAction"; tree: string; action: NavigationAction; node?: NodeId }
   | { kind: "requestCompleteSnapshot"; tree: string };
 
 export function subscribeToInspectorCommands(
@@ -69,4 +77,67 @@ export function queryHandlerInfo(tree: NavigationTree, id: NodeId): HandlerInfo[
   });
 
   return value;
+}
+
+const queue: InspectorMessage[] = [];
+let scheduledFlush: Promise<void> | null = null;
+
+function flushQueue(): void {
+  const batched: Record<string, InspectorMessage> = {};
+
+  for (const message of queue) {
+    const current = batched[message.tree];
+    if (current != null) {
+      mergeMessages(current, message);
+    } else {
+      batched[message.tree] = message;
+    }
+  }
+
+  queue.length = 0;
+
+  for (const message of Object.values(batched)) {
+    window.postMessage(message);
+  }
+}
+
+function mergeMessages(current: InspectorMessage, incoming: InspectorMessage): void {
+  if (incoming.focus != null) {
+    current.focus = incoming.focus;
+  }
+
+  if (incoming.nodes != null) {
+    current.nodes ??= [];
+
+    for (const node of incoming.nodes) {
+      const existing = current.nodes.findIndex((n) => n.id === node.id);
+      if (existing !== -1) {
+        current.nodes[existing] = node;
+      } else {
+        current.nodes.push(node);
+      }
+    }
+
+    if (current.removedNodes != null) {
+      const incomingNodes = incoming.nodes;
+      current.removedNodes = current.removedNodes.filter(
+        (id) => !incomingNodes.some((node) => node.id === id),
+      );
+    }
+  }
+
+  if (incoming.removedNodes != null) {
+    current.removedNodes ??= [];
+
+    for (const id of incoming.removedNodes) {
+      if (!current.removedNodes.includes(id)) {
+        current.removedNodes.push(id);
+      }
+    }
+
+    if (current.nodes != null) {
+      const removed = incoming.removedNodes ?? [];
+      current.nodes = current.nodes.filter((node) => !removed.includes(node.id));
+    }
+  }
 }
