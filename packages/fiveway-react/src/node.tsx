@@ -109,12 +109,12 @@ export function NavigationNode({ children, ...props }: NodeProps): ReactNode {
   return <Context>{typeof children === "function" ? children(node) : children}</Context>;
 }
 
-// lazy isFocused hook to avoid subscribing to focuschange events when not needed
+// lazy isFocused hook to avoid subscribing to focus when not needed
 function useLazyIsFocused(tree: NavigationTree, nodeId: NodeId): () => boolean {
   const [subscribed, setSubscribed] = useState(false);
 
   const subscribe = useCallback(
-    (cb: () => void) => registerListener(tree, nodeId, "focuschange", cb),
+    (handler: () => void) => registerListener(tree, nodeId, handler),
     [tree, nodeId],
   );
 

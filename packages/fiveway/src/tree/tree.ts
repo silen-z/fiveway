@@ -7,7 +7,7 @@ import {
   subscribeToInspectorCommands,
 } from "../inspector.ts";
 import { binarySearch } from "../lib/array.ts";
-import { type NavtreeEvent, type NavtreeListener, callListeners } from "./events.ts";
+import { notifyListeners, type NavtreeListener } from "./events.ts";
 import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
 import { toInspectorNode, type CreatedNavtreeNode, type NavtreeNode } from "./node.ts";
 
@@ -77,15 +77,6 @@ export function insertNode(tree: NavigationTree, node: CreatedNavtreeNode): () =
 function connectNode(tree: NavigationTree, parentNode: NavtreeNode, node: NavtreeNode) {
   insertChildInOrder(parentNode, node);
   node.connected = true;
-
-  const event: NavtreeEvent = {
-    type: "structurechange",
-    operation: "insert",
-    id: node.id,
-  };
-  idsToRoot(node.id, (id) => {
-    callListeners(tree, id, event);
-  });
 
   if (isParent(tree.focus, node.id)) {
     updateFocus(tree);
@@ -176,15 +167,6 @@ function disconnectNode(tree: NavigationTree, nodeId: NodeId) {
   }
 
   node.connected = false;
-
-  const event: NavtreeEvent = {
-    type: "structurechange",
-    operation: "removal",
-    id: node.id,
-  };
-  idsToRoot(node.parent, (id) => {
-    callListeners(tree, id, event);
-  });
 }
 
 function updateFocus(tree: NavigationTree) {
@@ -257,14 +239,8 @@ export function focusNode(
   const lastFocused = tree.focus;
   tree.focus = resolvedId;
 
-  const event: NavtreeEvent = {
-    type: "focuschange",
-    focused: tree.focus,
-    previous: lastFocused,
-  };
-
   convergingPaths(lastFocused, tree.focus, (id) => {
-    callListeners(tree, id, event);
+    notifyListeners(tree, id);
   });
 
   if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {

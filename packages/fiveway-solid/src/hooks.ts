@@ -18,7 +18,7 @@ export function useFocusedId(scope: NodeId): Accessor<NodeId | null> {
   const [focusedId, setFocusedId] = createSignal(isFocused(tree, globalId) ? tree.focus : null);
 
   createEffect(() => {
-    const cleanup = registerListener(tree, globalId, "focuschange", () => {
+    const cleanup = registerListener(tree, globalId, () => {
       const id = isFocused(tree, globalId) ? tree.focus : null;
       setFocusedId(id);
     });
@@ -44,7 +44,7 @@ export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
 
     const id = watchedId();
 
-    const cleanup = registerListener(tree, id, "focuschange", () => {
+    const cleanup = registerListener(tree, id, () => {
       setFocused(isFocused(tree, id));
     });
 
@@ -72,7 +72,7 @@ export function useOnFocusChange(
 
     handler(isFocused(tree, subscribedId) ? tree.focus : null);
 
-    const cleanup = registerListener(tree, subscribedId, "focuschange", () => {
+    const cleanup = registerListener(tree, subscribedId, () => {
       const focusedId = isFocused(tree, subscribedId) ? tree.focus : null;
       handler(focusedId);
     });

@@ -6,7 +6,6 @@ import {
   chainedHandler,
   registerListener,
   spatialItemHandler,
-  type FocusChangeEvent,
 } from "@fiveway/core";
 import { defaultEventMapping, elementHandler } from "@fiveway/core/dom";
 import { useRef, useMemo, useEffect } from "react";
@@ -63,13 +62,13 @@ export function useActionHandler(tree: NavigationTree, options: ActionHandlerOpt
 
 export function useFocusSync(tree: NavigationTree): void {
   useEffect(() => {
-    const handler = (e: FocusChangeEvent) => {
-      const el = elementHandler.query(tree, e.focused);
+    const handler = () => {
+      const el = elementHandler.query(tree, tree.focus);
       if (el != null) {
         el.focus({ focusVisible: true });
       }
     };
 
-    return registerListener(tree, "#", "focuschange", handler);
+    return registerListener(tree, "#", handler);
   }, [tree]);
 }
