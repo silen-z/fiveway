@@ -1,9 +1,9 @@
 import { render } from "solid-js/web";
 
-import { createDevtoolsContext, devtoolsContext, type InspetorInit } from "./context.js";
+import { createDevtoolsContext, devtoolsContext, type InspetorInit } from "../context.js";
 import { Inspector } from "./InspectorPanel.js";
 
-export function createInspector(el: HTMLElement, handle: InspetorInit) {
+export function createInspector(el: HTMLElement, handle: InspetorInit): void {
   render(() => {
     const context = createDevtoolsContext(handle);
 

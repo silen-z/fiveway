@@ -89,7 +89,7 @@ export type NodeProps = NodeOptions & {
   children?: ReactNode | ((props: Omit<NodeHandle, "Context">) => ReactNode);
 };
 
-export function NavigationNode({ children, ...props }: NodeProps) {
+export function NavigationNode({ children, ...props }: NodeProps): ReactNode {
   const { Context, ...node } = useNavigationNode(props);
 
   return <Context>{typeof children === "function" ? children(node) : children}</Context>;

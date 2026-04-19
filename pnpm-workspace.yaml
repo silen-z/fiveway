@@ -5,8 +5,8 @@ packages:
 
 catalog:
   typescript: ^6.0.3
-  vite: npm:@voidzero-dev/vite-plus-core@latest
   vite-plus: ^0.1.18
+  vite: npm:@voidzero-dev/vite-plus-core@latest
   vitest: npm:@voidzero-dev/vite-plus-test@latest
 
 overrides:

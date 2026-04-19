@@ -1,12 +1,7 @@
 export * from "@fiveway/core";
 export * from "@fiveway/core/dom";
 
-export {
-  NavigationContext,
-  NavigationProvider,
-  useNavigationContext,
-  type NavigationProviderProps,
-} from "./context.tsx";
+export { NavigationContext, NavigationProvider, useNavigationContext } from "./context.tsx";
 
 export {
   type NodeOptions,

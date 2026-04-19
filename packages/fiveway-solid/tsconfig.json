@@ -1,24 +1,30 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
-    "strict": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+
+    "module": "preserve",
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    "noUncheckedIndexedAccess": true,
-    "module": "preserve",
-    "declaration": true,
-    "composite": true,
-    "declarationMap": true,
-    "allowImportingTsExtensions": true,
-    "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
-    "lib": ["ES2023", "dom"],
+
+    "composite": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": true,
+    "isolatedDeclarations": true,
+
+    "target": "es2022",
+    "lib": ["es2022", "dom", "dom.iterable"],
+
     "jsx": "preserve",
     "jsxImportSource": "solid-js"
   },
-  "include": ["./src/**/*"],
-  "exclude": ["./src/**/*.test.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"],
+
   "references": [{ "path": "../fiveway" }]
 }

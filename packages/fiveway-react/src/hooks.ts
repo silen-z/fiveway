@@ -11,7 +11,7 @@ import { useCallback, useEffect, useSyncExternalStore, useRef } from "react";
 
 import { useNavigationContext } from "./context.tsx";
 
-export function useIsFocused(nodeId: NodeId) {
+export function useIsFocused(nodeId: NodeId): boolean {
   const { tree, parentNode } = useNavigationContext();
   const globalId = joinId(parentNode, nodeId);
 
@@ -23,7 +23,7 @@ export function useIsFocused(nodeId: NodeId) {
   return useSyncExternalStore(subscribe, () => isFocused(tree, globalId));
 }
 
-export function useOnFocus(nodeId: NodeId, handler: (id: NodeId | null) => void) {
+export function useOnFocus(nodeId: NodeId, handler: (id: NodeId | null) => void): void {
   const { tree, parentNode } = useNavigationContext();
   const globalId = joinId(parentNode, nodeId);
 
@@ -38,7 +38,7 @@ export function useOnFocus(nodeId: NodeId, handler: (id: NodeId | null) => void)
   }, [globalId, tree]);
 }
 
-export function useFocusedId(scope: NodeId) {
+export function useFocusedId(scope: NodeId): NodeId | null {
   const { tree, parentNode } = useNavigationContext();
   const globalId = joinId(parentNode, scope);
 
@@ -50,7 +50,9 @@ export function useFocusedId(scope: NodeId) {
   return useSyncExternalStore(subscribe, () => (isFocused(tree, globalId) ? tree.focus : null));
 }
 
-export function useFocus(scope?: NodeId): (nodeId: NodeId, options?: FocusOptions) => boolean {
+type FocusFn = (nodeId: NodeId, options?: FocusOptions) => boolean;
+
+export function useFocus(scope?: NodeId): FocusFn {
   const { tree, parentNode } = useNavigationContext();
   scope ??= parentNode;
 
@@ -62,7 +64,9 @@ export function useFocus(scope?: NodeId): (nodeId: NodeId, options?: FocusOption
   );
 }
 
-export function useSelect(scope?: NodeId) {
+type SelectFn = (nodeId: NodeId, focus?: boolean) => void;
+
+export function useSelect(scope?: NodeId): SelectFn {
   const { tree, parentNode } = useNavigationContext();
   scope ??= parentNode;
 

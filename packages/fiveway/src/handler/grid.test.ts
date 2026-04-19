@@ -1,6 +1,9 @@
 import { expect, test } from "vite-plus/test";
 
-import { createTreeFromSpec } from "../../test/treeSpec.ts";
+// import first to avoid circular dependency errors
+// prettier-ignore
+import { createTreeFromSpec } from "../test/treeSpec.ts";
+
 import {
   gridHandler,
   gridItemHandler,
@@ -12,7 +15,7 @@ import {
 } from "../index.ts";
 
 test("gridHandler", async () => {
-  const { tree, grid } = createTreeFromSpec({
+  const { tree, nodes } = createTreeFromSpec({
     id: "grid",
     handler: gridHandler(),
   });
@@ -21,7 +24,7 @@ test("gridHandler", async () => {
     for (let col = 1; col <= 3; col++) {
       const node = createNode({
         id: `item-${row}-${col}`,
-        parent: grid.id,
+        parent: nodes.grid.id,
         handler: defaultHandler.prepend(gridItemHandler({ row, col })),
       });
       insertNode(tree, node);

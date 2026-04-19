@@ -4,9 +4,10 @@ export default defineProject({
   pack: {
     platform: "neutral",
     entry: ["src/index.ts", "src/dom.ts"],
-    exports: true,
     format: ["esm"],
+    dts: true,
     unbundle: true,
+    exports: { packageJson: false },
     define: {
       // tsdown does not handle this by default
       "import.meta.vitest": "false",

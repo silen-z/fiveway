@@ -1,18 +1,18 @@
 import { type NavigationTree, type NodeId } from "@fiveway/core";
-import { createContext, useContext, type PropsWithChildren } from "react";
+import { type Context, type ReactNode, createContext, useContext } from "react";
 
 export type NavigationContext = {
   tree: NavigationTree;
   parentNode: NodeId;
 };
 
-export const NavigationContext = createContext<NavigationContext | null>(null);
+export const NavigationContext: Context<NavigationContext | null> =
+  createContext<NavigationContext | null>(null);
 
-export type NavigationProviderProps = PropsWithChildren<{
+export function NavigationProvider(props: {
   tree: NavigationTree;
-}>;
-
-export function NavigationProvider(props: NavigationProviderProps) {
+  children?: ReactNode;
+}): ReactNode {
   return (
     <NavigationContext.Provider value={{ tree: props.tree, parentNode: "#" }}>
       {props.children}

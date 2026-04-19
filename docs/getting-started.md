@@ -9,11 +9,11 @@ Install the core library and frameworks integration:
 ::: code-group
 
 ```sh [React]
-npm install @fiveway/core @fiveway/react
+npm install @fiveway/react
 ```
 
 ```sh [SolidJS]
-npm install @fiveway/core @fiveway/solid
+npm install @fiveway/solid
 ```
 
 :::
@@ -23,8 +23,7 @@ create a navigation tree and provide it to the application
 ::: code-group
 
 ```tsx [React]
-import { createNavigationTree } from "@fiveway/core";
-import { NavigationProvider, useActionHandler } from "@fiveway/react";
+import { createNavigationTree, NavigationProvider, useActionHandler } from "@fiveway/react";
 
 const navtree = createNavigationTree();
 
@@ -45,8 +44,7 @@ now your components can become navigation nodes
 ::: code-group
 
 ```jsx [React]
-import { horizontalHandler } from "@fiveway/core";
-import { useNavigationNode } from "@fiveway/react";
+import { useNavigationNode, horizontalHandler } from "@fiveway/react";
 
 const items = [
   { id: "1", label: "One" },

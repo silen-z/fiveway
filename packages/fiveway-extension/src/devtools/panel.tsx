@@ -1,14 +1,10 @@
 import type { InspectorCommand } from "@fiveway/core";
-import { createInspector } from "@fiveway/devtools";
+import { createInspector } from "@fiveway/inspector";
 import * as v from "valibot";
 import browser from "webextension-polyfill";
 
-import {
-  type InitMessage,
-  InspectorCommand as InspectorCommandMessage,
-  InspectorMessage,
-  ReloadMessage,
-} from "../messages.ts";
+import type { InspectorCommand as InspectorCommandMessage } from "../messages.ts";
+import { type InitMessage, InspectorMessage, ReloadMessage } from "../messages.ts";
 
 const port = browser.runtime.connect({ name: "devtools" });
 

@@ -30,7 +30,6 @@ window.addEventListener("message", (event) => {
   // forward tree updates to devtools
   const { success, output: message } = v.safeParse(InspectorMessage, event.data);
   if (success) {
-    console.log("contents script received message from page", message);
     port.postMessage(message);
   }
 });

@@ -1,6 +1,9 @@
 import { expect, test, vi } from "vite-plus/test";
 
-import { createTreeFromSpec } from "../../test/treeSpec.ts";
+// import first to avoid circular dependency errors
+// prettier-ignore
+import { createTreeFromSpec } from "../test/treeSpec.ts";
+
 import {
   createNavigationTree,
   focusNode,
@@ -219,7 +222,7 @@ test("selectNode", async () => {
 });
 
 test("traverseNodes", () => {
-  const { tree, container1, container2, item1, item2, item3, item4 } = createTreeFromSpec({
+  const { tree, nodes } = createTreeFromSpec({
     id: "app",
     children: [
       { id: "container1", children: [{ id: "item1" }, { id: "item2" }] },
@@ -232,18 +235,18 @@ test("traverseNodes", () => {
     result.push(id);
   });
 
-  expect(result).toContain(container1.id);
-  expect(result).toContain(container2.id);
-  expect(result).toContain(item1.id);
-  expect(result).toContain(item2.id);
-  expect(result).toContain(item3.id);
-  expect(result).toContain(item4.id);
+  expect(result).toContain(nodes.container1.id);
+  expect(result).toContain(nodes.container2.id);
+  expect(result).toContain(nodes.item1.id);
+  expect(result).toContain(nodes.item2.id);
+  expect(result).toContain(nodes.item3.id);
+  expect(result).toContain(nodes.item4.id);
 
   const shallowResult: string[] = [];
   traverseNodes(tree, "#/app", 1, (id) => {
     shallowResult.push(id);
   });
 
-  expect(shallowResult).toContain(container1.id);
-  expect(shallowResult).toContain(container2.id);
+  expect(shallowResult).toContain(nodes.container1.id);
+  expect(shallowResult).toContain(nodes.container2.id);
 });

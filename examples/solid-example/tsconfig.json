@@ -1,29 +1,29 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
     "skipLibCheck": true,
-    "target": "es2022",
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true,
+
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "module": "Preserve",
-    "moduleResolution": "Bundler",
-    "declaration": true,
-    "declarationMap": true,
-    "lib": ["es2022", "dom", "dom.iterable"],
-    "composite": false,
+
+    "module": "preserve",
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+
     "noEmit": true,
-    "rootDir": "src",
-    "outDir": "dist",
+
+    "target": "es2022",
+    "lib": ["es2022", "dom", "dom.iterable"],
+
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "allowImportingTsExtensions": true,
+
     "types": ["vite/client"]
   },
-  "include": ["./src/**/*"],
-  "references": [{ "path": "../../packages/fiveway-solid" }, { "path": "../../packages/fiveway" }]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"],
+
+  "references": [{ "path": "../../packages/fiveway" }, { "path": "../../packages/fiveway-solid" }]
 }
