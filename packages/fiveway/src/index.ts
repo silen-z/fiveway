@@ -77,7 +77,7 @@ export {
 
 export { type GridPos, gridItemHandler, gridMovement, gridHandler } from "./handler/grid.ts";
 
-export { selectNode, selectHandler } from "./handler/select.ts";
+export { type SelectOptions, selectNode, selectHandler } from "./handler/select.ts";
 
 export { spatialItemHandler, spatialMovement, spatialHandler } from "./handler/spatial.ts";
 

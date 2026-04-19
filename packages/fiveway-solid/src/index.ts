@@ -14,6 +14,7 @@ export {
 export {
   useIsFocused,
   useOnFocus,
+  useOnBlur,
   useOnFocusChange,
   useFocusedId,
   useFocus,

@@ -10,9 +10,6 @@ import { type MetaHandler, metaHandler } from "./metadata.ts";
 
 export const spatialItemHandler: MetaHandler<DOMRect> = metaHandler("core:node-position");
 
-/**
- * @category Handler
- */
 export const spatialMovement: NavigationHandler = (node, action, next) => {
   if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
     describeHandler(action, { name: "core:spatial" });
@@ -55,9 +52,6 @@ export const spatialMovement: NavigationHandler = (node, action, next) => {
   return closestId ?? next();
 };
 
-/**
- * @category Handler
- */
 export const spatialHandler: ChainedHandler = chainedHandler([
   focusHandler({ skipEmpty: true }),
   spatialMovement,

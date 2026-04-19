@@ -4,7 +4,7 @@ import {
   useOnFocusChange,
   verticalHandler,
 } from "@fiveway/solid";
-import { createSignal } from "solid-js";
+import { createMemo, createSignal, For } from "solid-js";
 
 import { NavItem } from "../NavItem.tsx";
 import { offsetWindow, mapRange } from "./virtual.ts";
@@ -53,6 +53,8 @@ export function VirtualListExample() {
     }
   });
 
+  const itemsInRange = createMemo(() => mapRange(items, windowRange(), (item) => item));
+
   return (
     <ul
       style={{
@@ -63,9 +65,9 @@ export function VirtualListExample() {
       }}
     >
       <nav.Context>
-        {mapRange(items, windowRange(), (item) => (
-          <NavItem navId={item.id} label={item.label} order={item.order} />
-        ))}
+        <For each={itemsInRange()}>
+          {(item) => <NavItem navId={item.id} label={item.label} order={item.order} />}
+        </For>
       </nav.Context>
     </ul>
   );

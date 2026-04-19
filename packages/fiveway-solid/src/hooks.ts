@@ -1,6 +1,7 @@
 import {
   type NodeId,
   type FocusOptions,
+  type SelectOptions,
   selectNode,
   joinId,
   focusNode,
@@ -10,83 +11,6 @@ import {
 import { type Accessor, createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 
 import { useNavigationContext } from "./context.tsx";
-
-export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
-  const { tree, parentNode } = useNavigationContext();
-
-  const watchedId = createMemo(() => joinId(parentNode(), typeof id === "function" ? id() : id));
-
-  const [isNodeFocused, setFocused] = createSignal<boolean>(false);
-
-  let subscription: (() => void) | null = null;
-  const subscribe = (id: NodeId) => {
-    if (subscription !== null) {
-      subscription();
-    }
-
-    setFocused(isFocused(tree, id));
-    subscription = registerListener(tree, id, "focuschange", () => {
-      setFocused(isFocused(tree, id));
-    });
-  };
-
-  createEffect(() => {
-    const id = watchedId();
-    if (subscription !== null) {
-      subscribe(id);
-    }
-  });
-
-  onCleanup(() => {
-    subscription?.();
-  });
-
-  const getter = () => {
-    if (subscription === null) {
-      subscribe(watchedId());
-    }
-    return isNodeFocused();
-  };
-
-  return getter;
-}
-
-export function useOnFocus(nodeId: NodeId | Accessor<NodeId>, handler: () => void): void {
-  const { tree, parentNode } = useNavigationContext();
-  const id = () => joinId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
-
-  createEffect(() => {
-    const subscribedId = id();
-    let focused = isFocused(tree, subscribedId);
-    const cleanup = registerListener(tree, subscribedId, "focuschange", () => {
-      const lastFocused = focused;
-      focused = isFocused(tree, subscribedId);
-      if (!lastFocused && focused) {
-        handler();
-      }
-    });
-
-    onCleanup(cleanup);
-  });
-}
-
-export function useOnFocusChange(
-  nodeId: NodeId | Accessor<NodeId>,
-  handler: (id: NodeId | null) => void,
-): void {
-  const { tree, parentNode } = useNavigationContext();
-  const id = () => joinId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
-
-  createEffect(() => {
-    const subscribedId = id();
-    const cleanup = registerListener(tree, subscribedId, "focuschange", () => {
-      const focusedId = isFocused(tree, subscribedId) ? tree.focus : null;
-      handler(focusedId);
-    });
-
-    onCleanup(cleanup);
-  });
-}
 
 export function useFocusedId(scope: NodeId): Accessor<NodeId | null> {
   const { tree, parentNode } = useNavigationContext();
@@ -105,6 +29,82 @@ export function useFocusedId(scope: NodeId): Accessor<NodeId | null> {
   return focusedId;
 }
 
+export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
+  const { tree, parentNode } = useNavigationContext();
+
+  const watchedId = createMemo(() => joinId(parentNode(), typeof id === "function" ? id() : id));
+
+  const [isSubscribed, setSubscribed] = createSignal<boolean>(false);
+  const [isNodeFocused, setFocused] = createSignal<boolean>(isFocused(tree, watchedId()));
+
+  createEffect(() => {
+    if (!isSubscribed()) {
+      return;
+    }
+
+    const id = watchedId();
+
+    const cleanup = registerListener(tree, id, "focuschange", () => {
+      setFocused(isFocused(tree, id));
+    });
+
+    onCleanup(cleanup);
+  });
+
+  const accessor = () => {
+    setSubscribed(true);
+
+    return isNodeFocused();
+  };
+
+  return accessor;
+}
+
+export function useOnFocusChange(
+  nodeId: NodeId | Accessor<NodeId>,
+  handler: (id: NodeId | null) => void,
+): void {
+  const { tree, parentNode } = useNavigationContext();
+  const id = () => joinId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
+
+  createEffect(() => {
+    const subscribedId = id();
+
+    handler(isFocused(tree, subscribedId) ? tree.focus : null);
+
+    const cleanup = registerListener(tree, subscribedId, "focuschange", () => {
+      const focusedId = isFocused(tree, subscribedId) ? tree.focus : null;
+      handler(focusedId);
+    });
+
+    onCleanup(cleanup);
+  });
+}
+
+export function useOnFocus(nodeId: NodeId | Accessor<NodeId>, handler: () => void): void {
+  let lastFocused = false;
+  useOnFocusChange(nodeId, (id) => {
+    const isFocused = id !== null;
+    if (!lastFocused && isFocused) {
+      handler();
+    }
+
+    lastFocused = isFocused;
+  });
+}
+
+export function useOnBlur(nodeId: NodeId | Accessor<NodeId>, handler: () => void): void {
+  let lastFocused = false;
+  useOnFocusChange(nodeId, (id) => {
+    const isFocused = id !== null;
+    if (lastFocused && !isFocused) {
+      handler();
+    }
+
+    lastFocused = isFocused;
+  });
+}
+
 type FocusFn = (nodeId: NodeId, options?: FocusOptions) => boolean;
 
 export function useFocus(scope?: NodeId): FocusFn {
@@ -116,13 +116,13 @@ export function useFocus(scope?: NodeId): FocusFn {
   };
 }
 
-type SelectFn = (nodeId: NodeId, focus?: boolean) => void;
+type SelectFn = (nodeId: NodeId, options?: SelectOptions) => void;
 
 export function useSelect(scope?: NodeId): SelectFn {
   const { tree, parentNode } = useNavigationContext();
   scope ??= parentNode();
 
-  return (nodeId: NodeId, focus?: boolean) => {
-    selectNode(tree, joinId(scope, nodeId), focus);
+  return (nodeId: NodeId, options?: SelectOptions) => {
+    selectNode(tree, joinId(scope, nodeId), options);
   };
 }

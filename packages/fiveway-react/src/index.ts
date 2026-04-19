@@ -11,7 +11,15 @@ export {
   NavigationNode,
 } from "./node.tsx";
 
-export { useIsFocused, useOnFocus, useFocusedId, useFocus, useSelect } from "./hooks.ts";
+export {
+  useIsFocused,
+  useOnFocus,
+  useOnBlur,
+  useOnFocusChange,
+  useFocusedId,
+  useFocus,
+  useSelect,
+} from "./hooks.ts";
 
 export {
   type ElementHandler,

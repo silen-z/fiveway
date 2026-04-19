@@ -1,5 +1,6 @@
 import {
   type FocusOptions,
+  type SelectOptions,
   type NavigationHandler,
   type NodeId,
   insertNode,
@@ -34,9 +35,9 @@ export type NodeOptions = {
 
 export type NodeHandle = {
   (): NodeId;
-  focus: (nodeId?: NodeId) => void;
-  select: () => void;
   isFocused: Accessor<boolean>;
+  focus: (nodeId?: NodeId, options?: FocusOptions) => void;
+  select: (nodeId?: NodeId, options?: SelectOptions) => void;
   onFocus: (fn: () => void) => void;
   Context: Component<ParentProps>;
 };
@@ -98,9 +99,9 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
     return focusNode(tree, id, options);
   };
 
-  const select = (nodeId?: NodeId) => {
+  const select = (nodeId?: NodeId, options?: SelectOptions) => {
     const id = nodeId != null ? joinId(node().id, nodeId) : node().id;
-    selectNode(tree, id);
+    selectNode(tree, id, options);
   };
 
   // workaround for: https://github.com/solidjs/solid/issues/2352

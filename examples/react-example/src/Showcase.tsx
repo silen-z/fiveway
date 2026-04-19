@@ -7,7 +7,7 @@ import {
   itemHandler,
   useNavigationContext,
   useNavigationNode,
-  useOnFocus,
+  useOnFocusChange,
 } from "@fiveway/react";
 import { useEffect } from "react";
 
@@ -27,7 +27,7 @@ export function Showcase() {
     handler: gridHandler().prepend(initialHandler("start")),
   });
 
-  useOnFocus(nav.id, (id) => {
+  useOnFocusChange(nav.id, (id) => {
     if (id === null) {
       return;
     }
