@@ -1,0 +1,36 @@
+name: Release Packages
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          node-version: "24"
+          cache: false
+
+      - run: "vp run preparePublish"
+
+      - run: "npm publish --tag latest --provenance"
+        working-directory: "packages/fiveway"
+
+      - run: "npm publish --tag latest --provenance"
+        working-directory: "packages/fiveway-react"
+
+      - run: "npm publish --tag latest --provenance"
+        working-directory: "packages/fiveway-solid"
+
+      - run: "npm publish --tag latest --provenance"
+        working-directory: "packages/fiveway-inspector"

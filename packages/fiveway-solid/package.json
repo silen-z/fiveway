@@ -1,6 +1,13 @@
 {
   "name": "@fiveway/solid",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silen-z/fiveway.git"
+  },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -8,6 +15,10 @@
       "import": "./dist/esm/index.js",
       "solid": "./dist/solid/index.js"
     }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "build": "vp pack",
