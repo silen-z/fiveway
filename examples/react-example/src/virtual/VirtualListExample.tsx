@@ -1,4 +1,4 @@
-import { childLocalId, useNavigationNode, useOnFocus, verticalHandler } from "@fiveway/react";
+import { childLocalId, useNavigationNode, useOnFocusChange, verticalHandler } from "@fiveway/react";
 import { useState } from "react";
 
 import { NavItem } from "../NavItem.tsx";
@@ -32,7 +32,7 @@ export function VirtualListExample() {
     }),
   });
 
-  useOnFocus(nav.id, (id) => {
+  useOnFocusChange(nav.id, (id) => {
     if (id === null) {
       return;
     }

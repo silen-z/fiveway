@@ -6,9 +6,6 @@ import { type ChainedHandler, chainedHandler } from "./chained.ts";
 import { focusHandler } from "./focus.ts";
 import { type HandlerNext, parentHandler } from "./handler.ts";
 
-/**
- * @category Handler
- */
 export function verticalMovementHandler(
   node: NavtreeNode,
   action: NavigationAction,
@@ -50,18 +47,12 @@ function verticalFocusDirection(dir: NavigationDirection | "initial" | null) {
   }
 }
 
-/**
- * @category Handler
- */
 export const verticalHandler: ChainedHandler = chainedHandler([
   focusHandler({ skipEmpty: true, direction: verticalFocusDirection }),
   verticalMovementHandler,
   parentHandler,
 ]);
 
-/**
- * @category Handler
- */
 export function horizontalMovementHandler(
   node: NavtreeNode,
   action: NavigationAction,
@@ -103,9 +94,6 @@ function horizontalFocusDirection(dir: NavigationDirection | "initial" | null) {
   }
 }
 
-/**
- * @category Handler
- */
 export const horizontalHandler: ChainedHandler = chainedHandler([
   focusHandler({ skipEmpty: true, direction: horizontalFocusDirection }),
   horizontalMovementHandler,

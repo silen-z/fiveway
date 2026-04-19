@@ -2,17 +2,29 @@ import {
   type NodeId,
   type NavigationHandler,
   type FocusOptions,
+  type SelectOptions,
   type CreatedNavtreeNode,
   updateNode,
   insertNode,
   removeNode,
   createNode,
+  isFocused,
+  registerListener,
+  type NavigationTree,
+  focusNode,
+  selectNode,
+  joinId,
 } from "@fiveway/core";
-import { type ReactNode, useRef, useEffect, useCallback } from "react";
+import {
+  type ReactNode,
+  useRef,
+  useEffect,
+  useCallback,
+  useSyncExternalStore,
+  useState,
+} from "react";
 
 import { NavigationContext, useNavigationContext } from "./context.tsx";
-import { useFocus, useSelect } from "./hooks.ts";
-import { useLazyIsFocused } from "./internal.ts";
 
 export type NodeOptions = {
   id: NodeId;
@@ -25,7 +37,7 @@ export type NodeHandle = {
   id: NodeId;
   isFocused: () => boolean;
   focus: (nodeId?: NodeId, options?: FocusOptions) => void;
-  select: (nodeId?: NodeId, focus?: boolean) => void;
+  select: (nodeId?: NodeId, options?: SelectOptions) => void;
   Context: React.FunctionComponent<{ children: ReactNode }>;
 };
 
@@ -56,6 +68,18 @@ export function useNavigationNode(options: NodeOptions): NodeHandle {
     };
   }, [tree, nodeId]);
 
+  const isFocused = useLazyIsFocused(tree, nodeId);
+
+  const focus = (target?: NodeId, options?: FocusOptions) => {
+    const id = target != null ? joinId(nodeId, target) : nodeId;
+    return focusNode(tree, id, options);
+  };
+
+  const select = (target?: NodeId, options?: SelectOptions) => {
+    const id = target != null ? joinId(nodeId, target) : nodeId;
+    selectNode(tree, id, options);
+  };
+
   const Context: NodeHandle["Context"] = useCallback(
     (props: { children: ReactNode }) => {
       const context = {
@@ -72,17 +96,7 @@ export function useNavigationNode(options: NodeOptions): NodeHandle {
 
   Context.displayName = "NodeContext";
 
-  const isFocused = useLazyIsFocused(tree, nodeId);
-  const focus = useFocus(nodeId);
-  const select = useSelect(nodeId);
-
-  return {
-    id: nodeId,
-    isFocused,
-    focus: (id, options) => focus(id ?? nodeId, options),
-    select: (id, focus) => select(id ?? nodeId, focus),
-    Context,
-  };
+  return { id: nodeId, isFocused, focus, select, Context };
 }
 
 export type NodeProps = NodeOptions & {
@@ -93,4 +107,30 @@ export function NavigationNode({ children, ...props }: NodeProps): ReactNode {
   const { Context, ...node } = useNavigationNode(props);
 
   return <Context>{typeof children === "function" ? children(node) : children}</Context>;
+}
+
+// lazy isFocused hook to avoid subscribing to focuschange events when not needed
+function useLazyIsFocused(tree: NavigationTree, nodeId: NodeId): () => boolean {
+  const [subscribed, setSubscribed] = useState(false);
+
+  const subscribe = useCallback(
+    (cb: () => void) => registerListener(tree, nodeId, "focuschange", cb),
+    [tree, nodeId],
+  );
+
+  const subscribedValue = useSyncExternalStore(subscribed ? subscribe : noopSubscribe, () =>
+    isFocused(tree, nodeId),
+  );
+
+  return () => {
+    if (!subscribed) {
+      setSubscribed(true);
+    }
+
+    return subscribedValue;
+  };
+}
+
+function noopSubscribe() {
+  return () => {};
 }

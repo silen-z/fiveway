@@ -4,7 +4,7 @@ import {
   gridItemHandler,
   itemHandler,
   useNavigationNode,
-  useOnFocus,
+  useOnFocusChange,
 } from "@fiveway/react";
 import { type CSSProperties, useState } from "react";
 
@@ -48,7 +48,7 @@ export function VirtualGridExample() {
     }),
   });
 
-  useOnFocus(nav.id, (id) => {
+  useOnFocusChange(nav.id, (id) => {
     if (id === null) {
       return;
     }

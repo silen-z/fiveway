@@ -94,9 +94,6 @@ type GridHandlerConfig = {
   distance?: DistanceFunction;
 };
 
-/**
- * @category Handler
- */
 function createGridMovement(config: GridHandlerConfig = {}): NavigationHandler {
   const gridMovement: NavigationHandler = (node, action, next) => {
     if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
@@ -155,9 +152,6 @@ function createGridMovement(config: GridHandlerConfig = {}): NavigationHandler {
   return gridMovement;
 }
 
-/**
- * @category Handler
- */
 export { createGridMovement as gridMovement };
 
 export const gridHandler = (config: GridHandlerConfig = {}): ChainedHandler =>

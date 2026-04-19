@@ -6,7 +6,7 @@ import {
   itemHandler,
   useOnFocusChange,
 } from "@fiveway/solid";
-import { createSignal, type JSX } from "solid-js";
+import { createMemo, createSignal, For, type JSX } from "solid-js";
 
 import { NavItem } from "../NavItem.tsx";
 import { offsetWindow, mapRange } from "./virtual.ts";
@@ -68,24 +68,28 @@ export function VirtualGridExample() {
     }
   });
 
+  const itemsInRange = createMemo(() => mapRange(items, gridRange(), (item) => item));
+
   return (
     <div class={css.grid} style={{ "--cols": cols } as JSX.CSSProperties}>
       <nav.Context>
-        {mapRange(items, gridRange(), (item) => {
-          const gridPosition = {
-            row: Math.floor(item.order / cols),
-            col: item.order % cols,
-          };
+        <For each={itemsInRange()}>
+          {(item) => {
+            const gridPosition = {
+              row: Math.floor(item.order / cols),
+              col: item.order % cols,
+            };
 
-          return (
-            <NavItem
-              navId={item.id}
-              label={item.label}
-              order={item.order}
-              handler={itemHandler().prepend(gridItemHandler(gridPosition))}
-            />
-          );
-        })}
+            return (
+              <NavItem
+                navId={item.id}
+                label={item.label}
+                order={item.order}
+                handler={itemHandler().prepend(gridItemHandler(gridPosition))}
+              />
+            );
+          }}
+        </For>
       </nav.Context>
     </div>
   );

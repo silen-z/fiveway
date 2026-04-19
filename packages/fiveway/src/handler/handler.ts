@@ -36,9 +36,6 @@ export function runHandler(
   return node.handler(node, action, next);
 }
 
-/**
- * @category Handler
- */
 export const parentHandler: NavigationHandler = (node, action, next) => {
   if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
     describeHandler(action, { name: "core:parent" });
