@@ -12,6 +12,15 @@ export default defineConfig({
           "@fiveway/inspector#build",
         ],
       },
+      preparePublish: {
+        command: "true",
+        dependsOn: [
+          "@fiveway/core#build",
+          "@fiveway/react#build",
+          "@fiveway/solid#build",
+          "@fiveway/inspector#build",
+        ],
+      },
       "example:react": {
         command: "vp run @fiveway/react-example#dev",
         dependsOn: ["@fiveway/core#build", "@fiveway/react#build"],
