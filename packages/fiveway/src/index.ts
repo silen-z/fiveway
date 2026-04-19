@@ -32,13 +32,7 @@ export {
 } from "./tree/node.ts";
 export { type NodeId, joinId, isParent, childLocalId } from "./tree/id.ts";
 
-export {
-  type FocusChangeEvent,
-  type StructureChangeEvent,
-  type NavtreeEvent,
-  type NavtreeListener,
-  registerListener,
-} from "./tree/events.ts";
+export { type NavtreeListener, registerListener } from "./tree/events.ts";
 
 export {
   type NavigationDirection,

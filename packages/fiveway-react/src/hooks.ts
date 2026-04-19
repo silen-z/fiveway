@@ -17,7 +17,7 @@ export function useFocusedId(scope: NodeId): NodeId | null {
   const globalId = joinId(parentNode, scope);
 
   const subscribe = useCallback(
-    (cb: () => void) => registerListener(tree, globalId, "focuschange", cb),
+    (handler: () => void) => registerListener(tree, globalId, handler),
     [tree, globalId],
   );
 
@@ -38,7 +38,7 @@ export function useOnFocusChange(nodeId: NodeId, handler: (id: NodeId | null) =>
   useEffect(() => {
     handlerRef.current(isFocused(tree, globalId) ? tree.focus : null);
 
-    return registerListener(tree, globalId, "focuschange", () => {
+    return registerListener(tree, globalId, () => {
       const id = isFocused(tree, globalId) ? tree.focus : null;
       handlerRef.current(id);
     });
