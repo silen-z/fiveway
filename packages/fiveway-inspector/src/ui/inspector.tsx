@@ -1,7 +1,7 @@
 import { render } from "solid-js/web";
 
-import { createDevtoolsContext, devtoolsContext, type InspetorInit } from "../context.js";
-import { Inspector } from "./InspectorPanel.js";
+import { createDevtoolsContext, devtoolsContext, type InspetorInit } from "../context.ts";
+import { Inspector } from "./InspectorPanel.tsx";
 
 export function createInspector(el: HTMLElement, handle: InspetorInit): void {
   render(() => {

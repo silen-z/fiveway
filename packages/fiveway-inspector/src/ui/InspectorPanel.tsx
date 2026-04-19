@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 
-import { useDevtoolsContext } from "../context.js";
-import { TreeInspector } from "./TreeInspector.js";
+import { useDevtoolsContext } from "../context.ts";
+import { TreeInspector } from "./TreeInspector.tsx";
 
 import styles from "./InspectorPanel.module.css";
 
