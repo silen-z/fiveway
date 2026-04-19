@@ -3,7 +3,7 @@ import { clsx } from "clsx";
 import * as Icon from "lucide-solid";
 import { createMemo, createSignal, For, Show } from "solid-js";
 
-import { type InspectedTree, useDevtoolsContext } from "../context.js";
+import { type InspectedTree, useDevtoolsContext } from "../context.ts";
 
 import styles from "./TreeNode.module.css";
 
