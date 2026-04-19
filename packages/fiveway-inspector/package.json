@@ -1,11 +1,10 @@
 {
-  "name": "@fiveway/devtools",
+  "name": "@fiveway/inspector",
   "version": "0.1.0",
   "type": "module",
   "types": "./dist/inspector.d.ts",
   "exports": {
     ".": "./dist/inspector.js",
-    "./package.json": "./package.json",
     "./style.css": "./dist/style.css"
   },
   "scripts": {

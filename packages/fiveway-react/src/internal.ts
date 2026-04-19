@@ -5,10 +5,7 @@ function noopSubscribe() {
   return () => {};
 }
 
-/**
- * @internal
- */
-export function useLazyIsFocused(tree: NavigationTree, nodeId: NodeId) {
+export function useLazyIsFocused(tree: NavigationTree, nodeId: NodeId): () => boolean {
   const [subscribed, setSubscribed] = useState(false);
 
   const subscribe = useCallback(

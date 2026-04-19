@@ -5,15 +5,6 @@ import { defineConfig } from "vite-plus";
 import pkg from "./package.json" with { type: "json" };
 import manifest from "./src/manifest.json" with { type: "json" };
 
-function generateManifest() {
-  return {
-    name: pkg.name,
-    description: pkg.description,
-    version: pkg.version,
-    ...manifest,
-  };
-}
-
 export default defineConfig({
   plugins: [
     solid(),
@@ -27,3 +18,12 @@ export default defineConfig({
     }),
   ],
 });
+
+function generateManifest() {
+  return {
+    name: pkg.name,
+    description: pkg.description,
+    version: pkg.version,
+    ...manifest,
+  };
+}

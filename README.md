@@ -6,10 +6,9 @@ It comes with a set of default behaviors and allows for extensive customization.
 
 ## Features
 
-- 🚀 **Ready to go** — Rich set of premade behaviors for common scenarios and robust defaults
-- 🧱 **Composable** — Designed with components, local reasoning and composition in mind
-- 🔌 **Extensible** — Fully customize behavior via advanced middleware-like handler system
-- 🌈 **Framework agnostic** — Available for React and SolidJS (more coming in the future)
+- 🧱 **Composable** — designed with components, local reasoning and composition in mind
+- 🔌 **Extensible** — fully customize behavior via advanced middleware-like handler system
+- 🌈 **Framework agnostic** — use it in your favorite framework - React, SolidJS and more to come
 
 ---
 
@@ -41,8 +40,7 @@ ReactDOM.createRoot(rootElement).render(<App />);
 Now your components can become navigation nodes:
 
 ```jsx
-import { horizontalHandler } from "@fiveway/core";
-import { useNavigationNode } from "@fiveway/react";
+import { useNavigationNode, horizontalHandler } from "@fiveway/react";
 
 const items = [
   { id: "1", label: "One" },
@@ -71,9 +69,11 @@ function Item(props) {
 }
 ```
 
+Checkout the full guide at: https://fiveway.io/getting-started
+
 ## Packages
 
 - **@fiveway/core** — Core library: navigation tree, nodes, handlers, actions, and DOM utilities
 - **@fiveway/react** — React integration (NavigationProvider, useNavigationNode, useActionHandler)
 - **@fiveway/solid** — SolidJS integration (NavigationProvider, useNavigationNode, useActionHandler)
-- **@fiveway/devtools** — DevTools for inspecting and debugging the navigation tree in the browser
+- **@fiveway/inspector** — Inspector UI for inspecting and debugging the navigation tree in the browser

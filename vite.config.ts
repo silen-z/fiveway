@@ -9,7 +9,7 @@ export default defineConfig({
           "@fiveway/core#build",
           "@fiveway/react#build",
           "@fiveway/solid#build",
-          "@fiveway/devtools#build",
+          "@fiveway/inspector#build",
         ],
       },
       "example:react": {

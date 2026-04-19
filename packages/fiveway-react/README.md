@@ -1,49 +1,48 @@
 # fiveway
 
-TypeScript library for keyboard navigation.
+**fiveway** is a TypeScript library for rich web applications that need to
+support keyboard navigation and require precise control over what is focused.
+It comes with a set of default behaviors and allows for extensive customization.
 
-### Features
+## Features
 
-- **configurable** - pick focus handler for your specific use-case, attach callbacks, enable/disable nodes, specify order and capture focus inside specific nodes
-
-- **extensible** - handlers are designed to be further extended and chained together via sofisticated middleware system
-
-- **framework agnostic** - seamlesly and consistently usable in any framework and even works across different ones at the same time
-
-- **robust** - consistent with predictable defaults, tries its hardest to not lose focus, works with framework lifecycles and hot-module-reloading
-
-- **performance** - performant while not sacrificing functionality and maintainability
+- 🧱 **Composable** — designed with components, local reasoning and composition in mind
+- 🔌 **Extensible** — fully customize behavior via advanced middleware-like handler system
+- 🌈 **Framework agnostic** — use it in your favorite framework - React, SolidJS and more to come
 
 ## @fiveway/react
 
+This package contains the React version of the library
+
 ### Getting started
 
-Install the core library and React integration:
+Install the React version of the library:
 
+```sh
+npm install @fiveway/react
 ```
-npm install @fiveway/core @fiveway/react
-```
 
-create a navigation tree and provide it to the application
+Create a navigation tree and provide it to the application:
 
-```typescript
-import { createNavigationTree } from "@fiveway/core";
-import { NavigationProvider } from "@fiveway/react";
+```tsx
+import { createNavigationTree, NavigationProvider, useActionHandler } from "@fiveway/react";
 
 const navtree = createNavigationTree();
 
-ReactDOM.createRoot(rootElement).render(
-  <NavigationProvider tree={navigationTree}>
-    <YourApp />
-  </NavigationProvider>
-);
+function App() {
+  // register keyboard listeners (by default on window)
+  useActionHandler(navtree);
+
+  return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
+}
+
+ReactDOM.createRoot(rootElement).render(<App />);
 ```
 
-now your components can become navigation nodes
+Now your components can become navigation nodes:
 
-```typescript
-import { horizontalList } from "@fiveway/core";
-import { useNavigationContainer, useNavigationItem } from "@fiveway/react";
+```jsx
+import { useNavigationNode, horizontalHandler } from "@fiveway/react";
 
 const items = [
   { id: "1", label: "One" },
@@ -52,32 +51,24 @@ const items = [
 ];
 
 function List() {
-  const navNode = useNavigationContainer({
-    id: "list",
-    handler: horizontalList,
-  });
+  const nav = useNavigationNode({ id: "list", handler: horizontalHandler });
 
   return (
-    <navNode.Context>
+    <nav.Context>
       <ul>
         {items.map((item, i) => (
           <Item key={item.id} item={item} order={i} />
         ))}
       </ul>
-    </navNode.Context>
+    </nav.Context>
   );
 }
 
 function Item(props) {
-  const navNode = useNavigationContainer({
-    id: props.item.id,
-    order: props.order,
-  });
+  const nav = useNavigationNode({ id: props.item.id, order: props.order });
 
-  return (
-    <li className={navNode.isFocused() && "focused"}>{props.item.label}</li>
-  );
+  return <li className={nav.isFocused() && "focused"}>{props.item.label}</li>;
 }
 ```
 
-full example at: https://github.com/silen-z/fiveway/tree/main/examples/react-example
+Checkout the full guide at: https://fiveway.io/getting-started

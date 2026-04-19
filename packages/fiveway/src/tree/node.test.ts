@@ -1,6 +1,9 @@
 import { expect, test } from "vite-plus/test";
 
-import { createTreeFromSpec } from "../../test/treeSpec.ts";
+// import first to avoid circular dependency errors
+// prettier-ignore
+import { createTreeFromSpec } from "../test/treeSpec.ts";
+
 import {
   createNavigationTree,
   insertNode,
@@ -42,24 +45,36 @@ test("updateNode: handler", () => {
 });
 
 test("updateNode: order", () => {
-  const { container, node1, node2, node3 } = createTreeFromSpec({
+  const { nodes } = createTreeFromSpec({
     id: "container",
     children: [{ id: "node1" }, { id: "node2" }, { id: "node3" }],
   });
 
-  expect(container.children.map((c) => c.id)).toStrictEqual([node1.id, node2.id, node3.id]);
+  expect(nodes.container.children.map((c) => c.id)).toStrictEqual([
+    nodes.node1.id,
+    nodes.node2.id,
+    nodes.node3.id,
+  ]);
 
-  updateNode(node2, {
+  updateNode(nodes.node2, {
     order: 1,
   });
 
-  expect(container.children.map((c) => c.id)).toStrictEqual([node1.id, node3.id, node2.id]);
+  expect(nodes.container.children.map((c) => c.id)).toStrictEqual([
+    nodes.node1.id,
+    nodes.node3.id,
+    nodes.node2.id,
+  ]);
 
-  updateNode(node2, {
+  updateNode(nodes.node2, {
     order: -1,
   });
 
-  expect(container.children.map((c) => c.id)).toStrictEqual([node2.id, node1.id, node3.id]);
+  expect(nodes.container.children.map((c) => c.id)).toStrictEqual([
+    nodes.node2.id,
+    nodes.node1.id,
+    nodes.node3.id,
+  ]);
 });
 
 test("updateNode: order on disconnected", () => {

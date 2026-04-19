@@ -14,7 +14,7 @@ export type ElementHandler = ChainedHandler & {
   register: (e: HTMLElement | null) => void;
 };
 
-export function createElementHandler() {
+export function createElementHandler(): ElementHandler {
   const [element, setElement] = createSignal<HTMLElement | null>(null);
   const position = () => element()?.getBoundingClientRect() ?? null;
 
@@ -36,7 +36,10 @@ export type ActionHandlerOptions = {
   eventToAction?: (e: Event) => NavigationAction | null;
 };
 
-export function createActionHandler(tree: NavigationTree, options: ActionHandlerOptions = {}) {
+export function createActionHandler(
+  tree: NavigationTree,
+  options: ActionHandlerOptions = {},
+): void {
   createEffect(() => {
     const eventToAction = options.eventToAction ?? defaultEventMapping;
     const target = options.target ?? window;
@@ -57,7 +60,7 @@ export function createActionHandler(tree: NavigationTree, options: ActionHandler
   });
 }
 
-export function useFocusSync(tree: NavigationTree) {
+export function useFocusSync(tree: NavigationTree): void {
   createEffect(() => {
     const cleanup = registerListener(tree, "#", "focuschange", () => {
       const el = elementHandler.query(tree, tree.focus);

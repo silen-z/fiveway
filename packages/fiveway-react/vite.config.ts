@@ -4,8 +4,9 @@ export default defineProject({
   pack: {
     platform: "neutral",
     entry: ["src/index.ts"],
-    exports: true,
     format: ["esm"],
+    dts: true,
     unbundle: true,
+    exports: { packageJson: false },
   },
 });

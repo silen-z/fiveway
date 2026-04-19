@@ -3,11 +3,13 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   pack: {
-    entry: ["src/inspector.tsx"],
+    entry: ["src/ui/inspector.tsx"],
     platform: "browser",
     dts: true,
-    minify: true,
+    exports: { packageJson: false, inlinedDependencies: false },
     plugins: [solid({ hot: false })],
-    // exports: true,
+    deps: {
+      onlyBundle: ["solid-js", "lucide-solid", "clsx"],
+    },
   },
 });

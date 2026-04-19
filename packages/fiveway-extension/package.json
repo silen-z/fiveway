@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@fiveway/core": "workspace:^",
-    "@fiveway/devtools": "workspace:^",
+    "@fiveway/inspector": "workspace:^",
     "solid-js": "^1.9.12",
     "valibot": "^1.3.1"
   },

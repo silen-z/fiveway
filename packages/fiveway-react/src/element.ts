@@ -15,7 +15,7 @@ export type ElementHandler = ChainedHandler & {
   register: (e: HTMLElement | null) => void;
 };
 
-export function useElementHandler() {
+export function useElementHandler(): ElementHandler {
   const elementRef = useRef<HTMLElement | null>(null);
 
   return useMemo(() => {
@@ -39,7 +39,7 @@ export type ActionHandlerOptions = {
   eventToAction?: (e: Event) => NavigationAction | null;
 };
 
-export function useActionHandler(tree: NavigationTree, options: ActionHandlerOptions = {}) {
+export function useActionHandler(tree: NavigationTree, options: ActionHandlerOptions = {}): void {
   const eventToAction = options.eventToAction ?? defaultEventMapping;
   const target = options.target ?? window;
 
@@ -61,7 +61,7 @@ export function useActionHandler(tree: NavigationTree, options: ActionHandlerOpt
   }, [tree, target, eventToAction]);
 }
 
-export function useFocusSync(tree: NavigationTree) {
+export function useFocusSync(tree: NavigationTree): void {
   useEffect(() => {
     const handler = (e: FocusChangeEvent) => {
       const el = elementHandler.query(tree, e.focused);

@@ -2,7 +2,7 @@ import type { NavigationAction } from "@fiveway/core";
 import * as Icon from "lucide-solid";
 import { createSignal, For, Show } from "solid-js";
 
-import { type InspectedTree, useDevtoolsContext } from "./context.js";
+import { type InspectedTree, useDevtoolsContext } from "../context.js";
 import { NavigationPad } from "./NavigationPad.js";
 import { TreeNode } from "./TreeNode.js";
 

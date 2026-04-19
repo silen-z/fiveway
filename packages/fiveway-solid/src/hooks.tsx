@@ -51,7 +51,7 @@ export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
   return getter;
 }
 
-export function useOnFocus(nodeId: NodeId | Accessor<NodeId>, handler: () => void) {
+export function useOnFocus(nodeId: NodeId | Accessor<NodeId>, handler: () => void): void {
   const { tree, parentNode } = useNavigationContext();
   const id = () => joinId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
 
@@ -73,7 +73,7 @@ export function useOnFocus(nodeId: NodeId | Accessor<NodeId>, handler: () => voi
 export function useOnFocusChange(
   nodeId: NodeId | Accessor<NodeId>,
   handler: (id: NodeId | null) => void,
-) {
+): void {
   const { tree, parentNode } = useNavigationContext();
   const id = () => joinId(parentNode(), typeof nodeId === "function" ? nodeId() : nodeId);
 
@@ -88,7 +88,7 @@ export function useOnFocusChange(
   });
 }
 
-export function useFocusedId(scope: NodeId) {
+export function useFocusedId(scope: NodeId): Accessor<NodeId | null> {
   const { tree, parentNode } = useNavigationContext();
   const globalId = joinId(parentNode(), scope);
   const [focusedId, setFocusedId] = createSignal(isFocused(tree, globalId) ? tree.focus : null);
@@ -105,7 +105,9 @@ export function useFocusedId(scope: NodeId) {
   return focusedId;
 }
 
-export function useFocus(scope?: NodeId) {
+type FocusFn = (nodeId: NodeId, options?: FocusOptions) => boolean;
+
+export function useFocus(scope?: NodeId): FocusFn {
   const { tree, parentNode } = useNavigationContext();
   scope ??= parentNode();
 
@@ -114,7 +116,9 @@ export function useFocus(scope?: NodeId) {
   };
 }
 
-export function useSelect(scope?: NodeId) {
+type SelectFn = (nodeId: NodeId, focus?: boolean) => void;
+
+export function useSelect(scope?: NodeId): SelectFn {
   const { tree, parentNode } = useNavigationContext();
   scope ??= parentNode();
 

@@ -49,16 +49,11 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
   const id = () => joinId(parent(), localId());
 
   const parent = () => {
-    const fromContext = parentNode();
-    // if (fromContext == null) {
-    //   console.warn("parent node not found in context", id());
-    // }
-
     if (typeof options.parent === "function") {
-      return options.parent() ?? fromContext;
+      return options.parent() ?? parentNode();
     }
 
-    return options.parent ?? fromContext;
+    return options.parent ?? parentNode();
   };
 
   const order = () => (typeof options.order === "function" ? options.order() : options.order);
@@ -132,7 +127,7 @@ export type NodeProps = NodeOptions & {
   children?: JSX.Element | ((node: NodeHandle) => JSX.Element);
 };
 
-export function NavigationNode(props: NodeProps) {
+export function NavigationNode(props: NodeProps): JSX.Element {
   const node = createNavigationNode(props);
 
   return (
