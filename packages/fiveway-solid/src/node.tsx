@@ -22,8 +22,8 @@ import {
   untrack,
 } from "solid-js";
 
-import { useNavigationContext, NavigationContext } from "./context.jsx";
-import { useIsFocused, useOnFocus } from "./hooks.jsx";
+import { useNavigationContext, NavigationContext } from "./context.tsx";
+import { useIsFocused, useOnFocus } from "./hooks.ts";
 
 export type NodeOptions = {
   id: NodeId | Accessor<NodeId>;

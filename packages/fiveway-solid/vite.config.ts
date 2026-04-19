@@ -2,13 +2,26 @@ import solid from "vite-plugin-solid";
 import { defineProject } from "vite-plus";
 
 export default defineProject({
-  pack: {
-    platform: "neutral",
-    entry: ["src/index.tsx"],
-    format: ["esm"],
-    dts: true,
-    unbundle: true,
-    exports: { packageJson: false },
-    plugins: [solid()],
-  },
+  pack: [
+    // build with JSX preserved
+    {
+      platform: "neutral",
+      entry: ["src/index.ts"],
+      format: ["esm"],
+      outDir: "dist/solid",
+      dts: true,
+      unbundle: true,
+    },
+
+    // build with JSX transpiled
+    {
+      platform: "neutral",
+      entry: ["src/index.ts"],
+      format: ["esm"],
+      outDir: "dist/esm",
+      dts: true,
+      unbundle: true,
+      plugins: [solid()],
+    },
+  ],
 });

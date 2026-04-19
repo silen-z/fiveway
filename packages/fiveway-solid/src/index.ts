@@ -1,7 +1,7 @@
 export * from "@fiveway/core";
 export * from "@fiveway/core/dom";
 
-export { NavigationContext, NavigationProvider, useNavigationContext } from "./context.jsx";
+export { NavigationContext, NavigationProvider, useNavigationContext } from "./context.tsx";
 
 export {
   type NodeOptions,
@@ -9,7 +9,7 @@ export {
   type NodeProps,
   createNavigationNode,
   NavigationNode,
-} from "./node.jsx";
+} from "./node.tsx";
 
 export {
   useIsFocused,
@@ -18,7 +18,7 @@ export {
   useFocusedId,
   useFocus,
   useSelect,
-} from "./hooks.jsx";
+} from "./hooks.ts";
 
 export {
   type ElementHandler,
@@ -26,4 +26,4 @@ export {
   createElementHandler,
   createActionHandler,
   useFocusSync,
-} from "./element.jsx";
+} from "./element.ts";
