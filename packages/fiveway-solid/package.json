@@ -4,7 +4,10 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "import": "./dist/esm/index.js",
+      "solid": "./dist/solid/index.js"
+    }
   },
   "scripts": {
     "build": "vp pack",

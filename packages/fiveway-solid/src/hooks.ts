@@ -9,7 +9,7 @@ import {
 } from "@fiveway/core";
 import { type Accessor, createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 
-import { useNavigationContext } from "./context.jsx";
+import { useNavigationContext } from "./context.tsx";
 
 export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
   const { tree, parentNode } = useNavigationContext();
