@@ -21,16 +21,9 @@ jobs:
           node-version: "24"
           cache: false
 
+        # workaround for voidzero-dev/setup-vp@v1 not putting pnpm in PATH
+      - run: vp install -g pnpm
+
       - run: "vp run preparePublish"
 
-      - run: "npm publish --tag latest --provenance"
-        working-directory: "packages/fiveway"
-
-      - run: "npm publish --tag latest --provenance"
-        working-directory: "packages/fiveway-react"
-
-      - run: "npm publish --tag latest --provenance"
-        working-directory: "packages/fiveway-solid"
-
-      - run: "npm publish --tag latest --provenance"
-        working-directory: "packages/fiveway-inspector"
+      - run: "pnpm publish -r --no-git-checks --tag latest"
