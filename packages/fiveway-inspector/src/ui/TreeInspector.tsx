@@ -1,4 +1,4 @@
-import type { NavigationAction } from "@fiveway/core";
+import { type NavigationAction } from "@fiveway/core";
 import * as Icon from "lucide-solid";
 import { createSignal, For, Show } from "solid-js";
 

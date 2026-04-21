@@ -1,9 +1,9 @@
-import type { NavigationHandler } from "../handler/handler.ts";
+import { type NavigationHandler } from "../handler/handler.ts";
 import { defaultHandler } from "../handler/handler.ts";
-import type { InspectorNode } from "../inspector.ts";
+import { type InspectorNode } from "../inspector.ts";
 import { binarySearch } from "../lib/array.ts";
 import { joinId, type NodeId } from "./id.ts";
-import type { NavigationTree } from "./tree.ts";
+import { type NavigationTree } from "./tree.ts";
 
 export type CreatedNavtreeNode = {
   tree: NavigationTree | null;

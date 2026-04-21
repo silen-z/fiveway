@@ -1,5 +1,5 @@
 import { describeHandler } from "../inspector.ts";
-import type { NodeId } from "../tree/id.ts";
+import { type NodeId } from "../tree/id.ts";
 import { type NavigationTree, focusNode } from "../tree/tree.ts";
 import { type NavigationHandler, runHandler } from "./handler.ts";
 

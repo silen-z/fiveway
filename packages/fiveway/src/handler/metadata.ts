@@ -1,8 +1,8 @@
 import { type NavigationAction } from "../action.ts";
 import { runHandler, type NavigationHandler } from "../handler/handler.ts";
 import { describeHandler } from "../inspector.ts";
-import type { NodeId } from "../tree/id.ts";
-import type { NavigationTree } from "../tree/tree.ts";
+import { type NodeId } from "../tree/id.ts";
+import { type NavigationTree } from "../tree/tree.ts";
 
 export type MetaHandler<T> = {
   key: string;

@@ -5,7 +5,7 @@ import {
   type NodeId,
   useNavigationNode,
 } from "@fiveway/react";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import css from "./ExampleBox.module.css";
 

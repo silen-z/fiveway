@@ -1,4 +1,4 @@
-import type { NavigationAction } from "./action.ts";
+import { type NavigationAction } from "./action.ts";
 import { metaHandler, type MetaHandler } from "./handler/metadata.ts";
 
 const eventKeyToAction: Record<string, NavigationAction> = {

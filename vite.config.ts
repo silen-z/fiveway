@@ -31,13 +31,6 @@ export default defineConfig({
       },
     },
   },
-  lint: {
-    plugins: ["unicorn", "typescript", "oxc", "import", "react", "vitest"],
-    options: {
-      typeAware: true,
-      typeCheck: true,
-    },
-  },
 
   test: {
     projects: ["packages/*"],
@@ -47,7 +40,19 @@ export default defineConfig({
     },
   },
 
+  lint: {
+    plugins: ["unicorn", "typescript", "oxc", "import", "react", "vitest"],
+    options: {
+      typeAware: true,
+      typeCheck: true,
+    },
+    rules: {
+      "import/consistent-type-specifier-style": ["error", "prefer-inline"],
+    },
+  },
+
   fmt: {
-    sortImports: {},
+    useTabs: true,
+    sortImports: true,
   },
 });
