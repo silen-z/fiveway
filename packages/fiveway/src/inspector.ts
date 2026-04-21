@@ -1,6 +1,6 @@
-import type { NavigationAction } from "./action.ts";
+import { type NavigationAction } from "./action.ts";
 import { runHandler } from "./handler/handler.ts";
-import type { NodeId } from "./tree/id.ts";
+import { type NodeId } from "./tree/id.ts";
 import { type NavigationTree } from "./tree/tree.ts";
 
 export type InspectorNode = {

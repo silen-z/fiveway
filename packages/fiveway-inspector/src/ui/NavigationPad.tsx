@@ -1,4 +1,4 @@
-import type { NavigationAction } from "@fiveway/core";
+import { type NavigationAction } from "@fiveway/core";
 import { clsx } from "clsx";
 import * as Icon from "lucide-solid";
 

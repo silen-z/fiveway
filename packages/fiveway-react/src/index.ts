@@ -6,7 +6,7 @@ export { NavigationContext, NavigationProvider, useNavigationContext } from "./c
 export {
   type NodeOptions,
   type NodeHandle,
-  type NodeProps,
+  type NavigationNodeProps,
   useNavigationNode,
   NavigationNode,
 } from "./node.tsx";

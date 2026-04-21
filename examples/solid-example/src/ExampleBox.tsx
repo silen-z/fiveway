@@ -5,7 +5,7 @@ import {
   gridItemHandler,
   type NodeId,
 } from "@fiveway/solid";
-import type { JSX } from "solid-js";
+import { type JSX } from "solid-js";
 
 import css from "./ExampleBox.module.css";
 

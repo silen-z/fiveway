@@ -1,7 +1,7 @@
-import type { NavigationAction, NavigationDirection } from "../action.ts";
+import { type NavigationAction, type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId, childLocalId } from "../tree/id.ts";
-import type { NavtreeNode } from "../tree/node.ts";
+import { type NavtreeNode } from "../tree/node.ts";
 import { type ChainedHandler, chainedHandler } from "./chained.ts";
 import { focusHandler } from "./focus.ts";
 import { type HandlerNext, parentHandler } from "./handler.ts";

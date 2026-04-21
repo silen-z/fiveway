@@ -1,4 +1,4 @@
-import type { NavigationHandler } from "../handler/handler.ts";
+import { type NavigationHandler } from "../handler/handler.ts";
 import { type NodeId } from "../tree/id.ts";
 import { createNode, type NavtreeNode } from "../tree/node.ts";
 import { type NavigationTree, createNavigationTree, holdFocus, insertNode } from "../tree/tree.ts";

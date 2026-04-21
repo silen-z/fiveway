@@ -1,4 +1,4 @@
-import type { NavigationDirection } from "../action.ts";
+import { type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId, childLocalId } from "../tree/id.ts";
 import { traverseNodes } from "../tree/tree.ts";

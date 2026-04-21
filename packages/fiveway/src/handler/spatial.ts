@@ -1,10 +1,10 @@
-import type { NavigationDirection } from "../action.ts";
+import { type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
-import type { NodeId } from "../tree/id.ts";
+import { type NodeId } from "../tree/id.ts";
 import { traverseNodes } from "../tree/tree.ts";
 import { type ChainedHandler, chainedHandler } from "./chained.ts";
 import { focusHandler } from "./focus.ts";
-import type { NavigationHandler } from "./handler.ts";
+import { type NavigationHandler } from "./handler.ts";
 import { parentHandler } from "./handler.ts";
 import { type MetaHandler, metaHandler } from "./metadata.ts";
 

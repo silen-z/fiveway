@@ -1,6 +1,6 @@
 import { swapRemove } from "../lib/array.ts";
-import type { NodeId } from "./id.ts";
-import type { NavigationTree } from "./tree.ts";
+import { type NodeId } from "./id.ts";
+import { type NavigationTree } from "./tree.ts";
 
 export type NavtreeListener = () => void;
 

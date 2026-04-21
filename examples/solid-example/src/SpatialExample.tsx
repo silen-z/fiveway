@@ -1,5 +1,5 @@
 import { captureHandler, createNavigationNode, spatialHandler } from "@fiveway/solid";
-import type { JSX } from "solid-js";
+import { type JSX } from "solid-js";
 
 import { NavItem } from "./NavItem.tsx";
 
