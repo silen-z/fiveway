@@ -2,37 +2,37 @@ import { type NodeId, type NavigationHandler, childLocalId } from "@fiveway/reac
 import { useState, useMemo } from "react";
 
 export type RememberHandler = NavigationHandler & {
-  lastFocused: NodeId | null;
-  clearMemory: () => void;
+	lastFocused: NodeId | null;
+	clearMemory: () => void;
 };
 
 export function useRememberHandler() {
-  const [lastFocused, setLastFocused] = useState<NodeId | null>(null);
+	const [lastFocused, setLastFocused] = useState<NodeId | null>(null);
 
-  return useMemo(() => {
-    const handler: RememberHandler = (node, action, next) => {
-      if (action.kind === "focus" && lastFocused !== null) {
-        try {
-          return next(lastFocused, action);
-        } catch {
-          // continue
-        }
-      }
+	return useMemo(() => {
+		const handler: RememberHandler = (node, action, next) => {
+			if (action.kind === "focus" && lastFocused !== null) {
+				try {
+					return next(lastFocused, action);
+				} catch {
+					// continue
+				}
+			}
 
-      const nextId = next();
-      const idToSave = nextId !== null ? childLocalId(node.id, nextId) : null;
-      if (idToSave !== null && !(action.kind === "focus" && action.direction === "initial")) {
-        setLastFocused(idToSave);
-      }
+			const nextId = next();
+			const idToSave = nextId !== null ? childLocalId(node.id, nextId) : null;
+			if (idToSave !== null && !(action.kind === "focus" && action.direction === "initial")) {
+				setLastFocused(idToSave);
+			}
 
-      return nextId;
-    };
+			return nextId;
+		};
 
-    handler.lastFocused = lastFocused;
-    handler.clearMemory = () => {
-      setLastFocused(null);
-    };
+		handler.lastFocused = lastFocused;
+		handler.clearMemory = () => {
+			setLastFocused(null);
+		};
 
-    return handler;
-  }, [lastFocused, setLastFocused]);
+		return handler;
+	}, [lastFocused, setLastFocused]);
 }

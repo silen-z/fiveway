@@ -9,30 +9,30 @@ export type NavigationDirection = "up" | "down" | "left" | "right";
 // }
 
 export type SelectAction = {
-  kind: "select";
+	kind: "select";
 };
 
 export type MoveAction = {
-  kind: "move";
-  direction: NavigationDirection | "back";
+	kind: "move";
+	direction: NavigationDirection | "back";
 };
 
 export type FocusAction = {
-  kind: "focus";
-  direction: NavigationDirection | "initial" | null;
+	kind: "focus";
+	direction: NavigationDirection | "initial" | null;
 };
 
 export type QueryAction = {
-  kind: "query";
-  key: string;
-  value: unknown;
+	kind: "query";
+	key: string;
+	value: unknown;
 };
 
 export interface NavigationActions {
-  select: SelectAction;
-  move: MoveAction;
-  focus: FocusAction;
-  query: QueryAction;
+	select: SelectAction;
+	move: MoveAction;
+	focus: FocusAction;
+	query: QueryAction;
 }
 
 export type NavigationAction = NavigationActions[keyof NavigationActions];

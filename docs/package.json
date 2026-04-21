@@ -1,13 +1,13 @@
 {
-  "name": "docs",
-  "type": "module",
-  "scripts": {
-    "dev": "vitepress dev",
-    "build": "vitepress build",
-    "preview": "vitepress preview"
-  },
-  "devDependencies": {
-    "oxc-minify": "^0.121.0",
-    "vitepress": "2.0.0-alpha.17"
-  }
+	"name": "docs",
+	"type": "module",
+	"scripts": {
+		"dev": "vitepress dev",
+		"build": "vitepress build",
+		"preview": "vitepress preview"
+	},
+	"devDependencies": {
+		"oxc-minify": "^0.121.0",
+		"vitepress": "2.0.0-alpha.17"
+	}
 }

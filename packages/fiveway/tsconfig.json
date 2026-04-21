@@ -1,28 +1,28 @@
 {
-  "compilerOptions": {
-    "skipLibCheck": true,
+	"compilerOptions": {
+		"skipLibCheck": true,
 
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
 
-    "module": "preserve",
-    "moduleDetection": "force",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true,
-    "erasableSyntaxOnly": true,
+		"module": "preserve",
+		"moduleDetection": "force",
+		"allowImportingTsExtensions": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+		"erasableSyntaxOnly": true,
 
-    "isolatedDeclarations": true,
+		"isolatedDeclarations": true,
 
-    "composite": true,
-    "emitDeclarationOnly": true,
-    "declarationMap": true,
+		"composite": true,
+		"emitDeclarationOnly": true,
+		"declarationMap": true,
 
-    "target": "es2022",
-    "lib": ["es2022", "dom", "dom.iterable"],
+		"target": "es2022",
+		"lib": ["es2022", "dom", "dom.iterable"],
 
-    "types": ["vitest/importMeta"]
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+		"types": ["vitest/importMeta"]
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules"]
 }

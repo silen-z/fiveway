@@ -28,10 +28,10 @@ import { createNavigationTree, NavigationProvider, useActionHandler } from "@fiv
 const navtree = createNavigationTree();
 
 function App() {
-  // register keyboard listeners (by default on window)
-  useActionHandler(navtree);
+	// register keyboard listeners (by default on window)
+	useActionHandler(navtree);
 
-  return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
+	return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
 }
 
 ReactDOM.createRoot(rootElement).render(<App />);
@@ -43,29 +43,29 @@ Now your components can become navigation nodes:
 import { useNavigationNode, horizontalHandler } from "@fiveway/react";
 
 const items = [
-  { id: "1", label: "One" },
-  { id: "2", label: "Two" },
-  { id: "3", label: "Three" },
+	{ id: "1", label: "One" },
+	{ id: "2", label: "Two" },
+	{ id: "3", label: "Three" },
 ];
 
 function List() {
-  const nav = useNavigationNode({ id: "list", handler: horizontalHandler });
+	const nav = useNavigationNode({ id: "list", handler: horizontalHandler });
 
-  return (
-    <nav.Context>
-      <ul>
-        {items.map((item, i) => (
-          <Item key={item.id} item={item} order={i} />
-        ))}
-      </ul>
-    </nav.Context>
-  );
+	return (
+		<nav.Context>
+			<ul>
+				{items.map((item, i) => (
+					<Item key={item.id} item={item} order={i} />
+				))}
+			</ul>
+		</nav.Context>
+	);
 }
 
 function Item(props) {
-  const nav = useNavigationNode({ id: props.item.id, order: props.order });
+	const nav = useNavigationNode({ id: props.item.id, order: props.order });
 
-  return <li className={nav.isFocused() && "focused"}>{props.item.label}</li>;
+	return <li className={nav.isFocused() && "focused"}>{props.item.label}</li>;
 }
 ```
 

@@ -5,35 +5,35 @@ import { type NodeId } from "../tree/id.ts";
 import { type NavigationTree } from "../tree/tree.ts";
 
 export type MetaHandler<T> = {
-  key: string;
-  (v: T | (() => T | null) | null): NavigationHandler;
-  query: (tree: NavigationTree, id: NodeId) => T | null;
+	key: string;
+	(v: T | (() => T | null) | null): NavigationHandler;
+	query: (tree: NavigationTree, id: NodeId) => T | null;
 };
 
 export function metaHandler<T>(key: string): MetaHandler<T> {
-  const handler = (value: unknown) => {
-    const metaHandler: NavigationHandler = (_, action, next) => {
-      if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-        describeHandler(action, { name: "core:metadata-provider", key });
-      }
+	const handler = (value: unknown) => {
+		const metaHandler: NavigationHandler = (_, action, next) => {
+			if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
+				describeHandler(action, { name: "core:metadata-provider", key });
+			}
 
-      if (action.kind === "query" && action.key === key) {
-        action.value = typeof value === "function" ? value() : value;
-        return null;
-      }
+			if (action.kind === "query" && action.key === key) {
+				action.value = typeof value === "function" ? value() : value;
+				return null;
+			}
 
-      return next();
-    };
+			return next();
+		};
 
-    return metaHandler;
-  };
+		return metaHandler;
+	};
 
-  handler.key = key;
-  handler.query = (tree: NavigationTree, id: NodeId) => {
-    const query: NavigationAction = { kind: "query", key, value: null };
-    runHandler(tree, id, query);
-    return query.value as T | null;
-  };
+	handler.key = key;
+	handler.query = (tree: NavigationTree, id: NodeId) => {
+		const query: NavigationAction = { kind: "query", key, value: null };
+		runHandler(tree, id, query);
+		return query.value as T | null;
+	};
 
-  return handler;
+	return handler;
 }

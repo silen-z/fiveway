@@ -8,19 +8,19 @@ Re-exports everything from `@fiveway/core` and `@fiveway/core/dom`, plus Solid p
 
 ```ts
 import {
-  NavigationProvider,
-  useNavigationContext,
-  createNavigationNode,
-  NavigationNode,
-  useIsFocused,
-  useOnFocus,
-  useOnFocusChange,
-  useFocusedId,
-  useFocus,
-  useSelect,
-  createElementHandler,
-  createActionHandler,
-  useFocusSync,
+	NavigationProvider,
+	useNavigationContext,
+	createNavigationNode,
+	NavigationNode,
+	useIsFocused,
+	useOnFocus,
+	useOnFocusChange,
+	useFocusedId,
+	useFocus,
+	useSelect,
+	createElementHandler,
+	createActionHandler,
+	useFocusSync,
 } from "@fiveway/solid";
 ```
 
@@ -30,8 +30,8 @@ import {
 
 ```ts
 type NavigationContext = {
-  tree: NavigationTree;
-  parentNode: () => NodeId;
+	tree: NavigationTree;
+	parentNode: () => NodeId;
 };
 ```
 
@@ -41,9 +41,9 @@ type NavigationContext = {
 
 ```ts
 type NavigationProviderProps = {
-  tree: NavigationTree;
-  fromEvent?: (e: KeyboardEvent) => NavigationAction | null;
-  children: JSX.Element;
+	tree: NavigationTree;
+	fromEvent?: (e: KeyboardEvent) => NavigationAction | null;
+	children: JSX.Element;
 };
 ```
 
@@ -61,10 +61,10 @@ function useNavigationContext(): NavigationContext;
 
 ```ts
 type NodeOptions = {
-  id: NodeId | Accessor<NodeId>;
-  parent?: NodeId | Accessor<NodeId | undefined>;
-  order?: number | Accessor<number | undefined>;
-  handler?: NavigationHandler;
+	id: NodeId | Accessor<NodeId>;
+	parent?: NodeId | Accessor<NodeId | undefined>;
+	order?: number | Accessor<number | undefined>;
+	handler?: NavigationHandler;
 };
 ```
 
@@ -72,12 +72,12 @@ type NodeOptions = {
 
 ```ts
 type NodeHandle = {
-  (): NodeId;
-  focus: (nodeId?: NodeId) => void;
-  select: () => void;
-  isFocused: Accessor<boolean>;
-  onFocus: (fn: () => void) => void;
-  Context: Component<ParentProps>;
+	(): NodeId;
+	focus: (nodeId?: NodeId) => void;
+	select: () => void;
+	isFocused: Accessor<boolean>;
+	onFocus: (fn: () => void) => void;
+	Context: Component<ParentProps>;
 };
 ```
 
@@ -115,8 +115,8 @@ Runs `handler` when the node gains focus (entering from unfocused).
 
 ```ts
 function useOnFocusChange(
-  nodeId: NodeId | Accessor<NodeId>,
-  handler: (id: NodeId | null) => void,
+	nodeId: NodeId | Accessor<NodeId>,
+	handler: (id: NodeId | null) => void,
 ): void;
 ```
 

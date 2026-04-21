@@ -7,9 +7,9 @@ The handler function is defined like this:
 
 ```ts
 export type NavigationHandler = (
-  node: NavtreeNode,
-  action: NavigationAction,
-  next: (id?: NodeId, action?: NavigationAction) => NodeId | null,
+	node: NavtreeNode,
+	action: NavigationAction,
+	next: (id?: NodeId, action?: NavigationAction) => NodeId | null,
 ) => NodeId | null;
 ```
 
@@ -64,11 +64,11 @@ import { defaultHandler } from "@fiveway/core";
 // defaultHandler is a basic composed handler
 // that can be extended with custom functionality
 const customHandler = defaultHandler.prepend((node, action, next) => {
-  if (action.kind === "move" && action.direction === "up") {
-    console.log("moving up");
-  }
+	if (action.kind === "move" && action.direction === "up") {
+		console.log("moving up");
+	}
 
-  return next(); // pass action to next handler in line
+	return next(); // pass action to next handler in line
 });
 ```
 
@@ -81,9 +81,9 @@ Sometimes you might want to create a completely new handler by combining multipl
 
 ```ts
 export const horizontalHandler = chainedHandler([
-  focusHandler({ skipEmpty: true, direction: horizontalFocusDirection }),
-  horizontalMovementHandler,
-  parentHandler,
+	focusHandler({ skipEmpty: true, direction: horizontalFocusDirection }),
+	horizontalMovementHandler,
+	parentHandler,
 ]);
 ```
 

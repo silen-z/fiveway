@@ -1,6 +1,6 @@
 {
-  "include": [".vitepress/**/*"],
-  "compilerOptions": {
-    "types": ["vitepress/client"]
-  }
+	"include": [".vitepress/**/*"],
+	"compilerOptions": {
+		"types": ["vitepress/client"]
+	}
 }

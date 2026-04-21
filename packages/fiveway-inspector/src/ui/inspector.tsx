@@ -4,13 +4,13 @@ import { createDevtoolsContext, devtoolsContext, type InspetorInit } from "../co
 import { Inspector } from "./InspectorPanel.tsx";
 
 export function createInspector(el: HTMLElement, handle: InspetorInit): void {
-  render(() => {
-    const context = createDevtoolsContext(handle);
+	render(() => {
+		const context = createDevtoolsContext(handle);
 
-    return (
-      <devtoolsContext.Provider value={context}>
-        <Inspector />
-      </devtoolsContext.Provider>
-    );
-  }, el);
+		return (
+			<devtoolsContext.Provider value={context}>
+				<Inspector />
+			</devtoolsContext.Provider>
+		);
+	}, el);
 }

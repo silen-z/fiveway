@@ -10,21 +10,21 @@ import { defaultEventMapping } from "./dom.ts";
 import { verticalHandler, defaultHandler, handleAction } from "./index.ts";
 
 test("defaultKeyMapping", async () => {
-  expect(defaultEventMapping(new MouseEvent("mouseover"))).toBeNull();
+	expect(defaultEventMapping(new MouseEvent("mouseover"))).toBeNull();
 
-  const { tree, nodes } = createTreeFromSpec({
-    id: "container",
-    handler: verticalHandler,
-    children: [
-      { id: "item1", handler: defaultHandler },
-      { id: "item2", handler: defaultHandler },
-    ],
-  });
+	const { tree, nodes } = createTreeFromSpec({
+		id: "container",
+		handler: verticalHandler,
+		children: [
+			{ id: "item1", handler: defaultHandler },
+			{ id: "item2", handler: defaultHandler },
+		],
+	});
 
-  expect(tree.focus).toBe(nodes.item1.id);
+	expect(tree.focus).toBe(nodes.item1.id);
 
-  const action = defaultEventMapping(new KeyboardEvent("keydown", { key: "ArrowDown" }));
-  expect(action).not.toBeNull();
-  handleAction(tree, action!);
-  expect(tree.focus).toBe(nodes.item2.id);
+	const action = defaultEventMapping(new KeyboardEvent("keydown", { key: "ArrowDown" }));
+	expect(action).not.toBeNull();
+	handleAction(tree, action!);
+	expect(tree.focus).toBe(nodes.item2.id);
 });

@@ -1,62 +1,62 @@
 import { expect, test, vi } from "vite-plus/test";
 
 import {
-  insertNode,
-  createNavigationTree,
-  createNode,
-  type NavigationHandler,
-  queryHandlerInfo,
-  containerHandler,
+	insertNode,
+	createNavigationTree,
+	createNode,
+	type NavigationHandler,
+	queryHandlerInfo,
+	containerHandler,
 } from "../index.ts";
 
 test("runHandler", async () => {
-  const tree = createNavigationTree();
+	const tree = createNavigationTree();
 
-  const handler = vi.fn<NavigationHandler>(() => null);
-  insertNode(tree, createNode({ id: "one", parent: "#", handler }));
+	const handler = vi.fn<NavigationHandler>(() => null);
+	insertNode(tree, createNode({ id: "one", parent: "#", handler }));
 
-  expect(handler).toHaveBeenCalledWith(
-    expect.objectContaining({ id: "#/one" }),
-    expect.objectContaining({ kind: "focus" }),
-    expect.any(Function),
-  );
+	expect(handler).toHaveBeenCalledWith(
+		expect.objectContaining({ id: "#/one" }),
+		expect.objectContaining({ kind: "focus" }),
+		expect.any(Function),
+	);
 });
 
 test("runHandler: pass action to non-existent node", () => {
-  const tree = createNavigationTree();
+	const tree = createNavigationTree();
 
-  const handler: NavigationHandler = (n, a, next) => {
-    const nextId = next("#/non-existent");
-    expect(nextId).toBeNull();
-    return nextId;
-  };
-  insertNode(tree, createNode({ id: "one", parent: "#", handler }));
+	const handler: NavigationHandler = (n, a, next) => {
+		const nextId = next("#/non-existent");
+		expect(nextId).toBeNull();
+		return nextId;
+	};
+	insertNode(tree, createNode({ id: "one", parent: "#", handler }));
 });
 
 // TODO test behavior instead of internal properties
 test("defaultHandler", () => {
-  const tree = createNavigationTree();
+	const tree = createNavigationTree();
 
-  const container = createNode({
-    id: "test",
-    parent: "#",
-    handler: containerHandler,
-  });
-  insertNode(tree, container);
+	const container = createNode({
+		id: "test",
+		parent: "#",
+		handler: containerHandler,
+	});
+	insertNode(tree, container);
 
-  const item = createNode({
-    id: "test",
-    parent: container.id,
-  });
-  insertNode(tree, item);
+	const item = createNode({
+		id: "test",
+		parent: container.id,
+	});
+	insertNode(tree, item);
 
-  expect(queryHandlerInfo(tree, container.id)).toEqual([
-    { name: "core:focus", skipEmpty: true, direction: "default" },
-    { name: "core:parent" },
-  ]);
+	expect(queryHandlerInfo(tree, container.id)).toEqual([
+		{ name: "core:focus", skipEmpty: true, direction: "default" },
+		{ name: "core:parent" },
+	]);
 
-  expect(queryHandlerInfo(tree, item.id)).toEqual([
-    { name: "core:focus", skipEmpty: false, direction: "default" },
-    { name: "core:parent" },
-  ]);
+	expect(queryHandlerInfo(tree, item.id)).toEqual([
+		{ name: "core:focus", skipEmpty: false, direction: "default" },
+		{ name: "core:parent" },
+	]);
 });
