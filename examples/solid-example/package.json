@@ -1,21 +1,21 @@
 {
-  "name": "@fiveway/solid-example",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vp dev",
-    "build": "vp build",
-    "preview": "vp preview"
-  },
-  "dependencies": {
-    "@fiveway/solid": "workspace:^",
-    "solid-js": "^1.9.12"
-  },
-  "devDependencies": {
-    "solid-devtools": "^0.34.5",
-    "typescript": "catalog:",
-    "vite": "catalog:",
-    "vite-plugin-solid": "^2.11.12",
-    "vite-plus": "catalog:"
-  }
+	"name": "@fiveway/solid-example",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vp dev",
+		"build": "vp build",
+		"preview": "vp preview"
+	},
+	"dependencies": {
+		"@fiveway/solid": "workspace:^",
+		"solid-js": "^1.9.12"
+	},
+	"devDependencies": {
+		"solid-devtools": "^0.34.5",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vite-plugin-solid": "^2.11.12",
+		"vite-plus": "catalog:"
+	}
 }

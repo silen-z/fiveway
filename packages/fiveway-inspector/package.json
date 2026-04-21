@@ -1,38 +1,38 @@
 {
-  "name": "@fiveway/inspector",
-  "version": "1.0.0-beta.3",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/silen-z/fiveway.git"
-  },
-  "files": [
-    "dist"
-  ],
-  "type": "module",
-  "types": "./dist/inspector.d.ts",
-  "exports": {
-    ".": "./dist/inspector.js",
-    "./style.css": "./dist/style.css"
-  },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  },
-  "scripts": {
-    "build": "vp pack",
-    "dev": "vp pack --watch"
-  },
-  "dependencies": {
-    "@fiveway/core": "workspace:*"
-  },
-  "devDependencies": {
-    "@tsdown/css": "^0.21.8",
-    "clsx": "^2.1.1",
-    "lucide-solid": "^1.8.0",
-    "solid-js": "^1.9.12",
-    "typescript": "catalog:",
-    "vite": "catalog:",
-    "vite-plugin-solid": "^2.11.12",
-    "vite-plus": "catalog:"
-  }
+	"name": "@fiveway/inspector",
+	"version": "1.0.0-beta.3",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/silen-z/fiveway.git"
+	},
+	"files": [
+		"dist"
+	],
+	"type": "module",
+	"types": "./dist/inspector.d.ts",
+	"exports": {
+		".": "./dist/inspector.js",
+		"./style.css": "./dist/style.css"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"scripts": {
+		"build": "vp pack",
+		"dev": "vp pack --watch"
+	},
+	"dependencies": {
+		"@fiveway/core": "workspace:*"
+	},
+	"devDependencies": {
+		"@tsdown/css": "^0.21.8",
+		"clsx": "^2.1.1",
+		"lucide-solid": "^1.8.0",
+		"solid-js": "^1.9.12",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vite-plugin-solid": "^2.11.12",
+		"vite-plus": "catalog:"
+	}
 }

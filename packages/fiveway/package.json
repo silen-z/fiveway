@@ -1,30 +1,30 @@
 {
-  "name": "@fiveway/core",
-  "version": "1.0.0-beta.3",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/silen-z/fiveway.git"
-  },
-  "files": [
-    "dist"
-  ],
-  "type": "module",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js",
-    "./dom": "./dist/dom.js"
-  },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  },
-  "scripts": {
-    "build": "vp pack",
-    "dev": "vp pack --watch"
-  },
-  "devDependencies": {
-    "typescript": "catalog:",
-    "vite-plus": "catalog:",
-    "vitest": "catalog:"
-  }
+	"name": "@fiveway/core",
+	"version": "1.0.0-beta.3",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/silen-z/fiveway.git"
+	},
+	"files": [
+		"dist"
+	],
+	"type": "module",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": "./dist/index.js",
+		"./dom": "./dist/dom.js"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"scripts": {
+		"build": "vp pack",
+		"dev": "vp pack --watch"
+	},
+	"devDependencies": {
+		"typescript": "catalog:",
+		"vite-plus": "catalog:",
+		"vitest": "catalog:"
+	}
 }

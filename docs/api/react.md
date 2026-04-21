@@ -8,18 +8,18 @@ Re-exports everything from `@fiveway/core` and `@fiveway/core/dom`, plus React b
 
 ```ts
 import {
-  NavigationProvider,
-  useNavigationContext,
-  useNavigationNode,
-  NavigationNode,
-  useIsFocused,
-  useOnFocus,
-  useFocusedId,
-  useFocus,
-  useSelect,
-  useElementHandler,
-  useActionHandler,
-  useFocusSync,
+	NavigationProvider,
+	useNavigationContext,
+	useNavigationNode,
+	NavigationNode,
+	useIsFocused,
+	useOnFocus,
+	useFocusedId,
+	useFocus,
+	useSelect,
+	useElementHandler,
+	useActionHandler,
+	useFocusSync,
 } from "@fiveway/react";
 ```
 
@@ -29,8 +29,8 @@ import {
 
 ```ts
 type NavigationContext = {
-  tree: NavigationTree;
-  parentNode: NodeId;
+	tree: NavigationTree;
+	parentNode: NodeId;
 };
 ```
 
@@ -44,7 +44,7 @@ const NavigationContext: React.Context<NavigationContext | null>;
 
 ```ts
 type NavigationProviderProps = PropsWithChildren<{
-  tree: NavigationTree;
+	tree: NavigationTree;
 }>;
 
 function NavigationProvider(props: NavigationProviderProps): JSX.Element;
@@ -66,10 +66,10 @@ Throws if used outside a provider.
 
 ```ts
 type NodeOptions = {
-  id: NodeId;
-  parent?: NodeId;
-  order?: number;
-  handler?: NavigationHandler;
+	id: NodeId;
+	parent?: NodeId;
+	order?: number;
+	handler?: NavigationHandler;
 };
 ```
 
@@ -77,11 +77,11 @@ type NodeOptions = {
 
 ```ts
 type NodeHandle = {
-  id: NodeId;
-  isFocused: () => boolean;
-  focus: (nodeId?: NodeId, options?: FocusOptions) => void;
-  select: (nodeId?: NodeId, focus?: boolean) => void;
-  Context: React.FunctionComponent<{ children: ReactNode }>;
+	id: NodeId;
+	isFocused: () => boolean;
+	focus: (nodeId?: NodeId, options?: FocusOptions) => void;
+	select: (nodeId?: NodeId, focus?: boolean) => void;
+	Context: React.FunctionComponent<{ children: ReactNode }>;
 };
 ```
 
@@ -97,7 +97,7 @@ Creates/updates a [node](/api/#nodes-and-ids), inserts it on mount, removes on u
 
 ```ts
 type NodeProps = NodeOptions & {
-  children?: ReactNode | ((props: Omit<NodeHandle, "Context">) => ReactNode);
+	children?: ReactNode | ((props: Omit<NodeHandle, "Context">) => ReactNode);
 };
 
 function NavigationNode(props: NodeProps): JSX.Element;
@@ -153,7 +153,7 @@ Calls [`selectNode`](/api/#selectnode) with ids under `scope`.
 
 ```ts
 type ElementHandler = ChainedHandler & {
-  register: (e: HTMLElement | null) => void;
+	register: (e: HTMLElement | null) => void;
 };
 ```
 
@@ -169,8 +169,8 @@ Memoized handler combining [element](/api/#dom) and spatial item behavior with a
 
 ```ts
 type ActionHandlerOptions = {
-  target?: EventTarget;
-  eventToAction?: (e: Event) => NavigationAction | null;
+	target?: EventTarget;
+	eventToAction?: (e: Event) => NavigationAction | null;
 };
 ```
 

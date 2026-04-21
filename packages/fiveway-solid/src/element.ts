@@ -1,76 +1,76 @@
 import {
-  chainedHandler,
-  handleAction,
-  spatialItemHandler,
-  registerListener,
-  type ChainedHandler,
-  type NavigationAction,
-  type NavigationTree,
+	chainedHandler,
+	handleAction,
+	spatialItemHandler,
+	registerListener,
+	type ChainedHandler,
+	type NavigationAction,
+	type NavigationTree,
 } from "@fiveway/core";
 import { defaultEventMapping, elementHandler } from "@fiveway/core/dom";
 import { createEffect, createSignal, onCleanup } from "solid-js";
 
 export type ElementHandler = ChainedHandler & {
-  register: (e: HTMLElement | null) => void;
+	register: (e: HTMLElement | null) => void;
 };
 
 export function createElementHandler(): ElementHandler {
-  const [element, setElement] = createSignal<HTMLElement | null>(null);
-  const position = () => element()?.getBoundingClientRect() ?? null;
+	const [element, setElement] = createSignal<HTMLElement | null>(null);
+	const position = () => element()?.getBoundingClientRect() ?? null;
 
-  // handlers doen't need to be reactive
-  const handler = chainedHandler([
-    // eslint-disable-next-line solid/reactivity
-    elementHandler(element),
-    // eslint-disable-next-line solid/reactivity
-    spatialItemHandler(position),
-  ]) as ElementHandler;
+	// handlers doen't need to be reactive
+	const handler = chainedHandler([
+		// eslint-disable-next-line solid/reactivity
+		elementHandler(element),
+		// eslint-disable-next-line solid/reactivity
+		spatialItemHandler(position),
+	]) as ElementHandler;
 
-  handler.register = setElement;
+	handler.register = setElement;
 
-  return handler;
+	return handler;
 }
 
 export type ActionHandlerOptions = {
-  target?: EventTarget;
-  eventToAction?: (e: Event) => NavigationAction | null;
+	target?: EventTarget;
+	eventToAction?: (e: Event) => NavigationAction | null;
 };
 
 export function createActionHandler(
-  tree: NavigationTree,
-  options: ActionHandlerOptions = {},
+	tree: NavigationTree,
+	options: ActionHandlerOptions = {},
 ): void {
-  createEffect(() => {
-    const eventToAction = options.eventToAction ?? defaultEventMapping;
-    const target = options.target ?? window;
+	createEffect(() => {
+		const eventToAction = options.eventToAction ?? defaultEventMapping;
+		const target = options.target ?? window;
 
-    const handler = (e: Event) => {
-      const action = eventToAction(e);
-      if (action === null) {
-        return;
-      }
+		const handler = (e: Event) => {
+			const action = eventToAction(e);
+			if (action === null) {
+				return;
+			}
 
-      handleAction(tree, action);
-    };
-    target.addEventListener("keydown", handler);
+			handleAction(tree, action);
+		};
+		target.addEventListener("keydown", handler);
 
-    onCleanup(() => {
-      target.removeEventListener("keydown", handler);
-    });
-  });
+		onCleanup(() => {
+			target.removeEventListener("keydown", handler);
+		});
+	});
 }
 
 export function useFocusSync(tree: NavigationTree): void {
-  createEffect(() => {
-    const cleanup = registerListener(tree, "#", () => {
-      const el = elementHandler.query(tree, tree.focus);
-      if (el !== null) {
-        el.focus();
-      } else if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-    });
+	createEffect(() => {
+		const cleanup = registerListener(tree, "#", () => {
+			const el = elementHandler.query(tree, tree.focus);
+			if (el !== null) {
+				el.focus();
+			} else if (document.activeElement instanceof HTMLElement) {
+				document.activeElement.blur();
+			}
+		});
 
-    onCleanup(cleanup);
-  });
+		onCleanup(cleanup);
+	});
 }

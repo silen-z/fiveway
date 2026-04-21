@@ -10,59 +10,59 @@ import { selectHandler } from "./select.ts";
 export type HandlerNext = (id?: NodeId, action?: NavigationAction) => NodeId | null;
 
 export type NavigationHandler = (
-  node: NavtreeNode,
-  action: NavigationAction,
-  next: HandlerNext,
+	node: NavtreeNode,
+	action: NavigationAction,
+	next: HandlerNext,
 ) => NodeId | null;
 
 export function runHandler(
-  tree: NavigationTree,
-  nodeId: NodeId,
-  action: NavigationAction,
+	tree: NavigationTree,
+	nodeId: NodeId,
+	action: NavigationAction,
 ): NodeId | null {
-  const node = tree.nodes.get(nodeId);
-  if (node == null || !node.connected) {
-    return null;
-  }
+	const node = tree.nodes.get(nodeId);
+	if (node == null || !node.connected) {
+		return null;
+	}
 
-  const next: HandlerNext = (id, newAction) => {
-    if (id == null) {
-      return null;
-    }
+	const next: HandlerNext = (id, newAction) => {
+		if (id == null) {
+			return null;
+		}
 
-    return runHandler(tree, id, newAction ?? action);
-  };
+		return runHandler(tree, id, newAction ?? action);
+	};
 
-  return node.handler(node, action, next);
+	return node.handler(node, action, next);
 }
 
 export const parentHandler: NavigationHandler = (node, action, next) => {
-  if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-    describeHandler(action, { name: "core:parent" });
-  }
+	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
+		describeHandler(action, { name: "core:parent" });
+	}
 
-  if (action.kind === "query") {
-    return null;
-  }
+	if (action.kind === "query") {
+		return null;
+	}
 
-  if (node.parent !== null) {
-    return next(node.parent);
-  }
+	if (node.parent !== null) {
+		return next(node.parent);
+	}
 
-  return next();
+	return next();
 };
 
 export const defaultHandler: ChainedHandler = chainedHandler([focusHandler(), parentHandler]);
 
 export const containerHandler: ChainedHandler = chainedHandler([
-  focusHandler({ skipEmpty: true }),
-  parentHandler,
+	focusHandler({ skipEmpty: true }),
+	parentHandler,
 ]);
 
 export const itemHandler = (onSelect?: () => void): ChainedHandler => {
-  if (onSelect == null) {
-    return defaultHandler;
-  }
+	if (onSelect == null) {
+		return defaultHandler;
+	}
 
-  return defaultHandler.prepend(selectHandler(onSelect));
+	return defaultHandler.prepend(selectHandler(onSelect));
 };

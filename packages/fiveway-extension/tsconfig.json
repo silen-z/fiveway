@@ -1,24 +1,24 @@
 {
-  "compilerOptions": {
-    "skipLibCheck": true,
+	"compilerOptions": {
+		"skipLibCheck": true,
 
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
 
-    "module": "preserve",
-    "moduleDetection": "force",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true,
-    "erasableSyntaxOnly": true,
+		"module": "preserve",
+		"moduleDetection": "force",
+		"allowImportingTsExtensions": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+		"erasableSyntaxOnly": true,
 
-    "noEmit": true,
+		"noEmit": true,
 
-    "target": "es2022",
-    "lib": ["es2022", "dom", "dom.iterable"]
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"],
+		"target": "es2022",
+		"lib": ["es2022", "dom", "dom.iterable"]
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules"],
 
-  "references": [{ "path": "../fiveway" }, { "path": "../fiveway-inspector" }]
+	"references": [{ "path": "../fiveway" }, { "path": "../fiveway-inspector" }]
 }

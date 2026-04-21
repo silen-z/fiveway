@@ -14,13 +14,13 @@ The navigation tree object keeps a `Map` of navigation `nodes` and currently foc
 
 ```ts
 type NavigationTree = {
-  nodes: Map<NodeId, NavtreeNode>;
-  focus: NodeId;
+	nodes: Map<NodeId, NavtreeNode>;
+	focus: NodeId;
 
-  // internal
-  orphans: Map<NodeId, NodeId[]>;
-  listeners: Map<NodeId, NavtreeListener[]>;
-  focusLock: "free" | "locked" | "updatePending";
+	// internal
+	orphans: Map<NodeId, NodeId[]>;
+	listeners: Map<NodeId, NavtreeListener[]>;
+	focusLock: "free" | "locked" | "updatePending";
 };
 ```
 
@@ -62,7 +62,7 @@ Calling the release function may apply a pending focus update.
 
 ```ts
 type FocusOptions = {
-  direction?: NavigationDirection | "initial";
+	direction?: NavigationDirection | "initial";
 };
 
 function focusNode(tree: NavigationTree, targetId: NodeId, options?: FocusOptions): boolean;
@@ -82,10 +82,10 @@ Returns `true` if `tree.focus === nodeId` or if `nodeId` is an ancestor of the f
 
 ```ts
 function traverseNodes(
-  tree: NavigationTree,
-  nodeId: NodeId,
-  depth: number | null,
-  callback: (id: NodeId) => void,
+	tree: NavigationTree,
+	nodeId: NodeId,
+	depth: number | null,
+	callback: (id: NodeId) => void,
 ): void;
 ```
 
@@ -115,17 +115,17 @@ Ids form a path hierarchy from the root `"#"`, e.g. `"#/list/item-1"`.
 
 ```ts
 type CreatedNavtreeNode = {
-  tree: NavigationTree | null;
-  id: NodeId;
-  connected: boolean;
-  parent: NodeId | null;
-  order: number | null;
-  handler: NavigationHandler;
-  children: NodeChild[];
+	tree: NavigationTree | null;
+	id: NodeId;
+	connected: boolean;
+	parent: NodeId | null;
+	order: number | null;
+	handler: NavigationHandler;
+	children: NodeChild[];
 };
 
 type NavtreeNode = CreatedNavtreeNode & {
-  tree: NavigationTree;
+	tree: NavigationTree;
 };
 ```
 
@@ -139,10 +139,10 @@ type NodeChild = { id: NodeId; order: number | null; active: boolean };
 
 ```ts
 type NodeConfig = {
-  id: string;
-  parent: NodeId;
-  order?: number;
-  handler?: NavigationHandler;
+	id: string;
+	parent: NodeId;
+	order?: number;
+	handler?: NavigationHandler;
 };
 ```
 
@@ -196,9 +196,9 @@ The tree emits structural and focus events on node paths so UI can subscribe at 
 
 ```ts
 type FocusChangeEvent = {
-  type: "focuschange";
-  focused: NodeId;
-  previous: NodeId;
+	type: "focuschange";
+	focused: NodeId;
+	previous: NodeId;
 };
 ```
 
@@ -206,9 +206,9 @@ type FocusChangeEvent = {
 
 ```ts
 type StructureChangeEvent = {
-  type: "structurechange";
-  operation: "insert" | "removal";
-  id: NodeId;
+	type: "structurechange";
+	operation: "insert" | "removal";
+	id: NodeId;
 };
 ```
 
@@ -222,8 +222,8 @@ type NavtreeEvent = StructureChangeEvent | FocusChangeEvent;
 
 ```ts
 type NavtreeListener = {
-  type: NavtreeEvent["type"];
-  fn: (event: NavtreeEvent) => void;
+	type: NavtreeEvent["type"];
+	fn: (event: NavtreeEvent) => void;
 };
 ```
 
@@ -231,10 +231,10 @@ type NavtreeListener = {
 
 ```ts
 function registerListener(
-  tree: NavigationTree,
-  id: NodeId,
-  type: "focuschange" | "structurechange",
-  fn: (event: NavtreeEvent) => void,
+	tree: NavigationTree,
+	id: NodeId,
+	type: "focuschange" | "structurechange",
+	fn: (event: NavtreeEvent) => void,
 ): () => void;
 ```
 
@@ -256,10 +256,10 @@ type NavigationDirection = "up" | "down" | "left" | "right";
 
 ```ts
 interface NavigationActions {
-  select: { kind: "select" };
-  move: { kind: "move"; direction: NavigationDirection | "back" };
-  focus: { kind: "focus"; direction: NavigationDirection | "initial" | null };
-  query: { kind: "query"; key: string; value: unknown };
+	select: { kind: "select" };
+	move: { kind: "move"; direction: NavigationDirection | "back" };
+	focus: { kind: "focus"; direction: NavigationDirection | "initial" | null };
+	query: { kind: "query"; key: string; value: unknown };
 }
 ```
 
@@ -269,9 +269,9 @@ You can merge additional action variants via TypeScript module augmentation:
 
 ```ts
 declare module "@fiveway/core" {
-  interface NavigationActions {
-    custom: { kind: "my-custom-action"; customValue: string };
-  }
+	interface NavigationActions {
+		custom: { kind: "my-custom-action"; customValue: string };
+	}
 }
 ```
 
@@ -303,9 +303,9 @@ Call `next()` to stop at the current node, `next(parentId)` to delegate to anoth
 
 ```ts
 type NavigationHandler = (
-  node: NavtreeNode,
-  action: NavigationAction,
-  next: HandlerNext,
+	node: NavtreeNode,
+	action: NavigationAction,
+	next: HandlerNext,
 ) => NodeId | null;
 ```
 
@@ -313,7 +313,7 @@ type NavigationHandler = (
 
 ```ts
 type ChainedHandler = NavigationHandler & {
-  prepend(another: NavigationHandler | ChainedHandler): ChainedHandler;
+	prepend(another: NavigationHandler | ChainedHandler): ChainedHandler;
 };
 
 function chainedHandler(handlers: NavigationHandler | NavigationHandler[] | null): ChainedHandler;
@@ -359,8 +359,8 @@ If `onSelect` is provided, prepends `selectHandler(onSelect)` to `defaultHandler
 type FocusDirection = "front" | "back";
 
 type FocusHandlerConfig = {
-  skipEmpty?: boolean;
-  direction?: (dir: NavigationDirection | "initial" | null) => FocusDirection | null;
+	skipEmpty?: boolean;
+	direction?: (dir: NavigationDirection | "initial" | null) => FocusDirection | null;
 };
 
 function focusHandler(config?: FocusHandlerConfig): NavigationHandler;
@@ -388,15 +388,15 @@ Ensures the resolved id stays under the current node subtree.
 
 ```ts
 function verticalMovementHandler(
-  node: NavtreeNode,
-  action: NavigationAction,
-  next: HandlerNext,
+	node: NavtreeNode,
+	action: NavigationAction,
+	next: HandlerNext,
 ): NodeId | null;
 
 function horizontalMovementHandler(
-  node: NavtreeNode,
-  action: NavigationAction,
-  next: HandlerNext,
+	node: NavtreeNode,
+	action: NavigationAction,
+	next: HandlerNext,
 ): NodeId | null;
 ```
 
@@ -437,7 +437,7 @@ Lower-level movement handler used inside `gridHandler`; picks the nearest cell u
 
 ```ts
 function gridHandler(config?: {
-  distance?: (direction: NavigationDirection) => (a: GridPos, b: GridPos) => number | null;
+	distance?: (direction: NavigationDirection) => (a: GridPos, b: GridPos) => number | null;
 }): ChainedHandler;
 ```
 
@@ -491,9 +491,9 @@ Metadata handlers attach values to nodes and expose them through `query` [action
 
 ```ts
 type MetaHandler<T> = {
-  key: string;
-  (v: T | (() => T | null) | null): NavigationHandler;
-  query: (tree: NavigationTree, id: NodeId) => T | null;
+	key: string;
+	(v: T | (() => T | null) | null): NavigationHandler;
+	query: (tree: NavigationTree, id: NodeId) => T | null;
 };
 ```
 

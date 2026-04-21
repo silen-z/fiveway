@@ -12,9 +12,9 @@ These are the most commonly used handlers that provide basic navigation function
 import { defaultHandler, createNode } from "@fiveway/core";
 
 const node = createNode({
-  id: "node",
-  parent: "#",
-  handler: defaultHandler,
+	id: "node",
+	parent: "#",
+	handler: defaultHandler,
 });
 ```
 
@@ -28,9 +28,9 @@ Together with `containerHandler`, it's the ideal handler to extend with custom m
 import { containerHandler, createNode } from "@fiveway/core";
 
 const node = createNode({
-  id: "node",
-  parent: "#",
-  handler: containerHandler,
+	id: "node",
+	parent: "#",
+	handler: containerHandler,
 });
 ```
 
@@ -44,11 +44,11 @@ Together with `defaultHandler`, it's the ideal handler to extend with custom mov
 import { itemHandler, createNode } from "@fiveway/core";
 
 const node = createNode({
-  id: "node",
-  parent: "#",
-  handler: itemHandler(() => {
-    console.log("Item selected!");
-  }),
+	id: "node",
+	parent: "#",
+	handler: itemHandler(() => {
+		console.log("Item selected!");
+	}),
 });
 ```
 
@@ -118,11 +118,11 @@ The focus handler might be the most important handler (and the most complicated 
 import { focusHandler } from "@fiveway/core";
 
 const handler = focusHandler({
-  skipEmpty: true,
-  direction: (dir) => {
-    // Custom focus direction logic
-    return dir === "up" ? "back" : "front";
-  },
+	skipEmpty: true,
+	direction: (dir) => {
+		// Custom focus direction logic
+		return dir === "up" ? "back" : "front";
+	},
 });
 ```
 
@@ -140,7 +140,7 @@ The select handler provides selection functionality.
 import { selectHandler } from "@fiveway/core";
 
 const handler = selectHandler(() => {
-  console.log("Node selected!");
+	console.log("Node selected!");
 });
 ```
 
