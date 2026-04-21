@@ -124,16 +124,22 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
   return handle;
 }
 
-export type NodeProps = NodeOptions & {
-  children?: JSX.Element | ((node: NodeHandle) => JSX.Element);
+type NavigationNodeHandle = Omit<NodeHandle, "Context">;
+
+type NavigationNodeChildren = JSX.Element | ((props: NavigationNodeHandle) => JSX.Element);
+
+export type NavigationNodeProps = NodeOptions & {
+  children?: NavigationNodeChildren;
 };
 
-export function NavigationNode(props: NodeProps): JSX.Element {
+export function NavigationNode(props: NavigationNodeProps): JSX.Element {
   const node = createNavigationNode(props);
 
-  return (
-    <node.Context>
-      {typeof props.children === "function" ? props.children(node) : props.children}
-    </node.Context>
-  );
+  return <node.Context>{resolveNodeChildren(props.children, node)}</node.Context>;
+}
+
+function resolveNodeChildren(children: NavigationNodeChildren, node: NodeHandle): JSX.Element {
+  return createMemo(() =>
+    typeof children === "function" ? children(node) : children,
+  ) as unknown as JSX.Element;
 }

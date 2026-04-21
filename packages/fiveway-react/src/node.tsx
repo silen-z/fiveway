@@ -99,11 +99,15 @@ export function useNavigationNode(options: NodeOptions): NodeHandle {
   return { id: nodeId, isFocused, focus, select, Context };
 }
 
-export type NodeProps = NodeOptions & {
-  children?: ReactNode | ((props: Omit<NodeHandle, "Context">) => ReactNode);
+type NavigationNodeHandle = Omit<NodeHandle, "Context">;
+
+type NavigationNodeChildren = ReactNode | ((props: NavigationNodeHandle) => ReactNode);
+
+export type NavigationNodeProps = NodeOptions & {
+  children?: NavigationNodeChildren;
 };
 
-export function NavigationNode({ children, ...props }: NodeProps): ReactNode {
+export function NavigationNode({ children, ...props }: NavigationNodeProps): ReactNode {
   const { Context, ...node } = useNavigationNode(props);
 
   return <Context>{typeof children === "function" ? children(node) : children}</Context>;
