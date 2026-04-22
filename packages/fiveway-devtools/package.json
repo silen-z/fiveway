@@ -1,0 +1,33 @@
+{
+	"name": "@fiveway/devtools",
+	"version": "1.0.0-beta.4",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/silen-z/fiveway.git"
+	},
+	"files": [
+		"dist"
+	],
+	"type": "module",
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"start": "vite start",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@solidjs/meta": "^0.29.4",
+		"@solidjs/router": "^0.15.4",
+		"@solidjs/start": "2.0.0-alpha.2",
+		"@solidjs/vite-plugin-nitro-2": "^0.1.0",
+		"solid-js": "^1.9.11",
+		"vite": "7.3.1"
+	},
+	"engines": {
+		"node": ">=22"
+	}
+}
