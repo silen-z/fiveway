@@ -11,6 +11,7 @@ export default defineProject({
 			outDir: "dist/solid",
 			dts: true,
 			unbundle: true,
+			outExtensions: () => ({ js: ".jsx" }),
 		},
 
 		// build with JSX transpiled
