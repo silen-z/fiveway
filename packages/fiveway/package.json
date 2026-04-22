@@ -25,6 +25,6 @@
 	"devDependencies": {
 		"typescript": "catalog:",
 		"vite-plus": "catalog:",
-		"vitest": "catalog:"
+		"vitest": "npm:@voidzero-dev/vite-plus-test@^0.1.19"
 	}
 }

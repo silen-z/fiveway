@@ -1,0 +1,29 @@
+{
+	"compilerOptions": {
+		"skipLibCheck": true,
+
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+
+		"module": "preserve",
+		"moduleDetection": "force",
+		"allowImportingTsExtensions": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+		"erasableSyntaxOnly": true,
+
+		"noEmit": true,
+
+		"target": "es2022",
+		"lib": ["es2022", "dom", "dom.iterable"],
+
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+
+		"types": ["vite/client"]
+	},
+	"include": ["src/**/*.ts", "src/**/*.tsx"],
+	"exclude": ["node_modules"],
+
+	"references": [{ "path": "../../packages/fiveway" }, { "path": "../../packages/fiveway-solid" }]
+}
