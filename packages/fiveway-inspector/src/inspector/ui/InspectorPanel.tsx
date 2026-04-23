@@ -5,7 +5,7 @@ import { TreeInspector } from "./TreeInspector.tsx";
 
 import styles from "./InspectorPanel.module.css";
 
-export function Inspector() {
+export function InspectorPanel() {
 	const devtools = useDevtoolsContext();
 
 	return (

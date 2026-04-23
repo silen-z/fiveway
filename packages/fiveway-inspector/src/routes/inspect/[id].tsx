@@ -1,22 +1,21 @@
 import { type InspectorCommand, type InspectorMessage } from "@fiveway/core";
-import { Link } from "@solidjs/meta";
 import { useParams } from "@solidjs/router";
 
-import inspectorStyle from "@fiveway/inspector/style.css?url";
+import { devtoolsContext, createDevtoolsContext } from "../../inspector/context.ts";
+import { InspectorPanel } from "../../inspector/ui/InspectorPanel.tsx";
 
 export default function InspectorPage() {
 	const { id } = useParams();
-	const handle = createInspectorConnection(id!);
+
+	const connection = createInspectorConnection(id!);
+	const context = createDevtoolsContext(connection);
 
 	return (
 		<>
-			<Link rel="stylesheet" href={inspectorStyle}></Link>
 			<main>
-				<div
-					ref={(el) =>
-						import("@fiveway/inspector").then(({ createInspector }) => createInspector(el, handle))
-					}
-				></div>
+				<devtoolsContext.Provider value={context}>
+					<InspectorPanel />
+				</devtoolsContext.Provider>
 			</main>
 		</>
 	);

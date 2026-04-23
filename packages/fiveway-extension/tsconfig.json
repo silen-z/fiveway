@@ -20,5 +20,5 @@
 	"include": ["src/**/*.ts"],
 	"exclude": ["node_modules"],
 
-	"references": [{ "path": "../fiveway" }, { "path": "../fiveway-inspector" }]
+	"references": [{ "path": "../fiveway" }, { "path": "../fiveway-inspector/src/inspector" }]
 }

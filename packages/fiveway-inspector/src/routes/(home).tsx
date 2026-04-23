@@ -4,7 +4,7 @@ import { For, Show } from "solid-js";
 
 import { getClients, type Client } from "../bridge.ts";
 
-const ScriptTag = clientOnly(() => import("../components/scriptTag.tsx"));
+const ScriptTag = clientOnly(() => import("../client/scriptTag.tsx"));
 
 export default function Home() {
 	const clients = createAsync(() => getClients());
