@@ -42,7 +42,9 @@ export function TreeInspector(props: { tree: InspectedTree }) {
 								/>
 							</g>
 						</svg>
-						<span class={styles.toolbarBrand}>fiveway</span>
+						<span>
+							<span class={styles.toolbarBrand}>fiveway</span> / inspector
+						</span>
 					</span>
 					<div class={styles.toolbarActions}>
 						<button

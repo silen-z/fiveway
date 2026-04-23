@@ -31,7 +31,7 @@
 		"lucide-solid": "^1.8.0",
 		"solid-js": "^1.9.12",
 		"typescript": "catalog:",
-		"vite": "npm:@voidzero-dev/vite-plus-core@^0.1.19",
+		"vite": "catalog:",
 		"vite-plugin-solid": "^2.11.12",
 		"vite-plus": "catalog:"
 	}
