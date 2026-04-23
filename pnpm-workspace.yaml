@@ -10,13 +10,15 @@ catalog:
   vitest: npm:@voidzero-dev/vite-plus-test@latest
 
 overrides:
-  # vite: "catalog:"
+  vite: "catalog:"
   vitest: "catalog:"
+patchedDependencies:
+  '@solidjs/start': patches/@solidjs__start.patch
 
-# peerDependencyRules:
-#   allowAny:
-#     - vite
-#     - vitest
-#   allowedVersions:
-#     vite: "*"
-#     vitest: "*"
+peerDependencyRules:
+  allowAny:
+    - vite
+    - vitest
+  allowedVersions:
+    vite: "*"
+    vitest: "*"

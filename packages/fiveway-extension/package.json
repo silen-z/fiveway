@@ -17,7 +17,7 @@
 	"devDependencies": {
 		"@types/webextension-polyfill": "^0.12.5",
 		"typescript": "catalog:",
-		"vite": "npm:@voidzero-dev/vite-plus-core@^0.1.19",
+		"vite": "catalog:",
 		"vite-plugin-solid": "^2.11.12",
 		"vite-plugin-web-extension": "^4.5.1",
 		"vite-plus": "catalog:",

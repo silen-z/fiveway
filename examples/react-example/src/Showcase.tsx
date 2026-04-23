@@ -56,7 +56,7 @@ export function Showcase() {
 				<header className={css.pageHeader}>
 					<div className={css.pageTitle}>
 						<h1>
-							<strong>fiveway</strong> / React demo
+							<strong>fiveway</strong> / react
 						</h1>
 						<div className={css.titleLinks}>
 							<a href="https://fiveway.io">Documentation</a>
