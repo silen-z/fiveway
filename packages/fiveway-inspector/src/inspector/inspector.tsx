@@ -1,7 +1,7 @@
 import { render } from "solid-js/web";
 
-import { createDevtoolsContext, devtoolsContext, type InspetorInit } from "../context.ts";
-import { Inspector } from "./InspectorPanel.tsx";
+import { createDevtoolsContext, devtoolsContext, type InspetorInit } from "./context.ts";
+import { InspectorPanel } from "./ui/InspectorPanel.tsx";
 
 export function createInspector(el: HTMLElement, handle: InspetorInit): void {
 	render(() => {
@@ -9,7 +9,7 @@ export function createInspector(el: HTMLElement, handle: InspetorInit): void {
 
 		return (
 			<devtoolsContext.Provider value={context}>
-				<Inspector />
+				<InspectorPanel />
 			</devtoolsContext.Provider>
 		);
 	}, el);

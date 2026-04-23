@@ -1,5 +1,7 @@
 import { type InspectorCommand } from "@fiveway/core";
 import { createInspector } from "@fiveway/inspector";
+
+import "@fiveway/inspector/style.css";
 import * as v from "valibot";
 import browser from "webextension-polyfill";
 

@@ -12,7 +12,9 @@
 		"verbatimModuleSyntax": true,
 		"erasableSyntaxOnly": true,
 
-		"noEmit": true,
+		"composite": true,
+		"emitDeclarationOnly": true,
+		"declarationMap": true,
 
 		"target": "es2022",
 		"lib": ["es2022", "dom", "dom.iterable"],
@@ -22,8 +24,8 @@
 
 		"types": ["vite/client"]
 	},
-	"include": ["src/**/*.ts", "src/**/*.tsx"],
+	"include": ["**/*.ts", "**/*.tsx"],
 	"exclude": ["node_modules"],
 
-	"references": [{ "path": "../../packages/fiveway" }, { "path": "../../packages/fiveway-solid" }]
+	"references": [{ "path": "../../../fiveway" }]
 }

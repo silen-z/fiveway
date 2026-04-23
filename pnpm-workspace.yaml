@@ -13,7 +13,7 @@ overrides:
   vite: "catalog:"
   vitest: "catalog:"
 patchedDependencies:
-  '@solidjs/start': patches/@solidjs__start.patch
+  "@solidjs/start": patches/@solidjs__start.patch
 
 peerDependencyRules:
   allowAny:
