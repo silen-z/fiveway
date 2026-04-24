@@ -1,4 +1,4 @@
-const remoteUrl = new URL("/client", document.currentScript.src);
+const remoteUrl = new URL("/ws/client", document.currentScript.src);
 remoteUrl.protocol = "ws:";
 remoteUrl.searchParams.set("title", document.title);
 remoteUrl.searchParams.set("url", window.location.href);

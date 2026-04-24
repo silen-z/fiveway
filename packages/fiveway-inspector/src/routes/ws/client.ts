@@ -1,7 +1,7 @@
 import { defineWebSocketHandler } from "nitro";
 import { v4 as uuidv4 } from "uuid";
 
-import { registerClient, unregisterClient } from "../../bridge.ts";
+import { registerClient, unregisterClient } from "../../server/bridge.ts";
 
 export const GET = defineWebSocketHandler({
 	upgrade() {

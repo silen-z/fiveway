@@ -1,13 +1,37 @@
-import { createAsync } from "@solidjs/router";
+import { createAsync, query, revalidate, type RouteDefinition } from "@solidjs/router";
 import { clientOnly } from "@solidjs/start";
-import { For, Show } from "solid-js";
+import { createEffect, For, Show } from "solid-js";
+import { Suspense } from "solid-js";
 
-import { getClients, type Client } from "../bridge.ts";
+import { getActiveClients, type Client } from "../server/bridge.ts";
 
-const ScriptTag = clientOnly(() => import("../client/scriptTag.tsx"));
+const ScriptTag = clientOnly(() => import("../client/ScriptTag.tsx"));
 
-export default function Home() {
+const getClients = query(async () => {
+	"use server";
+
+	return getActiveClients();
+}, "clients");
+
+export const route = {
+	preload: () => getClients(),
+} satisfies RouteDefinition;
+
+export default function HomePage() {
 	const clients = createAsync(() => getClients());
+
+	createEffect(() => {
+		const eventSource = new EventSource("/sse/notify");
+		eventSource.addEventListener("message", async (event) => {
+			if (event.data === "notify") {
+				await revalidate(getClients.key);
+			}
+		});
+
+		return () => {
+			eventSource.close();
+		};
+	});
 
 	const hasClients = () => (clients()?.length ?? 0) > 0;
 
@@ -61,9 +85,11 @@ export default function Home() {
 						</tr>
 					</thead>
 					<tbody>
-						<Show when={hasClients()} fallback={<NoClientsConnected />}>
-							<For each={clients()}>{(client) => <ClientRow client={client} />}</For>
-						</Show>
+						<Suspense>
+							<Show when={hasClients()} fallback={<NoClientsConnected />}>
+								<For each={clients()}>{(client) => <ClientRow client={client} />}</For>
+							</Show>
+						</Suspense>
 					</tbody>
 				</table>
 			</main>
@@ -104,7 +130,7 @@ function NoClientsConnected() {
 						No clients are connected yet.
 						<div class="mx-auto w-full max-w-2xl text-center text-sm">
 							<pre>
-								<ScriptTag fallback="..." />
+								<ScriptTag />
 							</pre>
 						</div>
 					</div>

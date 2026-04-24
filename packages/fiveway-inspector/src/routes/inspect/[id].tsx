@@ -28,7 +28,7 @@ function createInspectorConnection(id: string) {
 
 	return {
 		subscribe: (callback: (message: InspectorMessage) => void) => {
-			ws = new WebSocket(`/inspect?client=${id}`);
+			ws = new WebSocket(`/ws/inspect?client=${id}`);
 
 			ws.addEventListener("open", () => {
 				for (const message of queue) {
