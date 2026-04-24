@@ -29,19 +29,18 @@
 		"@solidjs/meta": "^0.29.4",
 		"@solidjs/router": "^0.15.4",
 		"@solidjs/start": "2.0.0-alpha.2",
-		"@solidjs/vite-plugin-nitro-2": "^0.1.0",
 		"crossws": "^0.4.5",
 		"nitro": "3.0.260415-beta",
-		"solid-js": "^1.9.11",
+		"solid-js": "^1.9.12",
 		"uuid": "^14.0.0",
-		"vite": "catalog:"
+		"vite": "npm:@voidzero-dev/vite-plus-core@^0.1.19"
 	},
 	"devDependencies": {
 		"@tailwindcss/vite": "0.0.0-insiders.f3fdda2",
-		"@tsdown/css": "^0.21.9",
+		"@tsdown/css": "0.21.9",
 		"clsx": "^2.1.1",
 		"daisyui": "^5.5.19",
-		"lucide-solid": "^1.8.0",
+		"lucide-solid": "^1.9.0",
 		"solid-js": "^1.9.12",
 		"tailwindcss": "^4.2.4",
 		"typescript": "catalog:",

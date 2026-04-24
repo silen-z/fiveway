@@ -7,5 +7,10 @@
 		"vite-plus": "catalog:",
 		"vitest": "npm:@voidzero-dev/vite-plus-test@^0.1.19"
 	},
-	"packageManager": "pnpm@10.33.0"
+	"packageManager": "pnpm@10.33.0",
+	"pnpm": {
+		"overrides": {
+			"@solidjs/start>h3": "2.0.1-rc.20"
+		}
+	}
 }

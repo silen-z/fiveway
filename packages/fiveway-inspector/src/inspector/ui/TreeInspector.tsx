@@ -1,8 +1,8 @@
 import { type NavigationAction } from "@fiveway/core";
-import * as Icon from "lucide-solid";
 import { createSignal, For, Show } from "solid-js";
 
 import { type InspectedTree, useDevtoolsContext } from "../context.ts";
+import { Gamepad2 } from "./icons.ts";
 import { NavigationPad } from "./NavigationPad.tsx";
 import { TreeNode } from "./TreeNode.tsx";
 
@@ -55,7 +55,7 @@ export function TreeInspector(props: { tree: InspectedTree }) {
 							aria-controls={navOpen() ? "fiveway-nav-pad" : undefined}
 							onClick={() => setNavOpen((o) => !o)}
 						>
-							<Icon.Gamepad2 size={18} />
+							<Gamepad2 size={18} />
 						</button>
 						<Show when={Object.keys(devtools.trees).length > 1}>
 							<select

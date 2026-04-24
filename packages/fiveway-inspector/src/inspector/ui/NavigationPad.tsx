@@ -1,6 +1,7 @@
 import { type NavigationAction } from "@fiveway/core";
 import { clsx } from "clsx";
-import * as Icon from "lucide-solid";
+
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Check, Undo2 } from "./icons.ts";
 
 import styles from "./NavigationPad.module.css";
 
@@ -16,7 +17,7 @@ export function NavigationPad(props: { onAction: (action: NavigationAction) => v
 				aria-label="Back"
 				onClick={() => onAction({ kind: "move", direction: "back" })}
 			>
-				<Icon.Undo2 size={16} />
+				<Undo2 size={16} />
 			</button>
 			<button
 				type="button"
@@ -25,7 +26,7 @@ export function NavigationPad(props: { onAction: (action: NavigationAction) => v
 				aria-label="Move up"
 				onClick={() => onAction({ kind: "move", direction: "up" })}
 			>
-				<Icon.ArrowUp size={16} />
+				<ArrowUp size={16} />
 			</button>
 			<button
 				type="button"
@@ -34,7 +35,7 @@ export function NavigationPad(props: { onAction: (action: NavigationAction) => v
 				aria-label="Select"
 				onClick={() => onAction({ kind: "select" })}
 			>
-				<Icon.Check size={16} />
+				<Check size={16} />
 			</button>
 			<button
 				type="button"
@@ -43,7 +44,7 @@ export function NavigationPad(props: { onAction: (action: NavigationAction) => v
 				aria-label="Move left"
 				onClick={() => onAction({ kind: "move", direction: "left" })}
 			>
-				<Icon.ArrowLeft size={16} />
+				<ArrowLeft size={16} />
 			</button>
 			<button
 				type="button"
@@ -52,7 +53,7 @@ export function NavigationPad(props: { onAction: (action: NavigationAction) => v
 				aria-label="Move right"
 				onClick={() => onAction({ kind: "move", direction: "right" })}
 			>
-				<Icon.ArrowRight size={16} />
+				<ArrowRight size={16} />
 			</button>
 			<button
 				type="button"
@@ -61,7 +62,7 @@ export function NavigationPad(props: { onAction: (action: NavigationAction) => v
 				aria-label="Move down"
 				onClick={() => onAction({ kind: "move", direction: "down" })}
 			>
-				<Icon.ArrowDown size={16} />
+				<ArrowDown size={16} />
 			</button>
 		</div>
 	);

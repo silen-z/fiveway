@@ -1,9 +1,16 @@
 import { isParent } from "@fiveway/core";
 import { clsx } from "clsx";
-import * as Icon from "lucide-solid";
 import { createMemo, createSignal, For, Show } from "solid-js";
 
 import { type InspectedTree, useDevtoolsContext } from "../context.ts";
+import {
+	ChevronDown,
+	ChevronRight,
+	CircleDot,
+	Focus,
+	FoldVertical,
+	UnfoldVertical,
+} from "./icons.ts";
 
 import styles from "./TreeNode.module.css";
 
@@ -66,12 +73,12 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 						when={childCount() > 0}
 						fallback={
 							<div class={styles.nodeKindIcon} aria-hidden="true">
-								<Icon.CircleDot size={14} />
+								<CircleDot size={14} />
 							</div>
 						}
 					>
 						<span class={styles.nodeChevron} aria-hidden="true">
-							{isExpanded() ? <Icon.ChevronDown size={14} /> : <Icon.ChevronRight size={14} />}
+							{isExpanded() ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
 						</span>
 					</Show>
 
@@ -93,7 +100,7 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 							aria-label="Focus in app"
 							onClick={() => focusNode()}
 						>
-							<Icon.Focus size={14} />
+							<Focus size={14} />
 						</button>
 					</Show>
 					<Show when={props.tree.focus === props.node}>
@@ -103,7 +110,7 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 							role="img"
 							aria-label="Focused in app"
 						>
-							<Icon.Focus size={14} />
+							<Focus size={14} />
 						</span>
 					</Show>
 				</div>
@@ -132,7 +139,7 @@ function ExpandButton(props: { expanded: boolean; onToggle: () => void }) {
 			aria-label={label()}
 			onClick={() => props.onToggle()}
 		>
-			{props.expanded ? <Icon.FoldVertical size={14} /> : <Icon.UnfoldVertical size={14} />}
+			{props.expanded ? <FoldVertical size={14} /> : <UnfoldVertical size={14} />}
 		</button>
 	);
 }

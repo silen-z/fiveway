@@ -11,7 +11,7 @@ export default defineConfig({
 	plugins: process.env.VITEST
 		? []
 		: [
-				solidStart({}),
+				solidStart(),
 				nitro({
 					features: {
 						websocket: true,

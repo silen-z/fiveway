@@ -1,0 +1,13 @@
+export { default as ArrowDown } from "lucide-solid/icons/arrow-down";
+export { default as ArrowLeft } from "lucide-solid/icons/arrow-left";
+export { default as ArrowRight } from "lucide-solid/icons/arrow-right";
+export { default as ArrowUp } from "lucide-solid/icons/arrow-up";
+export { default as Check } from "lucide-solid/icons/check";
+export { default as ChevronDown } from "lucide-solid/icons/chevron-down";
+export { default as ChevronRight } from "lucide-solid/icons/chevron-right";
+export { default as CircleDot } from "lucide-solid/icons/circle-dot";
+export { default as Focus } from "lucide-solid/icons/focus";
+export { default as FoldVertical } from "lucide-solid/icons/fold-vertical";
+export { default as Gamepad2 } from "lucide-solid/icons/gamepad-2";
+export { default as Undo2 } from "lucide-solid/icons/undo-2";
+export { default as UnfoldVertical } from "lucide-solid/icons/unfold-vertical";
