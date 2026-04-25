@@ -1,8 +1,8 @@
-import { type NavigationAction } from "@fiveway/core";
-import { createSignal, For, Show } from "solid-js";
+import { createMemo, createSignal, For, Show } from "solid-js";
 
 import { type InspectedTree, useDevtoolsContext } from "../context.ts";
 import { Gamepad2 } from "./icons.ts";
+import { InspectedNode } from "./InspectedNode.tsx";
 import { NavigationPad } from "./NavigationPad.tsx";
 import { TreeNode } from "./TreeNode.tsx";
 
@@ -13,13 +13,9 @@ export function TreeInspector(props: { tree: InspectedTree }) {
 
 	const [navOpen, setNavOpen] = createSignal(false);
 
-	const sendNav = (action: NavigationAction) => {
-		devtools.sendCommand({
-			kind: "handleAction",
-			tree: props.tree.label,
-			action,
-		});
-	};
+	const inspectedNode = createMemo(
+		() => devtools.trees[props.tree.label]?.nodes[props.tree.inspected],
+	);
 
 	return (
 		<div class={styles.inspector}>
@@ -84,11 +80,15 @@ export function TreeInspector(props: { tree: InspectedTree }) {
 				</div>
 
 				<Show when={navOpen()}>
-					<NavigationPad onAction={sendNav} />
+					<NavigationPad tree={props.tree.label} />
 				</Show>
 
 				<div class={styles.tree}>
 					<TreeNode tree={props.tree} node="#" />
+				</div>
+
+				<div>
+					<Show when={inspectedNode()}>{(node) => <InspectedNode node={node()} />}</Show>
 				</div>
 			</div>
 		</div>

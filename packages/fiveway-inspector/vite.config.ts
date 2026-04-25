@@ -8,9 +8,8 @@ export default defineConfig({
 	server: {
 		port: 3003,
 	},
-	plugins: process.env.VITEST
-		? []
-		: [
+	plugins: !process.env.VITEST
+		? [
 				solidStart(),
 				nitro({
 					features: {
@@ -18,7 +17,8 @@ export default defineConfig({
 					},
 				}),
 				tailwindcss(),
-			],
+			]
+		: [],
 	resolve: {
 		dedupe: ["@solidjs/start"],
 	},

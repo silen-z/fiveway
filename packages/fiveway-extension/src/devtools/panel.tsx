@@ -5,8 +5,12 @@ import "@fiveway/inspector/style.css";
 import * as v from "valibot";
 import browser from "webextension-polyfill";
 
-import { type InspectorCommand as InspectorCommandMessage } from "../messages.ts";
-import { type InitMessage, InspectorMessage, ReloadMessage } from "../messages.ts";
+import {
+	type InitMessage,
+	type InspectorCommand as InspectorCommandMessage,
+	InspectorMessage,
+	ReloadMessage,
+} from "../protocol.ts";
 
 const port = browser.runtime.connect({ name: "devtools" });
 

@@ -2,7 +2,7 @@ import { expect, test } from "vite-plus/test";
 
 import {
 	describeHandler,
-	queryHandlerInfo,
+	inspectHandler,
 	createNavigationTree,
 	insertNode,
 	createNode,
@@ -25,7 +25,7 @@ test("handlerInfo", () => {
 		}),
 	);
 
-	expect(queryHandlerInfo(tree, "#/test")).toEqual([{ name: "test" }]);
+	expect(inspectHandler(tree, "#/test")).toEqual([{ name: "test" }]);
 });
 
 test("chain handler adds fallback info to link handlers", () => {
@@ -44,7 +44,7 @@ test("chain handler adds fallback info to link handlers", () => {
 		}),
 	);
 
-	expect(queryHandlerInfo(tree, "#/test")).toEqual(
+	expect(inspectHandler(tree, "#/test")).toEqual(
 		expect.arrayContaining([{ name: "handlerWithoutInfo" }]),
 	);
 });
