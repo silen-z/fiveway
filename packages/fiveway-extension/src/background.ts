@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import browser from "webextension-polyfill";
 
-import { InitMessage, InspectorCommand } from "./messages.ts";
+import { InitMessage, InspectorCommand } from "./protocol.ts";
 
 const contentScriptPorts: Map<number, browser.Runtime.Port> = new Map();
 const devtoolsPorts: Map<number, browser.Runtime.Port> = new Map();

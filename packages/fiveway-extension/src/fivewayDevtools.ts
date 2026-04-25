@@ -1,7 +1,7 @@
 import * as v from "valibot";
 import browser from "webextension-polyfill";
 
-import { InspectorMessage } from "./messages.ts";
+import { InspectorMessage } from "./protocol.ts";
 
 let port = browser.runtime.connect({ name: "content-script" });
 

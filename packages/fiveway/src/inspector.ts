@@ -8,6 +8,7 @@ export type InspectorNode = {
 	parent: string | null;
 	order: number | null;
 	children: string[];
+	handler?: HandlerDescription[];
 };
 
 export type InspectorMessage = {
@@ -36,7 +37,8 @@ export function emitInspectorMessage(message: InspectorMessage): void {
 
 export type InspectorCommand =
 	| { kind: "handleAction"; tree: string; action: NavigationAction; node?: NodeId }
-	| { kind: "requestCompleteSnapshot"; tree: string };
+	| { kind: "requestCompleteSnapshot"; tree: string }
+	| { kind: "inspectHandler"; tree: string; node: NodeId };
 
 export function subscribeToInspectorCommands(
 	tree: NavigationTree,
@@ -56,27 +58,29 @@ export function subscribeToInspectorCommands(
 	});
 }
 
-export type HandlerInfo = Record<string, string | { toString(): string }>;
+export type HandlerDescription = Record<string, string | { toString(): string }>;
 
-export function describeHandler(action: NavigationAction, info: HandlerInfo): void {
-	if (action.kind === "query" && action.key === "core:handler-info") {
-		if (!Array.isArray(action.value)) {
-			action.value = [];
-		}
+export const INSPECT_HANLDER = "inspect_handler";
 
-		(action.value as HandlerInfo[]).push(info);
-	}
-}
-
-export function queryHandlerInfo(tree: NavigationTree, id: NodeId): HandlerInfo[] {
-	const value = [] as HandlerInfo[];
+export function inspectHandler(tree: NavigationTree, id: NodeId): HandlerDescription[] {
+	const value = [] as HandlerDescription[];
 	runHandler(tree, id, {
 		kind: "query",
-		key: "core:handler-info",
+		key: INSPECT_HANLDER,
 		value,
 	});
 
 	return value;
+}
+
+export function describeHandler(action: NavigationAction, info: HandlerDescription): void {
+	if (action.kind === "query" && action.key === INSPECT_HANLDER) {
+		if (!Array.isArray(action.value)) {
+			action.value = [];
+		}
+
+		(action.value as HandlerDescription[]).push(info);
+	}
 }
 
 const queue: InspectorMessage[] = [];

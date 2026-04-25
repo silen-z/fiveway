@@ -24,6 +24,7 @@ export const InspectorMessage = v.object({
 				parent: v.nullable(v.string()),
 				order: v.nullable(v.number()),
 				children: v.array(v.string()),
+				handler: v.optional(v.any()),
 			}),
 		),
 	),
@@ -41,6 +42,13 @@ export const Command = v.union([
 		tree: v.string(),
 		node: v.optional(v.string()),
 		action: v.unknown(),
+	}),
+
+	// inspect handler of a specific node
+	v.object({
+		kind: v.literal("inspectHandler"),
+		tree: v.string(),
+		node: v.string(),
 	}),
 ]);
 

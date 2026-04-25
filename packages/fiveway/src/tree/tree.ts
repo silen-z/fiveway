@@ -9,7 +9,7 @@ import {
 import { binarySearch } from "../lib/array.ts";
 import { notifyListeners, type NavtreeListener } from "./events.ts";
 import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
-import { toInspectorNode, type CreatedNavtreeNode, type NavtreeNode } from "./node.ts";
+import { inspectNode, type CreatedNavtreeNode, type NavtreeNode } from "./node.ts";
 
 export type NavigationTree = {
 	label: string;
@@ -95,7 +95,7 @@ function connectNode(tree: NavigationTree, parentNode: NavtreeNode, node: Navtre
 		emitInspectorMessage({
 			type: "fiveway:treeState",
 			tree: tree.label,
-			nodes: [toInspectorNode(node), toInspectorNode(parentNode)],
+			nodes: [inspectNode(node), inspectNode(parentNode)],
 		});
 	}
 }
@@ -129,7 +129,7 @@ export function removeNode(tree: NavigationTree, node: NodeId | NavtreeNode): vo
 		emitInspectorMessage({
 			type: "fiveway:treeState",
 			tree: tree.label,
-			nodes: parentNode != null ? [toInspectorNode(parentNode)] : undefined,
+			nodes: parentNode != null ? [inspectNode(parentNode)] : undefined,
 			removedNodes: [id],
 		});
 	}
@@ -353,8 +353,21 @@ function handleInspectorCommand(tree: NavigationTree, command: InspectorCommand)
 		handleAction(tree, command.action, command.node);
 	}
 
+	if (command.kind === "inspectHandler") {
+		const node = tree.nodes.get(command.node);
+		if (node == null || !node.connected) {
+			return;
+		}
+
+		emitInspectorMessage({
+			type: "fiveway:treeState",
+			tree: tree.label,
+			nodes: [inspectNode(node, true)],
+		});
+	}
+
 	if (command.kind === "requestCompleteSnapshot") {
-		const nodes = Array.from(tree.nodes.values(), toInspectorNode);
+		const nodes = Array.from(tree.nodes.values(), (node) => inspectNode(node, false));
 
 		emitInspectorMessage({
 			type: "fiveway:treeState",

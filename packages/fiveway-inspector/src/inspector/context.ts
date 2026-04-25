@@ -115,6 +115,7 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 			return;
 		}
 
+		handle.sendCommand({ kind: "inspectHandler", tree: tree.label, node: nodeId });
 		setState("trees", tree.label, "inspected", nodeId);
 	};
 

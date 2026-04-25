@@ -1,6 +1,6 @@
 import { type NavigationHandler } from "../handler/handler.ts";
 import { defaultHandler } from "../handler/handler.ts";
-import { type InspectorNode } from "../inspector.ts";
+import { inspectHandler, type InspectorNode } from "../inspector.ts";
 import { binarySearch } from "../lib/array.ts";
 import { joinId, type NodeId } from "./id.ts";
 import { type NavigationTree } from "./tree.ts";
@@ -81,17 +81,20 @@ function updateNodeOrder(node: CreatedNavtreeNode, order: number) {
 	parentNode.children.splice(newIndex, 0, ...removed);
 }
 
-export function toInspectorNode(node: NavtreeNode): InspectorNode {
+export function inspectNode(node: NavtreeNode, handler = false): InspectorNode {
 	const children: string[] = [];
+
 	for (const child of node.children) {
 		if (child.active) {
 			children.push(child.id);
 		}
 	}
+
 	return {
 		id: node.id,
 		parent: node.parent,
 		order: node.order,
 		children,
+		handler: handler ? inspectHandler(node.tree, node.id) : undefined,
 	};
 }

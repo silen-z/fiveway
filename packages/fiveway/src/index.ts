@@ -78,10 +78,10 @@ export { spatialItemHandler, spatialMovement, spatialHandler } from "./handler/s
 export { type MetaHandler, metaHandler } from "./handler/metadata.ts";
 
 export {
-	type HandlerInfo,
+	type HandlerDescription,
 	type InspectorMessage,
 	type InspectorCommand,
 	type InspectorNode,
 	describeHandler,
-	queryHandlerInfo,
+	inspectHandler,
 } from "./inspector.ts";
