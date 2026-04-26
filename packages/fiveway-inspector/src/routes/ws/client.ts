@@ -20,6 +20,8 @@ export const GET = defineWebSocketHandler({
 		});
 
 		peer.subscribe("commands");
+
+		peer.send(JSON.stringify({ type: "setId", id: peer.namespace }));
 	},
 
 	message(peer, message) {
@@ -27,6 +29,7 @@ export const GET = defineWebSocketHandler({
 	},
 
 	close(peer) {
+		peer.publish("updates", JSON.stringify({ type: "client-disconnected" }));
 		unregisterClient(peer.namespace);
 	},
 });

@@ -1,18 +1,26 @@
 import { type InspectorCommand, type InspectorMessage } from "@fiveway/core";
 import { useParams } from "@solidjs/router";
+import { createSignal, Show } from "solid-js";
 
 import { devtoolsContext, createDevtoolsContext } from "../../inspector/context.ts";
 import { InspectorPanel } from "../../inspector/ui/InspectorPanel.tsx";
 
 export default function InspectorPage() {
 	const { id } = useParams();
+	const [isDisconnected, setDisconnected] = createSignal(false);
 
-	const connection = createInspectorConnection(id!);
+	const connection = createInspectorConnection(id!, () => setDisconnected(true));
 	const context = createDevtoolsContext(connection);
 
 	return (
 		<>
 			<main>
+				<Show when={isDisconnected()}>
+					<div class="absolute inset-0 flex flex-col items-center justify-center h-full">
+						<h1 class="text-2xl font-bold">Client disconnected</h1>
+						<p class="text-gray-500">The client has disconnected from the inspector.</p>
+					</div>
+				</Show>
 				<devtoolsContext.Provider value={context}>
 					<InspectorPanel />
 				</devtoolsContext.Provider>
@@ -21,7 +29,7 @@ export default function InspectorPage() {
 	);
 }
 
-function createInspectorConnection(id: string) {
+function createInspectorConnection(id: string, onDisconnect: () => void) {
 	let ws: WebSocket;
 
 	const queue: string[] = [];
@@ -38,7 +46,16 @@ function createInspectorConnection(id: string) {
 			});
 
 			ws.addEventListener("message", (event) => {
+				if (event.data === JSON.stringify({ type: "client-disconnected" })) {
+					onDisconnect();
+					return;
+				}
+
 				callback(JSON.parse(event.data));
+			});
+
+			ws.addEventListener("close", () => {
+				onDisconnect();
 			});
 
 			return () => {
