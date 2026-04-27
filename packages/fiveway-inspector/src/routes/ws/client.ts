@@ -4,9 +4,14 @@ import { v4 as uuidv4 } from "uuid";
 import { registerClient, unregisterClient } from "../../server/bridge.ts";
 
 export const GET = defineWebSocketHandler({
-	upgrade() {
-		const id = uuidv4();
-		return { namespace: id };
+	upgrade(request) {
+		const url = new URL(request.url);
+		const id = url.searchParams.get("id");
+		if (id == null) {
+			return { namespace: uuidv4() };
+		}
+
+		return { namespace: id, context: { reconnect: true } };
 	},
 	open(peer) {
 		const url = new URL(peer.request.url);
@@ -21,7 +26,11 @@ export const GET = defineWebSocketHandler({
 
 		peer.subscribe("commands");
 
-		peer.send(JSON.stringify({ type: "setId", id: peer.namespace }));
+		if (peer.context.reconnect) {
+			peer.publish("updates", JSON.stringify({ type: "fiveway:reload" }));
+		} else {
+			peer.send(JSON.stringify({ type: "fiveway:assignId", id: peer.namespace }));
+		}
 	},
 
 	message(peer, message) {

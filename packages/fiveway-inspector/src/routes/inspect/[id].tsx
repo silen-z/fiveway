@@ -9,7 +9,11 @@ export default function InspectorPage() {
 	const { id } = useParams();
 	const [isDisconnected, setDisconnected] = createSignal(false);
 
-	const connection = createInspectorConnection(id!, () => setDisconnected(true));
+	const connection = createInspectorConnection(
+		id!,
+		() => setDisconnected(true),
+		() => setDisconnected(false),
+	);
 	const context = createDevtoolsContext(connection);
 
 	return (
@@ -29,7 +33,7 @@ export default function InspectorPage() {
 	);
 }
 
-function createInspectorConnection(id: string, onDisconnect: () => void) {
+function createInspectorConnection(id: string, onDisconnect: () => void, onReconnect: () => void) {
 	let ws: WebSocket;
 
 	const queue: string[] = [];
@@ -46,9 +50,13 @@ function createInspectorConnection(id: string, onDisconnect: () => void) {
 			});
 
 			ws.addEventListener("message", (event) => {
-				if (event.data === JSON.stringify({ type: "client-disconnected" })) {
+				if (event.data.type === "client-disconnected") {
 					onDisconnect();
 					return;
+				}
+
+				if (event.data.type === "fiveway:reload") {
+					onReconnect();
 				}
 
 				callback(JSON.parse(event.data));
