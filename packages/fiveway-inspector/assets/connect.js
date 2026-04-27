@@ -6,6 +6,11 @@
 	let ws;
 
 	function connect() {
+		const clientId = window.sessionStorage.getItem("fiveway:clientId");
+		if (clientId != null) {
+			remoteUrl.searchParams.set("id", clientId);
+		}
+
 		remoteUrl.searchParams.set("title", document.title);
 		remoteUrl.searchParams.set("url", window.location.href);
 
@@ -44,9 +49,17 @@
 			typeof message === "object" &&
 			message != null &&
 			"type" in message &&
-			message.type.startsWith("fiveway:") &&
-			message.type !== "fiveway:command"
+			message.type.startsWith("fiveway:")
 		) {
+			if (message.type === "fiveway:command") {
+				return;
+			}
+
+			if (message.type === "fiveway:assignId") {
+				window.sessionStorage.setItem("fiveway:clientId", message.id);
+				return;
+			}
+
 			ws.send(JSON.stringify(message));
 		}
 	});
