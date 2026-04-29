@@ -32,6 +32,7 @@ export default defineConfig({
 		exports: { packageJson: false, inlinedDependencies: false },
 		plugins: [solid({ hot: false })],
 		deps: {
+			alwaysBundle: ["solid-js", "solid-js/web", "solid-js/store"],
 			onlyBundle: ["solid-js", "lucide-solid", "clsx"],
 		},
 	},
