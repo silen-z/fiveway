@@ -1,40 +1,8 @@
 import { type NavigationAction } from "./action.ts";
 import { runHandler } from "./handler/handler.ts";
 import { type NodeId } from "./tree/id.ts";
+import { type NavtreeNode } from "./tree/node.ts";
 import { type NavigationTree } from "./tree/tree.ts";
-
-export type InspectorNode = {
-	id: string;
-	parent: string | null;
-	order: number | null;
-	children: string[];
-	handler?: HandlerDescription[];
-};
-
-export type InspectorMessage = {
-	type: "fiveway:treeState";
-	tree: string;
-	focus?: string;
-	nodes?: InspectorNode[];
-	removedNodes?: string[];
-	complete?: true;
-};
-
-export function emitInspectorMessage(message: InspectorMessage): void {
-	if (typeof window === "undefined") {
-		return;
-	}
-
-	queue.push(message);
-
-	if (scheduledFlush == null) {
-		scheduledFlush = Promise.resolve()
-			.then(flushQueue)
-			.finally(() => {
-				scheduledFlush = null;
-			});
-	}
-}
 
 export type InspectorCommand =
 	| { kind: "dispatchAction"; tree: string; action: NavigationAction; node?: NodeId }
@@ -59,20 +27,63 @@ export function subscribeToInspectorCommands(
 	});
 }
 
+export type InspectorMessage = {
+	type: "fiveway:treeState";
+	tree: string;
+	focus?: string;
+	nodes?: InspectorNode[];
+	removedNodes?: string[];
+	complete?: true;
+};
+
+const queue: InspectorMessage[] = [];
+let scheduledFlush: Promise<void> | null = null;
+
+export function emitInspectorMessage(message: InspectorMessage): void {
+	if (typeof window === "undefined") {
+		return;
+	}
+
+	queue.push(message);
+
+	if (scheduledFlush == null) {
+		scheduledFlush = Promise.resolve()
+			.then(flushQueue)
+			.finally(() => {
+				scheduledFlush = null;
+			});
+	}
+}
+
+export type InspectorNode = {
+	id: string;
+	parent: string | null;
+	order: number | null;
+	children: string[];
+	handler?: HandlerDescription[];
+};
+
+export function inspectNode(node: NavtreeNode, handler = false): InspectorNode {
+	const children: string[] = [];
+
+	for (const child of node.children) {
+		if (child.active) {
+			children.push(child.id);
+		}
+	}
+
+	return {
+		id: node.id,
+		parent: node.parent,
+		order: node.order,
+		children,
+		handler: handler ? inspectHandler(node.tree, node.id) : undefined,
+	};
+}
+
 export type HandlerDescription = Record<string, unknown>;
 
 export const INSPECT_HANLDER = "inspectHandler";
-
-export function inspectHandler(tree: NavigationTree, id: NodeId): HandlerDescription[] {
-	const value = [] as HandlerDescription[];
-	runHandler(tree, id, {
-		kind: "query",
-		key: INSPECT_HANLDER,
-		value,
-	});
-
-	return value;
-}
 
 export function describeHandler(action: NavigationAction, info: HandlerDescription): void {
 	if (action.kind === "query" && action.key === INSPECT_HANLDER) {
@@ -84,8 +95,16 @@ export function describeHandler(action: NavigationAction, info: HandlerDescripti
 	}
 }
 
-const queue: InspectorMessage[] = [];
-let scheduledFlush: Promise<void> | null = null;
+export function inspectHandler(tree: NavigationTree, id: NodeId): HandlerDescription[] {
+	const value = [] as HandlerDescription[];
+	runHandler(tree, id, {
+		kind: "query",
+		key: INSPECT_HANLDER,
+		value,
+	});
+
+	return value;
+}
 
 function flushQueue(): void {
 	const batched: Record<string, InspectorMessage> = {};

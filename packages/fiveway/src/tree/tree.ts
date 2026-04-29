@@ -5,11 +5,12 @@ import {
 	type InspectorCommand,
 	emitInspectorMessage,
 	subscribeToInspectorCommands,
+	inspectNode,
 } from "../inspector.ts";
 import { binarySearch } from "../lib/array.ts";
 import { notifyListeners, type NavtreeListener } from "./events.ts";
 import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
-import { inspectNode, type CreatedNavtreeNode, type NavtreeNode } from "./node.ts";
+import { type CreatedNavtreeNode, type NavtreeNode } from "./node.ts";
 
 export type NavigationTree = {
 	label: string;
