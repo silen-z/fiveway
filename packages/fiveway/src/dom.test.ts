@@ -7,7 +7,7 @@ import { test, expect } from "vite-plus/test";
 import { createTreeFromSpec } from "./test/treeSpec.ts";
 
 import { defaultEventMapping } from "./dom.ts";
-import { verticalHandler, defaultHandler, handleAction } from "./index.ts";
+import { verticalHandler, defaultHandler, dispatchAction } from "./index.ts";
 
 test("defaultKeyMapping", async () => {
 	expect(defaultEventMapping(new MouseEvent("mouseover"))).toBeNull();
@@ -25,6 +25,6 @@ test("defaultKeyMapping", async () => {
 
 	const action = defaultEventMapping(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 	expect(action).not.toBeNull();
-	handleAction(tree, action!);
+	dispatchAction(tree, action!);
 	expect(tree.focus).toBe(nodes.item2.id);
 });

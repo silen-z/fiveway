@@ -1,5 +1,5 @@
 import { type NavigationAction } from "./action.ts";
-import { metaHandler, type MetaHandler } from "./handler/metadata.ts";
+import { dataHandler, type DataHandler } from "./handler/metadata.ts";
 
 const eventKeyToAction: Record<string, NavigationAction> = {
 	ArrowUp: { kind: "move", direction: "up" },
@@ -19,4 +19,4 @@ export function defaultEventMapping(e: Event): NavigationAction | null {
 	return null;
 }
 
-export const elementHandler: MetaHandler<HTMLElement> = metaHandler("core:node-element");
+export const elementHandler: DataHandler<HTMLElement> = dataHandler("core:node-element");

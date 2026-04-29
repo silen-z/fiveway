@@ -1,13 +1,9 @@
 import { expect, test, vi } from "vite-plus/test";
 
-import {
-	insertNode,
-	createNavigationTree,
-	createNode,
-	type NavigationHandler,
-	inspectHandler,
-	containerHandler,
-} from "../index.ts";
+import { inspectHandler } from "../inspector.ts";
+import { createNode } from "../tree/node.ts";
+import { createNavigationTree, insertNode } from "../tree/tree.ts";
+import { containerHandler, type NavigationHandler } from "./handler.ts";
 
 test("runHandler", async () => {
 	const tree = createNavigationTree();
@@ -51,12 +47,12 @@ test("defaultHandler", () => {
 	insertNode(tree, item);
 
 	expect(inspectHandler(tree, container.id)).toEqual([
-		{ name: "core:focus", skipEmpty: true, direction: "default" },
+		{ name: "core:focus", focusWhenEmpty: false, direction: "default" },
 		{ name: "core:parent" },
 	]);
 
 	expect(inspectHandler(tree, item.id)).toEqual([
-		{ name: "core:focus", skipEmpty: false, direction: "default" },
+		{ name: "core:focus", focusWhenEmpty: true, direction: "default" },
 		{ name: "core:parent" },
 	]);
 });

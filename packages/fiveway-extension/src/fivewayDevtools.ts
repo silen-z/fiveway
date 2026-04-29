@@ -1,18 +1,13 @@
 import * as v from "valibot";
 import browser from "webextension-polyfill";
 
-import { InspectorMessage } from "./protocol.ts";
+import { FivewayMessage, TreeStateMessage } from "./protocol.ts";
 
 let port = browser.runtime.connect({ name: "content-script" });
 
 port.onMessage.addListener((message) => {
-	if (
-		typeof message === "object" &&
-		message != null &&
-		"type" in message &&
-		message.type !== "ping"
-	) {
-		// forward commands from devtools to page
+	const { success } = v.safeParse(FivewayMessage, message);
+	if (success) {
 		window.postMessage(message);
 	}
 });
@@ -28,8 +23,8 @@ window.addEventListener("message", (event) => {
 	}
 
 	// forward tree updates to devtools
-	const { success, output: message } = v.safeParse(InspectorMessage, event.data);
+	const { success } = v.safeParse(TreeStateMessage, event.data);
 	if (success) {
-		port.postMessage(message);
+		port.postMessage(event.data);
 	}
 });

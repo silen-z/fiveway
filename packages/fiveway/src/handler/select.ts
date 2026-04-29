@@ -20,11 +20,15 @@ function createSelectHandler(onSelect: () => void): NavigationHandler {
 	return selectHandler;
 }
 
-export type SelectOptions = {
+export type SelectNodeOptions = {
 	focus?: boolean;
 };
 
-export function selectNode(tree: NavigationTree, nodeId: NodeId, options?: SelectOptions): void {
+export function selectNode(
+	tree: NavigationTree,
+	nodeId: NodeId,
+	options?: SelectNodeOptions,
+): void {
 	if (options?.focus ?? true) {
 		focusNode(tree, nodeId);
 	}

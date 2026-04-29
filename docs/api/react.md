@@ -14,11 +14,13 @@ import {
 	NavigationNode,
 	useIsFocused,
 	useOnFocus,
+	useOnBlur,
+	useOnFocusChange,
 	useFocusedId,
 	useFocus,
 	useSelect,
 	useElementHandler,
-	useActionHandler,
+	useDispatchOnEvent,
 	useFocusSync,
 } from "@fiveway/react";
 ```
@@ -43,11 +45,7 @@ const NavigationContext: React.Context<NavigationContext | null>;
 ### `NavigationProvider`
 
 ```ts
-type NavigationProviderProps = PropsWithChildren<{
-	tree: NavigationTree;
-}>;
-
-function NavigationProvider(props: NavigationProviderProps): JSX.Element;
+function NavigationProvider(props: { tree: NavigationTree; children?: ReactNode }): ReactNode;
 ```
 
 Supplies `tree` and sets `parentNode` to `"#"`.
@@ -62,10 +60,10 @@ Throws if used outside a provider.
 
 ## Nodes
 
-### `NodeOptions`
+### `NavigationNodeOptions`
 
 ```ts
-type NodeOptions = {
+type NavigationNodeOptions = {
 	id: NodeId;
 	parent?: NodeId;
 	order?: number;
@@ -73,34 +71,36 @@ type NodeOptions = {
 };
 ```
 
-### `NodeHandle`
+### `NavigationNodeHandle`
 
 ```ts
-type NodeHandle = {
+type NavigationNodeHandle = {
 	id: NodeId;
 	isFocused: () => boolean;
-	focus: (nodeId?: NodeId, options?: FocusOptions) => void;
-	select: (nodeId?: NodeId, focus?: boolean) => void;
+	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
+	select: (nodeId?: NodeId, options?: SelectNodeOptions) => void;
 	Context: React.FunctionComponent<{ children: ReactNode }>;
 };
 ```
 
+`FocusNodeOptions` and `SelectNodeOptions` are from `@fiveway/core`.
+
 ### `useNavigationNode`
 
 ```ts
-function useNavigationNode(options: NodeOptions): NodeHandle;
+function useNavigationNode(options: NavigationNodeOptions): NavigationNodeHandle;
 ```
 
 Creates/updates a [node](/api/#nodes-and-ids), inserts it on mount, removes on unmount, and provides a `Context` component that scopes children to this node’s id.
 
-### `NodeProps` / `NavigationNode`
+### `NavigationNodeProps` / `NavigationNode`
 
 ```ts
-type NodeProps = NodeOptions & {
-	children?: ReactNode | ((props: Omit<NodeHandle, "Context">) => ReactNode);
+type NavigationNodeProps = NavigationNodeOptions & {
+	children?: ReactNode | ((props: Omit<NavigationNodeHandle, "Context">) => ReactNode);
 };
 
-function NavigationNode(props: NodeProps): JSX.Element;
+function NavigationNode(props: NavigationNodeProps): ReactNode;
 ```
 
 Declarative wrapper around `useNavigationNode` with optional render-prop children.
@@ -118,10 +118,26 @@ Reactive `isFocused` for a node id relative to the current context parent (uses 
 ### `useOnFocus`
 
 ```ts
-function useOnFocus(nodeId: NodeId, handler: (id: NodeId | null) => void): void;
+function useOnFocus(nodeId: NodeId, handler: () => void): void;
 ```
 
-Invokes the handler when focus enters or leaves this node’s subtree (focused id or `null`).
+Invokes the handler when focus enters this node’s subtree (from unfocused).
+
+### `useOnBlur`
+
+```ts
+function useOnBlur(nodeId: NodeId, handler: () => void): void;
+```
+
+Invokes the handler when focus leaves this node’s subtree.
+
+### `useOnFocusChange`
+
+```ts
+function useOnFocusChange(nodeId: NodeId, handler: (id: NodeId | null) => void): void;
+```
+
+Invokes the handler with the current focused id under this subtree, or `null` when unfocused. Also runs once with the initial value.
 
 ### `useFocusedId`
 
@@ -134,7 +150,7 @@ While `scope` contains focus, returns `tree.focus`; otherwise `null`.
 ### `useFocus`
 
 ```ts
-function useFocus(scope?: NodeId): (nodeId: NodeId, options?: FocusOptions) => boolean;
+function useFocus(scope?: NodeId): (nodeId: NodeId, options?: FocusNodeOptions) => boolean;
 ```
 
 Returns a stable function that calls [`focusNode`](/api/#focusnode) with ids joined under `scope` (default: context parent).
@@ -142,7 +158,7 @@ Returns a stable function that calls [`focusNode`](/api/#focusnode) with ids joi
 ### `useSelect`
 
 ```ts
-function useSelect(scope?: NodeId): (nodeId: NodeId, focus?: boolean) => void;
+function useSelect(scope?: NodeId): (nodeId: NodeId, options?: SelectNodeOptions) => void;
 ```
 
 Calls [`selectNode`](/api/#selectnode) with ids under `scope`.
@@ -165,22 +181,23 @@ function useElementHandler(): ElementHandler;
 
 Memoized handler combining [element](/api/#dom) and spatial item behavior with a `register` ref callback.
 
-### `ActionHandlerOptions`
+### `DispatchOnEventOptions`
 
 ```ts
-type ActionHandlerOptions = {
+type DispatchOnEventOptions = {
 	target?: EventTarget;
+	event?: string;
 	eventToAction?: (e: Event) => NavigationAction | null;
 };
 ```
 
-### `useActionHandler`
+### `useDispatchOnEvent`
 
 ```ts
-function useActionHandler(tree: NavigationTree, options?: ActionHandlerOptions): void;
+function useDispatchOnEvent(tree: NavigationTree, options?: DispatchOnEventOptions): void;
 ```
 
-Subscribes to `keydown` on `target` (default `window`) and forwards mapped actions to [`handleAction`](/api/#handleaction).
+Subscribes to DOM events on `target` (default `window`), `event` type default `keydown`, maps them with `eventToAction` (default [`defaultEventMapping`](/api/#dom)), and forwards to [`dispatchAction`](/api/#dispatchaction).
 
 ### `useFocusSync`
 

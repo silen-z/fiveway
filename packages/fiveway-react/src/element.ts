@@ -2,7 +2,7 @@ import {
 	type NavigationTree,
 	type NavigationAction,
 	type ChainedHandler,
-	handleAction,
+	dispatchAction,
 	chainedHandler,
 	registerListener,
 	spatialItemHandler,
@@ -33,31 +33,39 @@ export function useElementHandler(): ElementHandler {
 	}, []);
 }
 
-export type ActionHandlerOptions = {
+export type DispatchOnEventOptions = {
 	target?: EventTarget;
+	event?: string;
 	eventToAction?: (e: Event) => NavigationAction | null;
 };
 
-export function useActionHandler(tree: NavigationTree, options: ActionHandlerOptions = {}): void {
-	const eventToAction = options.eventToAction ?? defaultEventMapping;
+export function useDispatchOnEvent(
+	tree: NavigationTree,
+	options: DispatchOnEventOptions = {},
+): void {
 	const target = options.target ?? window;
+	const eventType = options.event ?? "keydown";
+	const mapper = options.eventToAction ?? defaultEventMapping;
+
+	const handlerRef = useRef<(e: Event) => void>(() => {});
+	handlerRef.current = (e: Event) => {
+		const action = mapper(e);
+		if (action !== null) {
+			dispatchAction(tree, action);
+		}
+	};
 
 	useEffect(() => {
 		const handler = (e: Event) => {
-			const action = eventToAction(e);
-			if (action === null) {
-				return;
-			}
-
-			handleAction(tree, action);
+			handlerRef.current(e);
 		};
 
-		target.addEventListener("keydown", handler);
+		target.addEventListener(eventType, handler);
 
 		return () => {
-			target.removeEventListener("keydown", handler);
+			target.removeEventListener(eventType, handler);
 		};
-	}, [tree, target, eventToAction]);
+	}, [tree, target, eventType]);
 }
 
 export function useFocusSync(tree: NavigationTree): void {

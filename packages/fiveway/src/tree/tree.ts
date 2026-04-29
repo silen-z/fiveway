@@ -209,14 +209,14 @@ export function holdFocus(tree: NavigationTree): (() => void) | null {
 	};
 }
 
-export type FocusOptions = {
+export type FocusNodeOptions = {
 	direction?: NavigationDirection | "initial";
 };
 
 export function focusNode(
 	tree: NavigationTree,
 	targetId: NodeId,
-	options: FocusOptions = {},
+	options: FocusNodeOptions = {},
 ): boolean {
 	const node = tree.nodes.get(targetId);
 	if (node == null || !node.connected) {
@@ -250,7 +250,11 @@ export function focusNode(
 	return true;
 }
 
-export function handleAction(tree: NavigationTree, action: NavigationAction, node?: NodeId): void {
+export function dispatchAction(
+	tree: NavigationTree,
+	action: NavigationAction,
+	node?: NodeId,
+): void {
 	const targetId = runHandler(tree, node ?? tree.focus, action);
 	if (targetId !== null) {
 		focusNode(tree, targetId);
@@ -349,8 +353,8 @@ function clearOrphan(tree: NavigationTree, parent: NodeId, child: NodeId) {
 }
 
 function handleInspectorCommand(tree: NavigationTree, command: InspectorCommand) {
-	if (command.kind === "handleAction") {
-		handleAction(tree, command.action, command.node);
+	if (command.kind === "dispatchAction") {
+		dispatchAction(tree, command.action, command.node);
 	}
 
 	if (command.kind === "inspectHandler") {
@@ -374,6 +378,7 @@ function handleInspectorCommand(tree: NavigationTree, command: InspectorCommand)
 			tree: tree.label,
 			focus: tree.focus,
 			nodes,
+			complete: true,
 		});
 	}
 }

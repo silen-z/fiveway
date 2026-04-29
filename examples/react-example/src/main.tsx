@@ -1,7 +1,7 @@
 import {
 	createNavigationTree,
 	NavigationProvider,
-	useActionHandler,
+	useDispatchOnEvent,
 	useFocusSync,
 } from "@fiveway/react";
 import React from "react";
@@ -15,7 +15,7 @@ import "./styles.css";
 const navigationTree = createNavigationTree();
 
 function App() {
-	useActionHandler(navigationTree);
+	useDispatchOnEvent(navigationTree);
 	useFocusSync(navigationTree);
 
 	return (

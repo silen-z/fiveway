@@ -4,15 +4,15 @@ import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavigationTree } from "../tree/tree.ts";
 
-export type MetaHandler<T> = {
+export type DataHandler<T> = {
 	key: string;
 	(v: T | (() => T | null) | null): NavigationHandler;
 	query: (tree: NavigationTree, id: NodeId) => T | null;
 };
 
-export function metaHandler<T>(key: string): MetaHandler<T> {
+export function dataHandler<T>(key: string): DataHandler<T> {
 	const handler = (value: unknown) => {
-		const metaHandler: NavigationHandler = (_, action, next) => {
+		const dataHandler: NavigationHandler = (_, action, next) => {
 			if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 				describeHandler(action, { name: "core:metadata-provider", key });
 			}
@@ -25,7 +25,7 @@ export function metaHandler<T>(key: string): MetaHandler<T> {
 			return next();
 		};
 
-		return metaHandler;
+		return dataHandler;
 	};
 
 	handler.key = key;

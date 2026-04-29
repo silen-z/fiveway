@@ -16,7 +16,7 @@ import {
 	captureHandler,
 	initialHandler,
 	verticalHandler,
-	handleAction,
+	dispatchAction,
 } from "../index.ts";
 
 test("focusHandler: items themselves are focusable", async () => {
@@ -99,7 +99,7 @@ test("initialHandler", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe(item3.id);
 
@@ -125,11 +125,11 @@ test("captureHandler", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe(nodes.item2.id);
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe(nodes.item2.id);
 

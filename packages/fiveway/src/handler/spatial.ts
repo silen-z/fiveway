@@ -6,9 +6,16 @@ import { type ChainedHandler, chainedHandler } from "./chained.ts";
 import { focusHandler } from "./focus.ts";
 import { type NavigationHandler } from "./handler.ts";
 import { parentHandler } from "./handler.ts";
-import { type MetaHandler, metaHandler } from "./metadata.ts";
+import { type DataHandler, dataHandler } from "./metadata.ts";
 
-export const spatialItemHandler: MetaHandler<DOMRect> = metaHandler("core:node-position");
+export type SpatialItem = {
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+};
+
+export const spatialItemHandler: DataHandler<SpatialItem> = dataHandler("core:node-position");
 
 export const spatialMovement: NavigationHandler = (node, action, next) => {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
@@ -53,21 +60,25 @@ export const spatialMovement: NavigationHandler = (node, action, next) => {
 };
 
 export const spatialHandler: ChainedHandler = chainedHandler([
-	focusHandler({ skipEmpty: true }),
+	focusHandler({ focusWhenEmpty: false }),
 	spatialMovement,
 	parentHandler,
 ]);
 
-type DirectionFilter = (current: DOMRect, potential: DOMRect) => boolean;
+type DirectionFilter = (current: SpatialItem, potential: SpatialItem) => boolean;
 
 const directionFilters: Record<NavigationDirection, DirectionFilter> = {
-	up: (current, potential) => Math.floor(potential.bottom) <= Math.ceil(current.top),
-	down: (current, potential) => Math.ceil(potential.top) >= Math.floor(current.bottom),
-	left: (current, potential) => Math.floor(potential.right) <= Math.ceil(current.left),
-	right: (current, potential) => Math.ceil(potential.left) >= Math.floor(current.right),
+	up: (current, potential) =>
+		Math.floor(potential.top + potential.height) <= Math.ceil(current.top),
+	down: (current, potential) =>
+		Math.ceil(potential.top) >= Math.floor(current.top + current.height),
+	left: (current, potential) =>
+		Math.floor(potential.left + potential.width) <= Math.ceil(current.left),
+	right: (current, potential) =>
+		Math.ceil(potential.left) >= Math.floor(current.left + current.width),
 };
 
-function distanceSquared(a: DOMRect, b: DOMRect) {
+function distanceSquared(a: SpatialItem, b: SpatialItem) {
 	const ax = a.left + a.width * 0.5;
 	const ay = a.top + a.height * 0.5;
 

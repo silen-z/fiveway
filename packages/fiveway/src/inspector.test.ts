@@ -1,14 +1,9 @@
 import { expect, test } from "vite-plus/test";
 
-import {
-	describeHandler,
-	inspectHandler,
-	createNavigationTree,
-	insertNode,
-	createNode,
-	defaultHandler,
-	type NavigationHandler,
-} from "./index.ts";
+import { defaultHandler, type NavigationHandler } from "./handler/handler.ts";
+import { describeHandler, inspectHandler } from "./inspector.ts";
+import { createNode } from "./tree/node.ts";
+import { createNavigationTree, insertNode } from "./tree/tree.ts";
 
 test("handlerInfo", () => {
 	const tree = createNavigationTree();

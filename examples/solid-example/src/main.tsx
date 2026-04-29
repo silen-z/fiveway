@@ -1,7 +1,7 @@
 /* @refresh reload */
 
 import {
-	createActionHandler,
+	useDispatchOnEvent,
 	createNavigationTree,
 	NavigationProvider,
 	useFocusSync,
@@ -15,7 +15,7 @@ import "./styles.css";
 function App() {
 	const navigationTree = createNavigationTree();
 
-	createActionHandler(navigationTree);
+	useDispatchOnEvent(navigationTree);
 	useFocusSync(navigationTree);
 
 	return (

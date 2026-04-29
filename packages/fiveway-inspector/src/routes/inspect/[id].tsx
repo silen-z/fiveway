@@ -6,20 +6,14 @@ import { devtoolsContext, createDevtoolsContext } from "../../inspector/context.
 import { InspectorPanel } from "../../inspector/ui/InspectorPanel.tsx";
 
 export default function InspectorPage() {
-	const { id } = useParams();
-	const [isDisconnected, setDisconnected] = createSignal(false);
-
-	const connection = createInspectorConnection(
-		id!,
-		() => setDisconnected(true),
-		() => setDisconnected(false),
-	);
-	const context = createDevtoolsContext(connection);
+	const params = useParams<{ id: string }>();
+	const handle = createInspectorConnection(params.id);
+	const context = createDevtoolsContext(handle);
 
 	return (
 		<>
 			<main>
-				<Show when={isDisconnected()}>
+				<Show when={handle.isClientConnected() === false}>
 					<div class="absolute inset-0 flex flex-col items-center justify-center h-full">
 						<h1 class="text-2xl font-bold">Client disconnected</h1>
 						<p class="text-gray-500">The client has disconnected from the inspector.</p>
@@ -33,12 +27,13 @@ export default function InspectorPage() {
 	);
 }
 
-function createInspectorConnection(id: string, onDisconnect: () => void, onReconnect: () => void) {
+function createInspectorConnection(id: string) {
 	let ws: WebSocket;
+	const [isClientConnected, setClientConnected] = createSignal<boolean | null>(null);
 
 	const queue: string[] = [];
 
-	return {
+	const handle = {
 		subscribe: (callback: (message: InspectorMessage) => void) => {
 			ws = new WebSocket(`/ws/inspect?client=${id}`);
 
@@ -50,20 +45,18 @@ function createInspectorConnection(id: string, onDisconnect: () => void, onRecon
 			});
 
 			ws.addEventListener("message", (event) => {
-				if (event.data.type === "client-disconnected") {
-					onDisconnect();
+				const message = JSON.parse(event.data);
+				if (message.type === "client-disconnected") {
+					setClientConnected(false);
 					return;
 				}
 
-				if (event.data.type === "fiveway:reload") {
-					onReconnect();
-				}
-
-				callback(JSON.parse(event.data));
+				setClientConnected(true);
+				callback(message);
 			});
 
 			ws.addEventListener("close", () => {
-				onDisconnect();
+				setClientConnected(false);
 			});
 
 			return () => {
@@ -80,5 +73,8 @@ function createInspectorConnection(id: string, onDisconnect: () => void, onRecon
 
 			ws.send(message);
 		},
+		isClientConnected,
 	};
+
+	return handle;
 }

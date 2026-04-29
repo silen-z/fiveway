@@ -5,7 +5,7 @@ import { test, expect } from "vite-plus/test";
 import { createTreeFromSpec } from "../test/treeSpec.ts";
 
 import {
-	handleAction,
+	dispatchAction,
 	horizontalHandler,
 	verticalHandler,
 	createNode,
@@ -22,11 +22,11 @@ test("verticalHandler", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe(nodes.item2.id);
 
-	handleAction(tree, { kind: "move", direction: "up" });
+	dispatchAction(tree, { kind: "move", direction: "up" });
 
 	expect(tree.focus).toBe(nodes.item1.id);
 });
@@ -42,15 +42,15 @@ test("verticalHandler: wrong direction", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "up" });
+	dispatchAction(tree, { kind: "move", direction: "up" });
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "left" });
+	dispatchAction(tree, { kind: "move", direction: "left" });
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "right" });
+	dispatchAction(tree, { kind: "move", direction: "right" });
 
 	expect(tree.focus).toBe(nodes.item1.id);
 });
@@ -66,11 +66,11 @@ test("verticalHandler: skip removed", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe(nodes.item3.id);
 
-	handleAction(tree, { kind: "move", direction: "up" });
+	dispatchAction(tree, { kind: "move", direction: "up" });
 
 	expect(tree.focus).toBe(nodes.item1.id);
 });
@@ -91,12 +91,12 @@ test("verticalHandler: focus direction", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "down" });
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe(nodes.outside.id);
 
-	handleAction(tree, { kind: "move", direction: "up" });
+	dispatchAction(tree, { kind: "move", direction: "up" });
 
 	expect(tree.focus).toBe(nodes.item2.id);
 });
@@ -110,11 +110,11 @@ test("horizontalHandler", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "right" });
+	dispatchAction(tree, { kind: "move", direction: "right" });
 
 	expect(tree.focus).toBe(nodes.item2.id);
 
-	handleAction(tree, { kind: "move", direction: "left" });
+	dispatchAction(tree, { kind: "move", direction: "left" });
 
 	expect(tree.focus).toBe(nodes.item1.id);
 });
@@ -130,15 +130,15 @@ test("horizontalHandler: wrong direction", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "left" });
+	dispatchAction(tree, { kind: "move", direction: "left" });
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "up" });
+	dispatchAction(tree, { kind: "move", direction: "up" });
 
 	expect(tree.focus).toBe(nodes.item1.id);
 });
@@ -159,12 +159,12 @@ test("horizontalHandler: focus direction", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "right" });
-	handleAction(tree, { kind: "move", direction: "right" });
+	dispatchAction(tree, { kind: "move", direction: "right" });
+	dispatchAction(tree, { kind: "move", direction: "right" });
 
 	expect(tree.focus).toBe(nodes.outside.id);
 
-	handleAction(tree, { kind: "move", direction: "left" });
+	dispatchAction(tree, { kind: "move", direction: "left" });
 
 	expect(tree.focus).toBe(nodes.item2.id);
 });
@@ -180,11 +180,11 @@ test("horizontal: skip removed", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	handleAction(tree, { kind: "move", direction: "right" });
+	dispatchAction(tree, { kind: "move", direction: "right" });
 
 	expect(tree.focus).toBe(nodes.item3.id);
 
-	handleAction(tree, { kind: "move", direction: "left" });
+	dispatchAction(tree, { kind: "move", direction: "left" });
 
 	expect(tree.focus).toBe(nodes.item1.id);
 });

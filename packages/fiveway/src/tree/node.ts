@@ -21,14 +21,14 @@ export type NavtreeNode = CreatedNavtreeNode & {
 
 export type NodeChild = { id: NodeId; order: number | null; active: boolean };
 
-export type NodeConfig = {
+export type NodeOptions = {
 	id: string;
 	parent: NodeId;
 	order?: number;
 	handler?: NavigationHandler;
 };
 
-export function createNode(options: NodeConfig): CreatedNavtreeNode {
+export function createNode(options: NodeOptions): CreatedNavtreeNode {
 	return {
 		id: joinId(options.parent, options.id),
 		connected: false,
@@ -42,7 +42,7 @@ export function createNode(options: NodeConfig): CreatedNavtreeNode {
 
 export function updateNode(
 	node: CreatedNavtreeNode,
-	options: Omit<NodeConfig, "id" | "parent">,
+	options: Omit<NodeOptions, "id" | "parent">,
 ): void {
 	if (options.handler != null) {
 		node.handler = options.handler;

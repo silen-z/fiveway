@@ -9,7 +9,7 @@
 		"dist"
 	],
 	"type": "module",
-	"types": "./dist/index.d.ts",
+	"types": "./dist/esm/index.d.ts",
 	"exports": {
 		".": {
 			"solid": "./dist/solid/index.jsx",

@@ -4,8 +4,8 @@ export * from "@fiveway/core/dom";
 export { NavigationContext, NavigationProvider, useNavigationContext } from "./context.tsx";
 
 export {
-	type NodeOptions,
-	type NodeHandle,
+	type NavigationNodeOptions,
+	type NavigationNodeHandle,
 	type NavigationNodeProps,
 	useNavigationNode,
 	NavigationNode,
@@ -23,8 +23,8 @@ export {
 
 export {
 	type ElementHandler,
-	type ActionHandlerOptions,
+	type DispatchOnEventOptions,
 	useElementHandler,
-	useActionHandler,
+	useDispatchOnEvent,
 	useFocusSync,
 } from "./element.ts";

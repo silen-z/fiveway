@@ -6,7 +6,7 @@ import {
 	createNode,
 	defaultHandler,
 	selectHandler,
-	handleAction,
+	dispatchAction,
 } from "../index.ts";
 
 test("selectHandler", async () => {
@@ -23,7 +23,7 @@ test("selectHandler", async () => {
 
 	expect(tree.focus).toBe(node.id);
 
-	handleAction(tree, { kind: "select" });
+	dispatchAction(tree, { kind: "select" });
 
 	expect(onSelect).toHaveBeenCalledTimes(1);
 });

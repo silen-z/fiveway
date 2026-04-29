@@ -14,12 +14,13 @@ import {
 	NavigationNode,
 	useIsFocused,
 	useOnFocus,
+	useOnBlur,
 	useOnFocusChange,
 	useFocusedId,
 	useFocus,
 	useSelect,
 	createElementHandler,
-	createActionHandler,
+	useDispatchOnEvent,
 	useFocusSync,
 } from "@fiveway/solid";
 ```
@@ -40,14 +41,14 @@ type NavigationContext = {
 ### `NavigationProvider`
 
 ```ts
-type NavigationProviderProps = {
+function NavigationProvider(props: {
 	tree: NavigationTree;
 	fromEvent?: (e: KeyboardEvent) => NavigationAction | null;
 	children: JSX.Element;
-};
+}): JSX.Element;
 ```
 
-Supplies the tree; optional `fromEvent` is reserved for custom key mapping at the provider level.
+Supplies the tree; `fromEvent` is reserved for custom key mapping at the provider level (the tree is not reactive through this prop).
 
 ### `useNavigationContext`
 
@@ -57,10 +58,10 @@ function useNavigationContext(): NavigationContext;
 
 ## Nodes
 
-### `NodeOptions`
+### `NavigationNodeOptions`
 
 ```ts
-type NodeOptions = {
+type NavigationNodeOptions = {
 	id: NodeId | Accessor<NodeId>;
 	parent?: NodeId | Accessor<NodeId | undefined>;
 	order?: number | Accessor<number | undefined>;
@@ -68,32 +69,40 @@ type NodeOptions = {
 };
 ```
 
-### `NodeHandle`
+### `NavigationNodeHandle`
 
 ```ts
-type NodeHandle = {
+type NavigationNodeHandle = {
 	(): NodeId;
-	focus: (nodeId?: NodeId) => void;
-	select: () => void;
+	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
+	select: (nodeId?: NodeId, options?: SelectNodeOptions) => void;
 	isFocused: Accessor<boolean>;
 	onFocus: (fn: () => void) => void;
 	Context: Component<ParentProps>;
 };
 ```
 
-Calling the handle returns the resolved global node id.
+Calling the handle returns the resolved global node id. `FocusNodeOptions` and `SelectNodeOptions` are from `@fiveway/core`.
 
 ### `createNavigationNode`
 
 ```ts
-function createNavigationNode(options: NodeOptions): NodeHandle;
+function createNavigationNode(options: NavigationNodeOptions): NavigationNodeHandle;
 ```
 
 Creates a reactive [node](/api/#nodes-and-ids), uses [`holdFocus`](/api/#holdfocus) during synchronous child setup for correct initial focus, and cleans up on dispose.
 
 ### `NavigationNode`
 
-Component wrapper around `createNavigationNode` (see package source for props).
+```ts
+type NavigationNodeProps = NavigationNodeOptions & {
+	children?: JSX.Element | ((props: Omit<NavigationNodeHandle, "Context">) => JSX.Element);
+};
+
+function NavigationNode(props: NavigationNodeProps): JSX.Element;
+```
+
+Component wrapper around `createNavigationNode` with optional render-prop children.
 
 ## Hooks
 
@@ -110,6 +119,14 @@ function useOnFocus(nodeId: NodeId | Accessor<NodeId>, handler: () => void): voi
 ```
 
 Runs `handler` when the node gains focus (entering from unfocused).
+
+### `useOnBlur`
+
+```ts
+function useOnBlur(nodeId: NodeId | Accessor<NodeId>, handler: () => void): void;
+```
+
+Runs `handler` when the node loses focus.
 
 ### `useOnFocusChange`
 
@@ -129,13 +146,13 @@ function useFocusedId(scope: NodeId): Accessor<NodeId | null>;
 ### `useFocus`
 
 ```ts
-function useFocus(scope?: NodeId): (nodeId: NodeId, options?: FocusOptions) => boolean;
+function useFocus(scope?: NodeId): (nodeId: NodeId, options?: FocusNodeOptions) => boolean;
 ```
 
 ### `useSelect`
 
 ```ts
-function useSelect(scope?: NodeId): (nodeId: NodeId, focus?: boolean) => void;
+function useSelect(scope?: NodeId): (nodeId: NodeId, options?: SelectNodeOptions) => void;
 ```
 
 ## DOM integration
@@ -152,13 +169,23 @@ function createElementHandler(): ElementHandler;
 
 Solid signal-backed element ref for [element](/api/#dom) + spatial handlers.
 
-### `createActionHandler`
+### `DispatchOnEventOptions`
 
 ```ts
-function createActionHandler(tree: NavigationTree, options?: ActionHandlerOptions): void;
+type DispatchOnEventOptions = {
+	target?: EventTarget;
+	event?: string;
+	eventToAction?: (e: Event) => NavigationAction | null;
+};
 ```
 
-`ActionHandlerOptions` matches React: `target`, `eventToAction`.
+### `useDispatchOnEvent`
+
+```ts
+function useDispatchOnEvent(tree: NavigationTree, options?: DispatchOnEventOptions): void;
+```
+
+Subscribes to DOM events and forwards mapped actions to [`dispatchAction`](/api/#dispatchaction), same options as React.
 
 ### `useFocusSync`
 

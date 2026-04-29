@@ -11,7 +11,7 @@ export function NavigationPad(props: { tree: string }) {
 
 	const sendAction = (action: NavigationAction) => {
 		devtools.sendCommand({
-			kind: "handleAction",
+			kind: "dispatchAction",
 			tree: props.tree,
 			action,
 		});

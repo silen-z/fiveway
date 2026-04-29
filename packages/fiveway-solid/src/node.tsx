@@ -1,6 +1,6 @@
 import {
-	type FocusOptions,
-	type SelectOptions,
+	type FocusNodeOptions,
+	type SelectNodeOptions,
 	type NavigationHandler,
 	type NodeId,
 	insertNode,
@@ -26,23 +26,23 @@ import {
 import { useNavigationContext, NavigationContext } from "./context.tsx";
 import { useIsFocused, useOnFocus } from "./hooks.ts";
 
-export type NodeOptions = {
+export type NavigationNodeOptions = {
 	id: NodeId | Accessor<NodeId>;
 	parent?: NodeId | Accessor<NodeId | undefined>;
 	order?: number | Accessor<number | undefined>;
 	handler?: NavigationHandler;
 };
 
-export type NodeHandle = {
+export type NavigationNodeHandle = {
 	(): NodeId;
 	isFocused: Accessor<boolean>;
-	focus: (nodeId?: NodeId, options?: FocusOptions) => void;
-	select: (nodeId?: NodeId, options?: SelectOptions) => void;
+	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
+	select: (nodeId?: NodeId, options?: SelectNodeOptions) => void;
 	onFocus: (fn: () => void) => void;
 	Context: Component<ParentProps>;
 };
 
-export function createNavigationNode(options: NodeOptions): NodeHandle {
+export function createNavigationNode(options: NavigationNodeOptions): NavigationNodeHandle {
 	const { tree, parentNode } = useNavigationContext();
 
 	const localId = () => (typeof options.id === "function" ? options.id() : options.id);
@@ -94,12 +94,12 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
 		}
 	});
 
-	const focus = (nodeId?: NodeId, options?: FocusOptions) => {
+	const focus = (nodeId?: NodeId, options?: FocusNodeOptions) => {
 		const id = nodeId != null ? joinId(node().id, nodeId) : node().id;
 		return focusNode(tree, id, options);
 	};
 
-	const select = (nodeId?: NodeId, options?: SelectOptions) => {
+	const select = (nodeId?: NodeId, options?: SelectNodeOptions) => {
 		const id = nodeId != null ? joinId(node().id, nodeId) : node().id;
 		selectNode(tree, id, options);
 	};
@@ -124,11 +124,11 @@ export function createNavigationNode(options: NodeOptions): NodeHandle {
 	return handle;
 }
 
-type NavigationNodeHandle = Omit<NodeHandle, "Context">;
+type NavigationNodeChildren =
+	| JSX.Element
+	| ((props: Omit<NavigationNodeHandle, "Context">) => JSX.Element);
 
-type NavigationNodeChildren = JSX.Element | ((props: NavigationNodeHandle) => JSX.Element);
-
-export type NavigationNodeProps = NodeOptions & {
+export type NavigationNodeProps = NavigationNodeOptions & {
 	children?: NavigationNodeChildren;
 };
 
@@ -138,7 +138,10 @@ export function NavigationNode(props: NavigationNodeProps): JSX.Element {
 	return <node.Context>{resolveNodeChildren(props.children, node)}</node.Context>;
 }
 
-function resolveNodeChildren(children: NavigationNodeChildren, node: NodeHandle): JSX.Element {
+function resolveNodeChildren(
+	children: NavigationNodeChildren,
+	node: NavigationNodeHandle,
+): JSX.Element {
 	return createMemo(() =>
 		typeof children === "function" ? children(node) : children,
 	) as unknown as JSX.Element;
