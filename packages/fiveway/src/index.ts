@@ -11,7 +11,7 @@ declare global {
 
 export {
 	type NavigationTree,
-	type FocusOptions,
+	type FocusNodeOptions,
 	createNavigationTree,
 	insertNode,
 	removeNode,
@@ -19,23 +19,25 @@ export {
 	focusNode,
 	isFocused,
 	traverseNodes,
-	handleAction,
+	dispatchAction,
 } from "./tree/tree.ts";
 
 export {
 	type CreatedNavtreeNode,
 	type NavtreeNode,
 	type NodeChild,
-	type NodeConfig,
+	type NodeOptions,
 	createNode,
 	updateNode,
 } from "./tree/node.ts";
+
 export { type NodeId, joinId, isParent, childLocalId } from "./tree/id.ts";
 
 export { type NavtreeListener, registerListener } from "./tree/events.ts";
 
 export {
 	type NavigationDirection,
+	type NavigationActions,
 	type NavigationAction,
 	type SelectAction,
 	type MoveAction,
@@ -56,26 +58,31 @@ export { type ChainedHandler, chainedHandler } from "./handler/chained.ts";
 
 export {
 	type FocusDirection,
-	type FocusHandlerConfig,
+	type FocusHandlerOptions,
+	focusHandler,
 	initialHandler,
 	captureHandler,
-	focusHandler,
 } from "./handler/focus.ts";
 
 export {
-	verticalMovementHandler,
 	verticalHandler,
-	horizontalMovementHandler,
 	horizontalHandler,
+	verticalMovementHandler,
+	horizontalMovementHandler,
 } from "./handler/directional.ts";
 
-export { type GridPos, gridItemHandler, gridMovement, gridHandler } from "./handler/grid.ts";
+export { type GridItem, gridHandler, gridItemHandler, gridMovement } from "./handler/grid.ts";
 
-export { type SelectOptions, selectNode, selectHandler } from "./handler/select.ts";
+export { type SelectNodeOptions, selectNode, selectHandler } from "./handler/select.ts";
 
-export { spatialItemHandler, spatialMovement, spatialHandler } from "./handler/spatial.ts";
+export {
+	type SpatialItem,
+	spatialHandler,
+	spatialItemHandler,
+	spatialMovement,
+} from "./handler/spatial.ts";
 
-export { type MetaHandler, metaHandler } from "./handler/metadata.ts";
+export { type DataHandler, dataHandler } from "./handler/metadata.ts";
 
 export {
 	type HandlerDescription,
@@ -83,5 +90,4 @@ export {
 	type InspectorCommand,
 	type InspectorNode,
 	describeHandler,
-	inspectHandler,
 } from "./inspector.ts";

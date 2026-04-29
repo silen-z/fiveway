@@ -1,5 +1,5 @@
 import { type NavigationAction } from "../action.ts";
-import { describeHandler, type HandlerDescription } from "../inspector.ts";
+import { describeHandler, INSPECT_HANLDER, type HandlerDescription } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavtreeNode } from "../tree/node.ts";
 import { type NavigationHandler } from "./handler.ts";
@@ -116,12 +116,12 @@ export function describeLinkHandler(
 	node: NavtreeNode,
 	action: NavigationAction,
 ): void {
-	if (action.kind !== "query" || action.key !== "core:handler-info") {
+	if (action.kind !== "query" || action.key !== INSPECT_HANLDER) {
 		return;
 	}
 
 	const value: Array<HandlerDescription> = [];
-	handler(node, { kind: "query", key: "core:handler-info", value }, () => null);
+	handler(node, { kind: "query", key: INSPECT_HANLDER, value }, () => null);
 	if (value.length === 0) {
 		describeHandler(action, {
 			name: handler.name !== "" ? handler.name : "custom",

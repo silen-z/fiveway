@@ -58,7 +58,11 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 					expanded: false,
 					inspected: "#",
 				});
-				handle.sendCommand({ kind: "requestCompleteSnapshot", tree: message.tree });
+
+				if (!message.complete) {
+					handle.sendCommand({ kind: "requestCompleteSnapshot", tree: message.tree });
+					return;
+				}
 			}
 
 			setState(

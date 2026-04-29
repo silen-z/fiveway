@@ -1,8 +1,8 @@
 import {
 	type NodeId,
 	type NavigationHandler,
-	type FocusOptions,
-	type SelectOptions,
+	type FocusNodeOptions,
+	type SelectNodeOptions,
 	type CreatedNavtreeNode,
 	updateNode,
 	insertNode,
@@ -26,24 +26,24 @@ import {
 
 import { NavigationContext, useNavigationContext } from "./context.tsx";
 
-export type NodeOptions = {
+export type NavigationNodeOptions = {
 	id: NodeId;
 	parent?: NodeId;
 	order?: number;
 	handler?: NavigationHandler;
 };
 
-export type NodeHandle = {
+export type NavigationNodeHandle = {
 	id: NodeId;
 	isFocused: () => boolean;
-	focus: (nodeId?: NodeId, options?: FocusOptions) => void;
-	select: (nodeId?: NodeId, options?: SelectOptions) => void;
+	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
+	select: (nodeId?: NodeId, options?: SelectNodeOptions) => void;
 	Context: React.FunctionComponent<{ children: ReactNode }>;
 };
 
 const NULL_NODE = {} as CreatedNavtreeNode;
 
-export function useNavigationNode(options: NodeOptions): NodeHandle {
+export function useNavigationNode(options: NavigationNodeOptions): NavigationNodeHandle {
 	const { tree, parentNode } = useNavigationContext();
 	const parent = options.parent ?? parentNode;
 
@@ -70,17 +70,17 @@ export function useNavigationNode(options: NodeOptions): NodeHandle {
 
 	const isFocused = useLazyIsFocused(tree, nodeId);
 
-	const focus = (target?: NodeId, options?: FocusOptions) => {
+	const focus = (target?: NodeId, options?: FocusNodeOptions) => {
 		const id = target != null ? joinId(nodeId, target) : nodeId;
 		return focusNode(tree, id, options);
 	};
 
-	const select = (target?: NodeId, options?: SelectOptions) => {
+	const select = (target?: NodeId, options?: SelectNodeOptions) => {
 		const id = target != null ? joinId(nodeId, target) : nodeId;
 		selectNode(tree, id, options);
 	};
 
-	const Context: NodeHandle["Context"] = useCallback(
+	const Context: NavigationNodeHandle["Context"] = useCallback(
 		(props: { children: ReactNode }) => {
 			const context = {
 				tree: tree,
@@ -99,12 +99,8 @@ export function useNavigationNode(options: NodeOptions): NodeHandle {
 	return { id: nodeId, isFocused, focus, select, Context };
 }
 
-type NavigationNodeHandle = Omit<NodeHandle, "Context">;
-
-type NavigationNodeChildren = ReactNode | ((props: NavigationNodeHandle) => ReactNode);
-
-export type NavigationNodeProps = NodeOptions & {
-	children?: NavigationNodeChildren;
+export type NavigationNodeProps = NavigationNodeOptions & {
+	children?: ReactNode | ((props: Omit<NavigationNodeHandle, "Context">) => ReactNode);
 };
 
 export function NavigationNode({ children, ...props }: NavigationNodeProps): ReactNode {

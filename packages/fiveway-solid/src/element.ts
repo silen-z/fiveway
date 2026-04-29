@@ -1,6 +1,6 @@
 import {
 	chainedHandler,
-	handleAction,
+	dispatchAction,
 	spatialItemHandler,
 	registerListener,
 	type ChainedHandler,
@@ -31,31 +31,33 @@ export function createElementHandler(): ElementHandler {
 	return handler;
 }
 
-export type ActionHandlerOptions = {
+export type DispatchOnEventOptions = {
 	target?: EventTarget;
+	event?: string;
 	eventToAction?: (e: Event) => NavigationAction | null;
 };
 
-export function createActionHandler(
+export function useDispatchOnEvent(
 	tree: NavigationTree,
-	options: ActionHandlerOptions = {},
+	options: DispatchOnEventOptions = {},
 ): void {
 	createEffect(() => {
-		const eventToAction = options.eventToAction ?? defaultEventMapping;
 		const target = options.target ?? window;
+		const eventType = options.event ?? "keydown";
+		const mapper = options.eventToAction ?? defaultEventMapping;
 
 		const handler = (e: Event) => {
-			const action = eventToAction(e);
+			const action = mapper(e);
 			if (action === null) {
 				return;
 			}
 
-			handleAction(tree, action);
+			dispatchAction(tree, action);
 		};
-		target.addEventListener("keydown", handler);
+		target.addEventListener(eventType, handler);
 
 		onCleanup(() => {
-			target.removeEventListener("keydown", handler);
+			target.removeEventListener(eventType, handler);
 		});
 	});
 }

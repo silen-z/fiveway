@@ -1,5 +1,5 @@
 import {
-	type GridPos,
+	type GridItem,
 	containerHandler,
 	createNavigationNode,
 	gridItemHandler,
@@ -11,7 +11,7 @@ import css from "./ExampleBox.module.css";
 
 type ExampleBoxProps = {
 	navId: NodeId;
-	gridPos: GridPos;
+	gridPos: GridItem;
 	label: string;
 	description: string;
 	children: JSX.Element;

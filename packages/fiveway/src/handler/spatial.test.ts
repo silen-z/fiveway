@@ -7,7 +7,7 @@ import { createTreeFromSpec } from "../test/treeSpec.ts";
 import {
 	spatialHandler,
 	spatialItemHandler,
-	handleAction,
+	dispatchAction,
 	createNode,
 	insertNode,
 	removeNode,
@@ -52,23 +52,23 @@ test("spatialHandler", async () => {
 
 	expect(tree.focus).toBe("#/spatial/item-1-1");
 
-	handleAction(tree, { kind: "move", direction: "right" });
+	dispatchAction(tree, { kind: "move", direction: "right" });
 
 	expect(tree.focus).toBe("#/spatial/item-1-2");
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe("#/spatial/item-2-1");
 
-	handleAction(tree, { kind: "move", direction: "up" });
+	dispatchAction(tree, { kind: "move", direction: "up" });
 
 	expect(tree.focus).toBe("#/spatial/item-1-1");
 
-	handleAction(tree, { kind: "move", direction: "right" });
+	dispatchAction(tree, { kind: "move", direction: "right" });
 
 	expect(tree.focus).toBe("#/spatial/item-1-2");
 
-	handleAction(tree, { kind: "move", direction: "left" });
+	dispatchAction(tree, { kind: "move", direction: "left" });
 
 	expect(tree.focus).toBe("#/spatial/item-1-1");
 });

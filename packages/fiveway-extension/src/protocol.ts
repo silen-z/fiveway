@@ -1,9 +1,8 @@
 import * as v from "valibot";
 
-export type InitMessage = v.InferOutput<typeof InitMessage>;
-export type InspectorMessage = v.InferOutput<typeof InspectorMessage>;
-export type InspectorCommand = v.InferOutput<typeof InspectorCommand>;
-export type Command = v.InferOutput<typeof Command>;
+export const FivewayMessage = v.object({
+	type: v.pipe(v.string(), v.startsWith("fiveway:")),
+});
 
 // send when devtools initializes
 // used for connecting devtools to content script of its inspectedTab
@@ -12,22 +11,24 @@ export const InitMessage = v.object({
 	tabId: v.number(),
 });
 
+const HandlerDescription = v.object({
+	name: v.optional(v.string()),
+});
+
+const Node = v.object({
+	id: v.string(),
+	parent: v.nullable(v.string()),
+	order: v.nullable(v.number()),
+	children: v.array(v.string()),
+	handler: v.optional(v.array(HandlerDescription)),
+});
+
 // send from content script to devtools when a tree update happens
-export const InspectorMessage = v.object({
+export const TreeStateMessage = v.object({
 	type: v.literal("fiveway:treeState"),
 	tree: v.string(),
 	focus: v.optional(v.string()),
-	nodes: v.optional(
-		v.array(
-			v.object({
-				id: v.string(),
-				parent: v.nullable(v.string()),
-				order: v.nullable(v.number()),
-				children: v.array(v.string()),
-				handler: v.optional(v.any()),
-			}),
-		),
-	),
+	nodes: v.optional(v.array(Node)),
 	removedNodes: v.optional(v.array(v.string())),
 });
 
@@ -38,7 +39,7 @@ export const Command = v.union([
 
 	// focus a specific node
 	v.object({
-		kind: v.literal("handleAction"),
+		kind: v.literal("dispatchAction"),
 		tree: v.string(),
 		node: v.optional(v.string()),
 		action: v.unknown(),

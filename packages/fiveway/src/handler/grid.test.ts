@@ -7,7 +7,7 @@ import { createTreeFromSpec } from "../test/treeSpec.ts";
 import {
 	gridHandler,
 	gridItemHandler,
-	handleAction,
+	dispatchAction,
 	createNode,
 	insertNode,
 	removeNode,
@@ -36,43 +36,43 @@ test("gridHandler", async () => {
 
 	expect(tree.focus).toBe("#/grid/item-1-1");
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe("#/grid/item-2-1");
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe("#/grid/item-3-1");
 
-	handleAction(tree, { kind: "move", direction: "right" });
+	dispatchAction(tree, { kind: "move", direction: "right" });
 
 	expect(tree.focus).toBe("#/grid/item-3-2");
 
-	handleAction(tree, { kind: "move", direction: "up" });
+	dispatchAction(tree, { kind: "move", direction: "up" });
 
 	expect(tree.focus).toBe("#/grid/item-2-3");
 
-	handleAction(tree, { kind: "move", direction: "right" });
+	dispatchAction(tree, { kind: "move", direction: "right" });
 
 	expect(tree.focus).toBe("#/grid/item-2-3");
 
-	handleAction(tree, { kind: "move", direction: "left" });
+	dispatchAction(tree, { kind: "move", direction: "left" });
 
 	expect(tree.focus).toBe("#/grid/item-1-2");
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe("#/grid/item-2-1");
 
-	handleAction(tree, { kind: "move", direction: "right" });
+	dispatchAction(tree, { kind: "move", direction: "right" });
 
 	expect(tree.focus).toBe("#/grid/item-3-2");
 
-	handleAction(tree, { kind: "move", direction: "up" });
+	dispatchAction(tree, { kind: "move", direction: "up" });
 
 	expect(tree.focus).toBe("#/grid/item-2-3");
 
-	handleAction(tree, { kind: "move", direction: "down" });
+	dispatchAction(tree, { kind: "move", direction: "down" });
 
 	expect(tree.focus).toBe("#/grid/item-3-2");
 });

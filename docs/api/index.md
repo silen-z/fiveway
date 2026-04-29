@@ -8,16 +8,15 @@ These functions, types and objects are the same for all frameworks. As such they
 
 ## Navigation tree {#navigation-tree}
 
-The navigation tree object keeps a `Map` of navigation `nodes` and currently focused node ID in `focus`. Other properties are considered internal and should not be relied upon.
+The navigation tree object keeps a `Map` of navigation `nodes` and currently focused node ID in `focus`. It also has a `label` string (used by the inspector protocol). Other fields are mainly for internal bookkeeping.
 
 ### `NavigationTree`
 
 ```ts
 type NavigationTree = {
+	label: string;
 	nodes: Map<NodeId, NavtreeNode>;
 	focus: NodeId;
-
-	// internal
 	orphans: Map<NodeId, NodeId[]>;
 	listeners: Map<NodeId, NavtreeListener[]>;
 	focusLock: "free" | "locked" | "updatePending";
@@ -27,10 +26,10 @@ type NavigationTree = {
 ### `createNavigationTree`
 
 ```ts
-function createNavigationTree(): NavigationTree;
+function createNavigationTree(options?: { label?: string }): NavigationTree;
 ```
 
-Creates a new tree with a root node `"#"`.
+Creates a new tree with a root node `"#"`. An optional `label` identifies this tree for devtools messages (defaults to a random label).
 
 ### `insertNode`
 
@@ -38,7 +37,7 @@ Creates a new tree with a root node `"#"`.
 function insertNode(tree: NavigationTree, node: CreatedNavtreeNode): () => void;
 ```
 
-Registers a node create by [createNode](#createNode) in the tree. Replaces node with identical ID if it already exists. This function returns a dispose function that removes the node.
+Registers a node created by [createNode](#createNode) in the tree. Replaces node with identical ID if it already exists. This function returns a dispose function that removes the node.
 
 ### `removeNode`
 
@@ -54,18 +53,18 @@ Removes a node by ID or by reference.
 function holdFocus(tree: NavigationTree): (() => void) | null;
 ```
 
-Temporarily locks focus from changinh while the tree structure changes to allow inserting multiple nodes at once. Returns a release function, or `null` if a lock is already held.
+Temporarily locks focus from changing while the tree structure changes to allow inserting multiple nodes at once. Returns a release function, or `null` if a lock is already held.
 
 Calling the release function may apply a pending focus update.
 
 ### `focusNode` {#focusnode}
 
 ```ts
-type FocusOptions = {
+type FocusNodeOptions = {
 	direction?: NavigationDirection | "initial";
 };
 
-function focusNode(tree: NavigationTree, targetId: NodeId, options?: FocusOptions): boolean;
+function focusNode(tree: NavigationTree, targetId: NodeId, options?: FocusNodeOptions): boolean;
 ```
 
 Attempts to move focus to `targetId` by running the focus [action](#actions) through handlers. Returns whether focus ended on the resolved node.
@@ -91,10 +90,10 @@ function traverseNodes(
 
 Walks active children from `nodeId`. If `depth` is a number, only that many levels are visited; `null` means unlimited depth.
 
-### `handleAction` {#handleaction}
+### `dispatchAction` {#dispatchaction}
 
 ```ts
-function handleAction(tree: NavigationTree, action: NavigationAction): void;
+function dispatchAction(tree: NavigationTree, action: NavigationAction, node?: NodeId): void;
 ```
 
 Runs the current focus node’s handler chain with `action`. If the handler chain returns a target id, focus moves there via `focusNode`.
@@ -135,10 +134,10 @@ type NavtreeNode = CreatedNavtreeNode & {
 type NodeChild = { id: NodeId; order: number | null; active: boolean };
 ```
 
-### `NodeConfig`
+### `NodeOptions`
 
 ```ts
-type NodeConfig = {
+type NodeOptions = {
 	id: string;
 	parent: NodeId;
 	order?: number;
@@ -146,12 +145,10 @@ type NodeConfig = {
 };
 ```
 
-Used by higher-level patterns; the core `createNode` API uses `NodeConfig`.
-
-### `createNode`
+### `createNode` {#createNode}
 
 ```ts
-function createNode(options: NodeConfig): CreatedNavtreeNode;
+function createNode(options: NodeOptions): CreatedNavtreeNode;
 ```
 
 Builds an unattached node description. The `id` is combined with `parent` via `joinId`. Default handler is `defaultHandler` if omitted.
@@ -159,7 +156,7 @@ Builds an unattached node description. The `id` is combined with `parent` via `j
 ### `updateNode`
 
 ```ts
-function updateNode(node: CreatedNavtreeNode, options: Omit<NodeConfig, "id" | "parent">): void;
+function updateNode(node: CreatedNavtreeNode, options: Omit<NodeOptions, "id" | "parent">): void;
 ```
 
 Updates `handler` and/or `order` on an existing node. Changing order repositions the node among its parent’s children.
@@ -188,59 +185,23 @@ function childLocalId(parentId: NodeId, descendantId: NodeId): NodeId | null;
 
 Returns the id of the direct child of `parentId` on the path to `descendantId`, or `null` if not a descendant.
 
-## Events {#events}
+## Listeners {#events}
 
-The tree emits structural and focus events on node paths so UI can subscribe at the right scope.
-
-### `FocusChangeEvent`
-
-```ts
-type FocusChangeEvent = {
-	type: "focuschange";
-	focused: NodeId;
-	previous: NodeId;
-};
-```
-
-### `StructureChangeEvent`
-
-```ts
-type StructureChangeEvent = {
-	type: "structurechange";
-	operation: "insert" | "removal";
-	id: NodeId;
-};
-```
-
-### `NavtreeEvent`
-
-```ts
-type NavtreeEvent = StructureChangeEvent | FocusChangeEvent;
-```
+When focus moves, callbacks registered on nodes along the path between the previous and new focus are notified. This is what powers reactive hooks in the framework packages.
 
 ### `NavtreeListener`
 
 ```ts
-type NavtreeListener = {
-	type: NavtreeEvent["type"];
-	fn: (event: NavtreeEvent) => void;
-};
+type NavtreeListener = () => void;
 ```
 
 ### `registerListener`
 
 ```ts
-function registerListener(
-	tree: NavigationTree,
-	id: NodeId,
-	type: "focuschange" | "structurechange",
-	fn: (event: NavtreeEvent) => void,
-): () => void;
+function registerListener(tree: NavigationTree, id: NodeId, handler: NavtreeListener): () => void;
 ```
 
-Registers a listener on `id` for `"focuschange"` or `"structurechange"`. Returns an unsubscribe function.
-
-Focus changes are invoked along the converging path between the previous and new focus so ancestors can update highlighting.
+Registers `handler` on `id`. It runs when a focus transition affects that node (along the converging path between old and new focus). Returns an unsubscribe function.
 
 ## Actions {#actions}
 
@@ -252,16 +213,23 @@ Actions describe what the navigation system should do. Handlers receive them and
 type NavigationDirection = "up" | "down" | "left" | "right";
 ```
 
-### `NavigationActions`
+### `NavigationActions` and per-kind types
 
 ```ts
 interface NavigationActions {
-	select: { kind: "select" };
-	move: { kind: "move"; direction: NavigationDirection | "back" };
-	focus: { kind: "focus"; direction: NavigationDirection | "initial" | null };
-	query: { kind: "query"; key: string; value: unknown };
+	select: SelectAction;
+	move: MoveAction;
+	focus: FocusAction;
+	query: QueryAction;
 }
+
+type SelectAction = { kind: "select" };
+type MoveAction = { kind: "move"; direction: NavigationDirection | "back" };
+type FocusAction = { kind: "focus"; direction: NavigationDirection | "initial" | null };
+type QueryAction = { kind: "query"; key: string; value: unknown };
 ```
+
+These types are exported individually as well as through `NavigationActions`.
 
 #### Extending actions
 
@@ -284,7 +252,7 @@ type NavigationAction = NavigationActions[keyof NavigationActions];
 ### Typical flow
 
 1. Input (e.g. keyboard) is mapped to a `NavigationAction` (see [DOM](#dom) `defaultEventMapping`).
-2. [`handleAction`](#handleaction) runs the action from the focused node.
+2. [`dispatchAction`](#dispatchaction) runs the action from the focused node.
 3. Handlers return the next `NodeId` to focus, or `null`.
 
 ## Handlers {#handlers}
@@ -335,7 +303,7 @@ Chains `focusHandler()` with `parentHandler` — typical leaf and general-purpos
 const containerHandler: ChainedHandler;
 ```
 
-Like `defaultHandler`, but focus skips empty containers (`focusHandler({ skipEmpty: true })`).
+Like `defaultHandler`, but empty containers do not keep focus (`focusHandler({ focusWhenEmpty: false })`).
 
 ### `parentHandler`
 
@@ -358,20 +326,20 @@ If `onSelect` is provided, prepends `selectHandler(onSelect)` to `defaultHandler
 ```ts
 type FocusDirection = "front" | "back";
 
-type FocusHandlerConfig = {
-	skipEmpty?: boolean;
+type FocusHandlerOptions = {
+	focusWhenEmpty?: boolean;
 	direction?: (dir: NavigationDirection | "initial" | null) => FocusDirection | null;
 };
 
-function focusHandler(config?: FocusHandlerConfig): NavigationHandler;
+function focusHandler(config?: FocusHandlerOptions): NavigationHandler;
 ```
 
-Resolves `focus` actions by walking children (respecting `initialHandler` metadata when direction is initial).
+Resolves `focus` actions by walking children (respecting `initialHandler` metadata when direction is initial). When `focusWhenEmpty` is `false`, an empty container does not receive focus (used by `containerHandler`, grid, and spatial chains).
 
 ### `initialHandler`
 
 ```ts
-const initialHandler: MetaHandler<string>;
+const initialHandler: DataHandler<string>;
 ```
 
 Metadata handler keyed `core:initial` — stores the local id of the preferred first child for initial focus.
@@ -411,19 +379,19 @@ const horizontalHandler: ChainedHandler;
 
 Prebuilt chains: `focusHandler` with direction mapping, movement handler, and `parentHandler`.
 
-### `GridPos`
+### `GridItem`
 
 ```ts
-type GridPos = { row: number; col: number };
+type GridItem = { row: number; col: number };
 ```
 
 ### `gridItemHandler`
 
 ```ts
-const gridItemHandler: MetaHandler<GridPos>;
+const gridItemHandler: DataHandler<GridItem>;
 ```
 
-Associates each item with grid coordinates (`core:grid-item`).
+Associates each item with grid coordinates (query key `gridItem`).
 
 ### `gridMovement`
 
@@ -437,21 +405,34 @@ Lower-level movement handler used inside `gridHandler`; picks the nearest cell u
 
 ```ts
 function gridHandler(config?: {
-	distance?: (direction: NavigationDirection) => (a: GridPos, b: GridPos) => number | null;
+	distance?: (direction: NavigationDirection) => (a: GridItem, b: GridItem) => number | null;
 }): ChainedHandler;
 ```
 
-Chains `focusHandler({ skipEmpty: true })`, `gridMovement` (with optional `distance`), and `parentHandler`.
+Chains `focusHandler({ focusWhenEmpty: false })`, `gridMovement` (with optional `distance`), and `parentHandler`.
 
 Optional `distance` overrides how the nearest cell is chosen for each arrow direction; defaults use row/column heuristics.
+
+### `SpatialItem`
+
+```ts
+type SpatialItem = {
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+};
+```
+
+Plain rectangle (for example from `getBoundingClientRect()`).
 
 ### `spatialItemHandler`
 
 ```ts
-const spatialItemHandler: MetaHandler<DOMRect>;
+const spatialItemHandler: DataHandler<SpatialItem>;
 ```
 
-Stores layout bounds per node (`core:node-position`).
+Stores layout bounds per node (query key `core:node-position`).
 
 ### `spatialMovement`
 
@@ -478,58 +459,78 @@ Invokes `onSelect` when the action is `select`. Used inside `itemHandler`.
 ### `selectNode` {#selectnode}
 
 ```ts
-function selectNode(tree: NavigationTree, nodeId: NodeId, focus?: boolean): void;
+type SelectNodeOptions = {
+	focus?: boolean;
+};
+
+function selectNode(tree: NavigationTree, nodeId: NodeId, options?: SelectNodeOptions): void;
 ```
 
-Optionally focuses `nodeId`, then runs the `select` action through that node’s handler chain.
+By default focuses `nodeId` first (`focus` defaults to `true`), then runs the `select` action through that node’s handler chain.
 
 ## Metadata & introspection {#metadata-and-introspection}
 
-Metadata handlers attach values to nodes and expose them through `query` [actions](#actions). Introspection helpers support dev tooling and handler inspection.
+Data handlers attach values to nodes and expose them through `query` [actions](#actions). Exported introspection types support devtools and custom tooling.
 
-### `MetaHandler`
+### `DataHandler`
 
 ```ts
-type MetaHandler<T> = {
+type DataHandler<T> = {
 	key: string;
 	(v: T | (() => T | null) | null): NavigationHandler;
 	query: (tree: NavigationTree, id: NodeId) => T | null;
 };
 ```
 
-Calling `metaHandler(key)` returns a factory: given a value (or getter), it produces a handler that answers `query` actions for that `key`. The `.query(tree, id)` helper runs the query and returns the stored value.
+Calling `dataHandler(key)` returns a factory: given a value (or getter), it produces a handler that answers `query` actions for that `key`. The `.query(tree, id)` helper runs the query and returns the stored value.
 
-Built-in meta handlers include `initialHandler`, `gridItemHandler`, `spatialItemHandler`, and DOM `elementHandler` (see [DOM](#dom)).
+Built-in data handlers include `initialHandler`, `gridItemHandler`, `spatialItemHandler`, and DOM `elementHandler` (see [DOM](#dom)).
 
-### `metaHandler`
+### `dataHandler`
 
 ```ts
-function metaHandler<T>(key: string): MetaHandler<T>;
+function dataHandler<T>(key: string): DataHandler<T>;
 ```
 
 Factory for custom metadata keys.
 
-### `HandlerInfo`
-
-```ts
-type HandlerInfo = Record<string, string | { toString(): string }>;
-```
-
 ### `describeHandler`
 
 ```ts
-function describeHandler(action: NavigationAction, info: HandlerInfo): void;
+type HandlerDescription = Record<string, unknown>;
+
+function describeHandler(action: NavigationAction, info: HandlerDescription): void;
 ```
 
-In development, records handler description into `query` actions with key `core:handler-info`.
+In development builds, handler implementations call this so inspector queries can collect structured descriptions.
 
-### `queryHandlerInfo`
+### Inspector protocol types (exported)
 
 ```ts
-function queryHandlerInfo(tree: NavigationTree, id: NodeId): HandlerInfo[];
+type InspectorNode = {
+	id: string;
+	parent: string | null;
+	order: number | null;
+	children: string[];
+	handler?: HandlerDescription[];
+};
+
+type InspectorMessage = {
+	type: "fiveway:treeState";
+	tree: string;
+	focus?: string;
+	nodes?: InspectorNode[];
+	removedNodes?: string[];
+	complete?: true;
+};
+
+type InspectorCommand =
+	| { kind: "dispatchAction"; tree: string; action: NavigationAction; node?: NodeId }
+	| { kind: "requestCompleteSnapshot"; tree: string }
+	| { kind: "inspectHandler"; tree: string; node: NodeId };
 ```
 
-Runs the handler-info query at `id` and returns collected metadata from the chain.
+These mirror messages used between the library and the browser extension / inspector UI.
 
 ## DOM (`@fiveway/core/dom`) {#dom}
 
@@ -543,14 +544,14 @@ function defaultEventMapping(e: Event): NavigationAction | null;
 
 Maps `keydown` events to default [actions](#actions): arrow keys to `move`, Enter/Space to `select`, Backspace to `move` with direction `"back"`. Returns `null` when unmapped.
 
-Use with [`handleAction`](#handleaction) from a keydown listener, or via framework helpers ([React](/api/react) `useActionHandler`, [Solid](/api/solid) `createActionHandler`).
+Use with [`dispatchAction`](#dispatchaction) from a keydown listener, or via framework helpers ([React](/api/react) `useDispatchOnEvent`, [Solid](/api/solid) `useDispatchOnEvent`).
 
 ### `elementHandler`
 
 ```ts
-const elementHandler: MetaHandler<HTMLElement>;
+const elementHandler: DataHandler<HTMLElement>;
 ```
 
 Metadata handler (`core:node-element`) that ties a node to a focusable DOM element (getter or value). Exposes `.query(tree, id)` to resolve the element for focus sync.
 
-React’s `useElementHandler` and Solid’s `createElementHandler` wrap this with `spatialItemHandler` for layout-aware navigation.
+React’s `useElementHandler` and Solid’s `createElementHandler` combine this with `spatialItemHandler` for layout-aware navigation.

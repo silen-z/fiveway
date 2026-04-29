@@ -3,25 +3,25 @@ import { describeHandler } from "../inspector.ts";
 import { type NodeId, isParent } from "../tree/id.ts";
 import { type NavtreeNode } from "../tree/node.ts";
 import { type NavigationHandler } from "./handler.ts";
-import { type MetaHandler, metaHandler } from "./metadata.ts";
+import { type DataHandler, dataHandler } from "./metadata.ts";
 
 export type FocusDirection = "front" | "back";
 
-export type FocusHandlerConfig = {
-	skipEmpty?: boolean;
+export type FocusHandlerOptions = {
+	focusWhenEmpty?: boolean;
 	direction?: (dir: NavigationDirection | "initial" | null) => FocusDirection | null;
 };
 
-export const initialHandler: MetaHandler<string> = metaHandler<string>("core:initial");
+export const initialHandler: DataHandler<string> = dataHandler<string>("core:initial");
 
-function createFocusHandler(config: FocusHandlerConfig = {}): NavigationHandler {
-	const skipEmpty = config.skipEmpty ?? false;
+function createFocusHandler(config: FocusHandlerOptions = {}): NavigationHandler {
+	const focusWhenEmpty = config.focusWhenEmpty ?? true;
 
 	const focusHandler: NavigationHandler = (node, action, next) => {
 		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 			describeHandler(action, {
 				name: "core:focus",
-				skipEmpty,
+				focusWhenEmpty,
 				direction: config.direction != null ? "custom" : "default",
 			});
 		}
@@ -31,11 +31,11 @@ function createFocusHandler(config: FocusHandlerConfig = {}): NavigationHandler 
 		}
 
 		if (!node.children.some((c) => c.active)) {
-			if (skipEmpty) {
-				return null;
+			if (focusWhenEmpty) {
+				return node.id;
 			}
 
-			return node.id;
+			return null;
 		}
 
 		const focusDirection = config.direction?.(action.direction) ?? null;

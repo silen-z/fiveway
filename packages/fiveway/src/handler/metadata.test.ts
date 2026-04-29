@@ -2,7 +2,7 @@ import { test, expect } from "vite-plus/test";
 
 import {
 	containerHandler,
-	metaHandler,
+	dataHandler,
 	createNode,
 	createNavigationTree,
 	insertNode,
@@ -10,7 +10,7 @@ import {
 
 test("don't look for metadata in parent", () => {
 	const tree = createNavigationTree();
-	const meta = metaHandler("test");
+	const meta = dataHandler("test");
 
 	const container = createNode({
 		id: "test",

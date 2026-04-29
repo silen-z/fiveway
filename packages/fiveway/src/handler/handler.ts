@@ -55,7 +55,7 @@ export const parentHandler: NavigationHandler = (node, action, next) => {
 export const defaultHandler: ChainedHandler = chainedHandler([focusHandler(), parentHandler]);
 
 export const containerHandler: ChainedHandler = chainedHandler([
-	focusHandler({ skipEmpty: true }),
+	focusHandler({ focusWhenEmpty: false }),
 	parentHandler,
 ]);
 

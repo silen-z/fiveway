@@ -48,7 +48,7 @@ function verticalFocusDirection(dir: NavigationDirection | "initial" | null) {
 }
 
 export const verticalHandler: ChainedHandler = chainedHandler([
-	focusHandler({ skipEmpty: true, direction: verticalFocusDirection }),
+	focusHandler({ focusWhenEmpty: false, direction: verticalFocusDirection }),
 	verticalMovementHandler,
 	parentHandler,
 ]);
@@ -95,7 +95,7 @@ function horizontalFocusDirection(dir: NavigationDirection | "initial" | null) {
 }
 
 export const horizontalHandler: ChainedHandler = chainedHandler([
-	focusHandler({ skipEmpty: true, direction: horizontalFocusDirection }),
+	focusHandler({ focusWhenEmpty: false, direction: horizontalFocusDirection }),
 	horizontalMovementHandler,
 	parentHandler,
 ]);

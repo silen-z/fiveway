@@ -5,16 +5,16 @@ import { traverseNodes } from "../tree/tree.ts";
 import { type ChainedHandler, chainedHandler } from "./chained.ts";
 import { focusHandler } from "./focus.ts";
 import { type NavigationHandler, parentHandler } from "./handler.ts";
-import { type MetaHandler, metaHandler } from "./metadata.ts";
+import { type DataHandler, dataHandler } from "./metadata.ts";
 
-export type GridPos = {
+export type GridItem = {
 	row: number;
 	col: number;
 };
 
-export const gridItemHandler: MetaHandler<GridPos> = metaHandler("core:grid-item");
+export const gridItemHandler: DataHandler<GridItem> = dataHandler("gridItem");
 
-const defaultDistanceDown = (current: GridPos, potential: GridPos) => {
+const defaultDistanceDown = (current: GridItem, potential: GridItem) => {
 	const rowDistance = potential.row - current.row;
 	if (rowDistance <= 0) {
 		return null;
@@ -28,7 +28,7 @@ const defaultDistanceDown = (current: GridPos, potential: GridPos) => {
 	return rowDistance + Math.abs(colDistance);
 };
 
-const defaultDistanceUp = (current: GridPos, potential: GridPos) => {
+const defaultDistanceUp = (current: GridItem, potential: GridItem) => {
 	const rowDistance = current.row - potential.row;
 	if (rowDistance <= 0) {
 		return null;
@@ -42,7 +42,7 @@ const defaultDistanceUp = (current: GridPos, potential: GridPos) => {
 	return rowDistance + Math.abs(colDistance);
 };
 
-const defaultDistanceLeft = (current: GridPos, potential: GridPos) => {
+const defaultDistanceLeft = (current: GridItem, potential: GridItem) => {
 	const colDistance = current.col - potential.col;
 	if (colDistance <= 0) {
 		return null;
@@ -56,7 +56,7 @@ const defaultDistanceLeft = (current: GridPos, potential: GridPos) => {
 	return colDistance + Math.abs(rowDistance);
 };
 
-const defaultDistanceRight = (current: GridPos, potential: GridPos) => {
+const defaultDistanceRight = (current: GridItem, potential: GridItem) => {
 	const colDistance = potential.col - current.col;
 	if (colDistance <= 0) {
 		return null;
@@ -88,7 +88,7 @@ const defaultDistance: DistanceFunction = (direction: NavigationDirection) => {
 
 type DistanceFunction = (
 	direction: NavigationDirection,
-) => (a: GridPos, b: GridPos) => number | null;
+) => (a: GridItem, b: GridItem) => number | null;
 
 type GridHandlerConfig = {
 	distance?: DistanceFunction;
@@ -155,4 +155,8 @@ function createGridMovement(config: GridHandlerConfig = {}): NavigationHandler {
 export { createGridMovement as gridMovement };
 
 export const gridHandler = (config: GridHandlerConfig = {}): ChainedHandler =>
-	chainedHandler([focusHandler({ skipEmpty: true }), createGridMovement(config), parentHandler]);
+	chainedHandler([
+		focusHandler({ focusWhenEmpty: false }),
+		createGridMovement(config),
+		parentHandler,
+	]);

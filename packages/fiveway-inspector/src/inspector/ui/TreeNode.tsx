@@ -38,7 +38,7 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 
 	const focusNode = () => {
 		devtools.sendCommand({
-			kind: "handleAction",
+			kind: "dispatchAction",
 			tree: props.tree.label,
 			node: props.node,
 			action: { kind: "focus", direction: null },

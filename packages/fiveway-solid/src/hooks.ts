@@ -1,7 +1,7 @@
 import {
 	type NodeId,
-	type FocusOptions,
-	type SelectOptions,
+	type FocusNodeOptions,
+	type SelectNodeOptions,
 	selectNode,
 	joinId,
 	focusNode,
@@ -105,24 +105,24 @@ export function useOnBlur(nodeId: NodeId | Accessor<NodeId>, handler: () => void
 	});
 }
 
-type FocusFn = (nodeId: NodeId, options?: FocusOptions) => boolean;
+type FocusFn = (nodeId: NodeId, options?: FocusNodeOptions) => boolean;
 
 export function useFocus(scope?: NodeId): FocusFn {
 	const { tree, parentNode } = useNavigationContext();
 	scope ??= parentNode();
 
-	return (nodeId: NodeId, options?: FocusOptions) => {
+	return (nodeId: NodeId, options?: FocusNodeOptions) => {
 		return focusNode(tree, joinId(scope, nodeId), options);
 	};
 }
 
-type SelectFn = (nodeId: NodeId, options?: SelectOptions) => void;
+type SelectFn = (nodeId: NodeId, options?: SelectNodeOptions) => void;
 
 export function useSelect(scope?: NodeId): SelectFn {
 	const { tree, parentNode } = useNavigationContext();
 	scope ??= parentNode();
 
-	return (nodeId: NodeId, options?: SelectOptions) => {
+	return (nodeId: NodeId, options?: SelectNodeOptions) => {
 		selectNode(tree, joinId(scope, nodeId), options);
 	};
 }

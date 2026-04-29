@@ -1,5 +1,7 @@
 import { defineWebSocketHandler } from "nitro";
 
+import { getActiveClients } from "../../server/bridge";
+
 export const GET = defineWebSocketHandler({
 	upgrade(request) {
 		const url = new URL(request.url);
@@ -12,6 +14,10 @@ export const GET = defineWebSocketHandler({
 	},
 	open(peer) {
 		peer.subscribe("updates");
+
+		if (!getActiveClients().find((c) => c.id === peer.namespace)) {
+			peer.send(JSON.stringify({ type: "client-disconnected" }));
+		}
 	},
 
 	message(peer, message) {

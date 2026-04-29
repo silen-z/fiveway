@@ -17,6 +17,7 @@ export type InspectorMessage = {
 	focus?: string;
 	nodes?: InspectorNode[];
 	removedNodes?: string[];
+	complete?: true;
 };
 
 export function emitInspectorMessage(message: InspectorMessage): void {
@@ -36,7 +37,7 @@ export function emitInspectorMessage(message: InspectorMessage): void {
 }
 
 export type InspectorCommand =
-	| { kind: "handleAction"; tree: string; action: NavigationAction; node?: NodeId }
+	| { kind: "dispatchAction"; tree: string; action: NavigationAction; node?: NodeId }
 	| { kind: "requestCompleteSnapshot"; tree: string }
 	| { kind: "inspectHandler"; tree: string; node: NodeId };
 
@@ -58,9 +59,9 @@ export function subscribeToInspectorCommands(
 	});
 }
 
-export type HandlerDescription = Record<string, string | { toString(): string }>;
+export type HandlerDescription = Record<string, unknown>;
 
-export const INSPECT_HANLDER = "inspect_handler";
+export const INSPECT_HANLDER = "inspectHandler";
 
 export function inspectHandler(tree: NavigationTree, id: NodeId): HandlerDescription[] {
 	const value = [] as HandlerDescription[];
