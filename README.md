@@ -23,13 +23,12 @@ npm install @fiveway/react
 Create a navigation tree and provide it to the application:
 
 ```tsx
-import { createNavigationTree, NavigationProvider, useActionHandler } from "@fiveway/react";
+import { createNavigationTree, NavigationProvider, useDispatchOnEvent } from "@fiveway/react";
 
 const navtree = createNavigationTree();
 
 function App() {
-	// register keyboard listeners (by default on window)
-	useActionHandler(navtree);
+	useDispatchOnEvent(navtree);
 
 	return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
 }
@@ -39,7 +38,7 @@ ReactDOM.createRoot(rootElement).render(<App />);
 
 Now your components can become navigation nodes:
 
-```jsx
+```tsx
 import { useNavigationNode, horizontalHandler } from "@fiveway/react";
 
 const items = [
@@ -74,6 +73,6 @@ Checkout the full guide at: https://fiveway.io/getting-started
 ## Packages
 
 - **@fiveway/core** — Core library: navigation tree, nodes, handlers, actions, and DOM utilities
-- **@fiveway/react** — React integration (NavigationProvider, useNavigationNode, useActionHandler)
-- **@fiveway/solid** — SolidJS integration (NavigationProvider, useNavigationNode, useActionHandler)
+- **@fiveway/react** — React integration (NavigationProvider, useNavigationNode, useDispatchOnEvent)
+- **@fiveway/solid** — SolidJS integration (NavigationProvider, createNavigationNode, useDispatchOnEvent)
 - **@fiveway/inspector** — Inspector UI for inspecting and debugging the navigation tree in the browser

@@ -10,38 +10,40 @@ It comes with a set of default behaviors and allows for extensive customization.
 - 🔌 **Extensible** — fully customize behavior via advanced middleware-like handler system
 - 🌈 **Framework agnostic** — use it in your favorite framework - React, SolidJS and more to come
 
-## @fiveway/react
+## @fiveway/solid
 
-This package contains the React version of the library
+This package contains the SolidJS version of the library.
 
 ### Getting started
 
-Install the React version of the library:
+Install the SolidJS version of the library:
 
 ```sh
-npm install @fiveway/react
+npm install @fiveway/solid
 ```
 
 Create a navigation tree and provide it to the application:
 
 ```tsx
-import { createNavigationTree, NavigationProvider, useDispatchOnEvent } from "@fiveway/react";
-
-const navtree = createNavigationTree();
+import { createNavigationTree, NavigationProvider, useDispatchOnEvent } from "@fiveway/solid";
+import { render } from "solid-js/web";
 
 function App() {
+	const navtree = createNavigationTree();
+
 	useDispatchOnEvent(navtree);
 
 	return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
 }
 
-ReactDOM.createRoot(rootElement).render(<App />);
+render(App, rootElement);
 ```
 
 Now your components can become navigation nodes:
 
 ```tsx
-import { useNavigationNode, horizontalHandler } from "@fiveway/react";
+import { createNavigationNode, horizontalHandler } from "@fiveway/solid";
+import { For } from "solid-js";
 
 const items = [
 	{ id: "1", label: "One" },
@@ -50,23 +52,21 @@ const items = [
 ];
 
 function List() {
-	const nav = useNavigationNode({ id: "list", handler: horizontalHandler });
+	const nav = createNavigationNode({ id: "list", handler: horizontalHandler });
 
 	return (
 		<nav.Context>
 			<ul>
-				{items.map((item, i) => (
-					<Item key={item.id} item={item} order={i} />
-				))}
+				<For each={items}>{(item, i) => <Item item={item} order={i()} />}</For>
 			</ul>
 		</nav.Context>
 	);
 }
 
 function Item(props) {
-	const nav = useNavigationNode({ id: props.item.id, order: props.order });
+	const nav = createNavigationNode({ id: props.item.id, order: () => props.order });
 
-	return <li className={nav.isFocused() && "focused"}>{props.item.label}</li>;
+	return <li classList={{ focused: nav.isFocused() }}>{props.item.label}</li>;
 }
 ```
 

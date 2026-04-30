@@ -35,7 +35,7 @@ function contentScriptConnected(port: browser.Runtime.Port): void {
 	});
 }
 
-export const AcceptedIncomingDevtoolsMessage = v.union([InitMessage, InspectorCommand]);
+const AcceptedIncomingDevtoolsMessage = v.union([InitMessage, InspectorCommand]);
 
 function devtoolsConnected(port: browser.Runtime.Port): void {
 	// since devtools ports do not contain `tabId` of a tab inspected by the devtool panel
