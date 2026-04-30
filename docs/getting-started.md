@@ -23,13 +23,13 @@ create a navigation tree and provide it to the application
 ::: code-group
 
 ```tsx [React]
-import { createNavigationTree, NavigationProvider, useActionHandler } from "@fiveway/react";
+import { createNavigationTree, NavigationProvider, useDispatchOnEvent } from "@fiveway/react";
 
 const navtree = createNavigationTree();
 
 function App() {
 	// register keyboard listeners (by default on window)
-	useActionHandler(navtree);
+	useDispatchOnEvent(navtree);
 
 	return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
 }
