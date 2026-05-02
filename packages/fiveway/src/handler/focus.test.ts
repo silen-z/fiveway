@@ -63,7 +63,7 @@ test("initialHandler", async () => {
 	const { tree, nodes } = createTreeFromSpec({
 		id: "container",
 
-		handler: verticalHandler.prepend(initialHandler("item2")),
+		handler: verticalHandler.compose(initialHandler("item2")),
 		children: [
 			{
 				id: "item1",
@@ -116,7 +116,7 @@ test("captureHandler", async () => {
 		children: [
 			{
 				id: "list",
-				handler: verticalHandler.prepend(captureHandler),
+				handler: verticalHandler.compose(captureHandler),
 				children: [{ id: "item1" }, { id: "item2" }],
 			},
 			{ id: "outside" },

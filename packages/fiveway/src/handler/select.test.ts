@@ -17,7 +17,7 @@ test("selectHandler", async () => {
 	const node = createNode({
 		id: "test",
 		parent: "#",
-		handler: defaultHandler.prepend(selectHandler(onSelect)),
+		handler: defaultHandler.compose(selectHandler(onSelect)),
 	});
 	insertNode(tree, node);
 

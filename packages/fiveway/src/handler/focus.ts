@@ -14,15 +14,15 @@ export type FocusHandlerOptions = {
 
 export const initialHandler: DataHandler<string> = dataHandler<string>("core:initial");
 
-function createFocusHandler(config: FocusHandlerOptions = {}): NavigationHandler {
-	const focusWhenEmpty = config.focusWhenEmpty ?? true;
+function createFocusHandler(options: FocusHandlerOptions = {}): NavigationHandler {
+	const focusWhenEmpty = options.focusWhenEmpty ?? true;
 
 	const focusHandler: NavigationHandler = (node, action, next) => {
 		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 			describeHandler(action, {
 				name: "core:focus",
 				focusWhenEmpty,
-				direction: config.direction != null ? "custom" : "default",
+				direction: options.direction != null ? "custom" : "default",
 			});
 		}
 
@@ -38,7 +38,7 @@ function createFocusHandler(config: FocusHandlerOptions = {}): NavigationHandler
 			return null;
 		}
 
-		const focusDirection = config.direction?.(action.direction) ?? null;
+		const focusDirection = options.direction?.(action.direction) ?? null;
 		if (focusDirection === null) {
 			const initialChild = findInitialChild(node);
 			if (initialChild !== null) {

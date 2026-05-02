@@ -1,6 +1,6 @@
 import {
 	itemHandler,
-	type ChainedHandler,
+	type ComposedHandler,
 	type NavigationHandler,
 	type NodeId,
 	useElementHandler,
@@ -14,7 +14,7 @@ type NavItemProps = {
 	order?: number;
 	onSelect?: () => void;
 	label: string;
-	handler?: ChainedHandler;
+	handler?: ComposedHandler;
 };
 
 const goBackHandler: NavigationHandler = (_, action, next) => {
@@ -30,7 +30,7 @@ export function NavItem(props: NavItemProps) {
 	const nav = useNavigationNode({
 		id: props.navId,
 		order: props.order,
-		handler: (props.handler ?? itemHandler()).prepend(goBackHandler).prepend(elementHandler),
+		handler: (props.handler ?? itemHandler()).compose(goBackHandler).compose(elementHandler),
 	});
 
 	return (

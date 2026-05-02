@@ -24,7 +24,7 @@ export function Showcase() {
 	const { tree } = useNavigationContext();
 	const nav = createNavigationNode({
 		id: "showcase",
-		handler: gridHandler().prepend(initialHandler("start")),
+		handler: gridHandler().compose(initialHandler("start")),
 	});
 
 	useOnFocusChange(nav, (id) => {
@@ -89,7 +89,7 @@ export function Showcase() {
 						label="Start"
 						handler={itemHandler(() => {
 							nav.focus("vertical-list");
-						}).prepend(gridItemHandler({ row: 0, col: 0 }))}
+						}).compose(gridItemHandler({ row: 0, col: 0 }))}
 					/>
 				</div>
 
@@ -120,7 +120,7 @@ export function Showcase() {
 					>
 						<ListExample
 							direction="horizontal"
-							handler={(h) => h.prepend(initialHandler("item3"))}
+							handler={(h) => h.compose(initialHandler("item3"))}
 						/>
 					</ExampleBox>
 
@@ -133,7 +133,7 @@ export function Showcase() {
 						<ListExample
 							direction="horizontal"
 							handler={(h) =>
-								h.prepend(captureHandler).prepend((n, a, next) => {
+								h.compose(captureHandler).compose((n, a, next) => {
 									if (a.kind === "move" && a.direction === "back") {
 										nav.focus();
 										return null;

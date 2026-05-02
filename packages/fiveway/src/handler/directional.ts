@@ -2,7 +2,7 @@ import { type NavigationAction, type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId, childLocalId } from "../tree/id.ts";
 import { type NavtreeNode } from "../tree/node.ts";
-import { type ChainedHandler, chainedHandler } from "./chained.ts";
+import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { type HandlerNext, parentHandler } from "./handler.ts";
 
@@ -47,7 +47,7 @@ function verticalFocusDirection(dir: NavigationDirection | "initial" | null) {
 	}
 }
 
-export const verticalHandler: ChainedHandler = chainedHandler([
+export const verticalHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false, direction: verticalFocusDirection }),
 	verticalMovementHandler,
 	parentHandler,
@@ -94,7 +94,7 @@ function horizontalFocusDirection(dir: NavigationDirection | "initial" | null) {
 	}
 }
 
-export const horizontalHandler: ChainedHandler = chainedHandler([
+export const horizontalHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false, direction: horizontalFocusDirection }),
 	horizontalMovementHandler,
 	parentHandler,

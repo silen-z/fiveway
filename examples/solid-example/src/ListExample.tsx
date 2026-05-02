@@ -2,7 +2,7 @@ import {
 	createNavigationNode,
 	horizontalHandler,
 	verticalHandler,
-	type ChainedHandler,
+	type ComposedHandler,
 	type NavigationHandler,
 } from "@fiveway/solid";
 import { For } from "solid-js";
@@ -12,7 +12,7 @@ import { range } from "./utils.ts";
 
 export function ListExample(props: {
 	direction: "vertical" | "horizontal";
-	handler?: (h: ChainedHandler) => NavigationHandler;
+	handler?: (h: ComposedHandler) => NavigationHandler;
 }) {
 	const baseHandler = props.direction === "vertical" ? verticalHandler : horizontalHandler;
 

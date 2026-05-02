@@ -2,7 +2,7 @@ import { type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId, childLocalId } from "../tree/id.ts";
 import { traverseNodes } from "../tree/tree.ts";
-import { type ChainedHandler, chainedHandler } from "./chained.ts";
+import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { type NavigationHandler, parentHandler } from "./handler.ts";
 import { type DataHandler, dataHandler } from "./metadata.ts";
@@ -90,11 +90,11 @@ type DistanceFunction = (
 	direction: NavigationDirection,
 ) => (a: GridItem, b: GridItem) => number | null;
 
-type GridHandlerConfig = {
+type GridHandlerOptions = {
 	distance?: DistanceFunction;
 };
 
-function createGridMovement(config: GridHandlerConfig = {}): NavigationHandler {
+function createGridMovement(options: GridHandlerOptions = {}): NavigationHandler {
 	const gridMovement: NavigationHandler = (node, action, next) => {
 		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 			describeHandler(action, { name: "core:grid" });
@@ -115,8 +115,8 @@ function createGridMovement(config: GridHandlerConfig = {}): NavigationHandler {
 		}
 
 		const getDistance =
-			config.distance != null
-				? config.distance(action.direction)
+			options.distance != null
+				? options.distance(action.direction)
 				: defaultDistance(action.direction);
 
 		let closestId: NodeId | null = null;
@@ -154,9 +154,9 @@ function createGridMovement(config: GridHandlerConfig = {}): NavigationHandler {
 
 export { createGridMovement as gridMovement };
 
-export const gridHandler = (config: GridHandlerConfig = {}): ChainedHandler =>
-	chainedHandler([
+export const gridHandler = (options: GridHandlerOptions = {}): ComposedHandler =>
+	composeHandlers([
 		focusHandler({ focusWhenEmpty: false }),
-		createGridMovement(config),
+		createGridMovement(options),
 		parentHandler,
 	]);

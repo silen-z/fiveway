@@ -33,7 +33,7 @@ export function VirtualGridExample() {
 
 	const nav = createNavigationNode({
 		id: "virtual-grid",
-		handler: gridHandler().prepend((node, action, next) => {
+		handler: gridHandler().compose((node, action, next) => {
 			if (action.kind === "focus") {
 				const lp = listPosition();
 				const item = items[lp - (lp % cols)];
@@ -85,7 +85,7 @@ export function VirtualGridExample() {
 								navId={item.id}
 								label={item.label}
 								order={item.order}
-								handler={itemHandler().prepend(gridItemHandler(gridPosition))}
+								handler={itemHandler().compose(gridItemHandler(gridPosition))}
 							/>
 						);
 					}}

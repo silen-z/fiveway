@@ -168,7 +168,7 @@ Calls [`selectNode`](/api/#selectnode) with ids under `scope`.
 ### `ElementHandler`
 
 ```ts
-type ElementHandler = ChainedHandler & {
+type ElementHandler = ComposedHandler & {
 	register: (e: HTMLElement | null) => void;
 };
 ```

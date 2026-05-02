@@ -28,7 +28,7 @@ Focus behavior can be extended using handlers.
 
 Handlers, along with nodes, are the core of fiveway. Every node has an associated handler that defines its behavior.
 In their simplest form, handlers are just functions that accept **actions** and return node IDs. fiveway provides a set of handlers for common scenarios.
-These handlers can be composed and chained together with custom handlers to create unique custom behavior.
+These handlers can be composed together with custom handlers to create unique custom behavior.
 
 When given an action, the navigation tree passes that action to the focused node and its handler. The handler can either return a node that should get focused
 or pass the action to another (usually parent) node and its handler.

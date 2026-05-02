@@ -1,16 +1,16 @@
 import {
 	type NavigationTree,
 	type NavigationAction,
-	type ChainedHandler,
+	type ComposedHandler,
 	dispatchAction,
-	chainedHandler,
+	composeHandlers,
 	registerListener,
 	spatialItemHandler,
 } from "@fiveway/core";
 import { defaultEventMapping, elementHandler } from "@fiveway/core/dom";
 import { useRef, useMemo, useEffect } from "react";
 
-export type ElementHandler = ChainedHandler & {
+export type ElementHandler = ComposedHandler & {
 	register: (e: HTMLElement | null) => void;
 };
 
@@ -18,7 +18,7 @@ export function useElementHandler(): ElementHandler {
 	const elementRef = useRef<HTMLElement | null>(null);
 
 	return useMemo(() => {
-		const handler = chainedHandler([
+		const handler = composeHandlers([
 			elementHandler(() => elementRef.current),
 			spatialItemHandler(() => {
 				return elementRef.current?.getBoundingClientRect() ?? null;

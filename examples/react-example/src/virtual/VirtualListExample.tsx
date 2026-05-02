@@ -14,7 +14,7 @@ export function VirtualListExample() {
 
 	const nav = useNavigationNode({
 		id: "virtual-list",
-		handler: verticalHandler.prepend((node, action, next) => {
+		handler: verticalHandler.compose((node, action, next) => {
 			if (action.kind === "focus") {
 				const item = items[listPosition];
 				if (item == null) {

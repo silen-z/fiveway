@@ -23,7 +23,7 @@ test("handlerInfo", () => {
 	expect(inspectHandler(tree, "#/test")).toEqual([{ name: "test" }]);
 });
 
-test("chain handler adds fallback info to link handlers", () => {
+test("composed handler adds fallback info to link handlers", () => {
 	const tree = createNavigationTree();
 
 	const handlerWithoutInfo: NavigationHandler = (_node, _action, next) => {
@@ -35,7 +35,7 @@ test("chain handler adds fallback info to link handlers", () => {
 		createNode({
 			id: "test",
 			parent: "#",
-			handler: defaultHandler.prepend(handlerWithoutInfo),
+			handler: defaultHandler.compose(handlerWithoutInfo),
 		}),
 	);
 

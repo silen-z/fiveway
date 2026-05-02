@@ -54,7 +54,7 @@ export {
 	itemHandler,
 } from "./handler/handler.ts";
 
-export { type ChainedHandler, chainedHandler } from "./handler/chained.ts";
+export { type ComposedHandler, composeHandlers } from "./handler/composed.ts";
 
 export {
 	type FocusDirection,

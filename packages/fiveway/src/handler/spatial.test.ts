@@ -41,7 +41,7 @@ test("spatialHandler", async () => {
 			const node = createNode({
 				id: `item-${row}-${col}`,
 				parent: nodes.spatial.id,
-				handler: defaultHandler.prepend(position),
+				handler: defaultHandler.compose(position),
 			});
 
 			insertNode(tree, node);

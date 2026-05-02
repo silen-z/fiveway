@@ -1,7 +1,7 @@
 import {
 	horizontalHandler,
 	verticalHandler,
-	type ChainedHandler,
+	type ComposedHandler,
 	type NavigationHandler,
 	useNavigationNode,
 } from "@fiveway/react";
@@ -11,7 +11,7 @@ import { range } from "./utils";
 
 export function ListExample(props: {
 	direction: "vertical" | "horizontal";
-	handler?: (h: ChainedHandler) => NavigationHandler;
+	handler?: (h: ComposedHandler) => NavigationHandler;
 }) {
 	const handler = props.direction === "vertical" ? verticalHandler : horizontalHandler;
 

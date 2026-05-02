@@ -15,7 +15,7 @@ test("don't look for metadata in parent", () => {
 	const container = createNode({
 		id: "test",
 		parent: "#",
-		handler: containerHandler.prepend(meta(1)),
+		handler: containerHandler.compose(meta(1)),
 	});
 	insertNode(tree, container);
 
