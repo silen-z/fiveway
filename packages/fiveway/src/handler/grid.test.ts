@@ -25,7 +25,7 @@ test("gridHandler", async () => {
 			const node = createNode({
 				id: `item-${row}-${col}`,
 				parent: nodes.grid.id,
-				handler: defaultHandler.prepend(gridItemHandler({ row, col })),
+				handler: defaultHandler.compose(gridItemHandler({ row, col })),
 			});
 			insertNode(tree, node);
 		}

@@ -4,14 +4,14 @@ import { type NodeId } from "../tree/id.ts";
 import { type NavtreeNode } from "../tree/node.ts";
 import { type NavigationHandler } from "./handler.ts";
 
-export type ChainedHandler = NavigationHandler & {
-	chain: ChainLink | null;
-	prepend(another: NavigationHandler | ChainedHandler): ChainedHandler;
+export type ComposedHandler = NavigationHandler & {
+	link: HandlerLink | null;
+	compose(handler: NavigationHandler | ComposedHandler): ComposedHandler;
 };
 
-type ChainLink = {
+type HandlerLink = {
 	handler: NavigationHandler;
-	next: ChainLink | null;
+	next: HandlerLink | null;
 };
 
 /**
@@ -21,18 +21,18 @@ type ChainLink = {
  * @param handlers handlers that will be called in order first to last
  * @returns handler that will pipe navigation actions through via the next function
  */
-function createChainedHandler(
-	chain: ChainLink | NavigationHandler | NavigationHandler[] | null = null,
-): ChainedHandler {
-	if (typeof chain === "function") {
-		chain = { handler: chain, next: null };
-	} else if (Array.isArray(chain)) {
-		chain = createChain(chain);
+function composeHandlers(
+	link: HandlerLink | NavigationHandler | NavigationHandler[] | null = null,
+): ComposedHandler {
+	if (typeof link === "function") {
+		link = { handler: link, next: null };
+	} else if (Array.isArray(link)) {
+		link = createChain(link);
 	}
 
-	const chainedHandler: ChainedHandler = (node, action, next) => {
+	const composedHandler: ComposedHandler = (node, action, next) => {
 		const runLink = (
-			link: ChainLink | null,
+			link: HandlerLink | null,
 			id?: NodeId,
 			newAction?: NavigationAction,
 		): NodeId | null => {
@@ -51,29 +51,29 @@ function createChainedHandler(
 			return link.handler(node, newAction ?? action, runLink.bind(null, link.next));
 		};
 
-		return runLink(chain);
+		return runLink(link);
 	};
 
-	chainedHandler.chain = chain;
+	composedHandler.link = link;
 
-	chainedHandler.prepend = (prepended) => {
-		if ("chain" in prepended) {
-			if (prepended.chain === null) {
-				return chainedHandler;
+	composedHandler.compose = (prepended) => {
+		if ("link" in prepended) {
+			if (prepended.link === null) {
+				return composedHandler;
 			}
 
-			const cloned = cloneChain(prepended.chain);
-			appendChain(cloned, chain);
-			return createChainedHandler(cloned);
+			const cloned = cloneChain(prepended.link);
+			appendChain(cloned, link);
+			return composeHandlers(cloned);
 		}
 
-		return createChainedHandler({ handler: prepended, next: chain });
+		return composeHandlers({ handler: prepended, next: link });
 	};
 
-	return chainedHandler;
+	return composedHandler;
 }
 
-function createChain(handlers: (NavigationHandler | ChainedHandler)[]): ChainLink | null {
+function createChain(handlers: (NavigationHandler | ComposedHandler)[]): HandlerLink | null {
 	if (handlers.length === 0) {
 		return null;
 	}
@@ -86,7 +86,7 @@ function createChain(handlers: (NavigationHandler | ChainedHandler)[]): ChainLin
 	return chain;
 }
 
-function appendChain(chain: ChainLink, next: ChainLink | null) {
+function appendChain(chain: HandlerLink, next: HandlerLink | null) {
 	let current = chain;
 	while (current.next !== null) {
 		current = current.next;
@@ -95,8 +95,8 @@ function appendChain(chain: ChainLink, next: ChainLink | null) {
 	current.next = next;
 }
 
-function cloneChain(original: ChainLink) {
-	const cloned: ChainLink = { handler: original.handler, next: null };
+function cloneChain(original: HandlerLink) {
+	const cloned: HandlerLink = { handler: original.handler, next: null };
 
 	let current = original;
 	let currentCloned = cloned;
@@ -129,4 +129,4 @@ export function describeLinkHandler(
 	}
 }
 
-export { createChainedHandler as chainedHandler };
+export { composeHandlers };

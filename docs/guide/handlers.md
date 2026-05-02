@@ -56,14 +56,14 @@ The key to this is the `next` function. It can pass an action to the next handle
 ### Extending built-in handlers
 
 Built-in handlers can be extended to add additional functionality or modify the current behavior.
-The simplest way to do this is by prepending a handler to an existing one:
+The simplest way to do this is by composing a handler onto an existing one with `.compose()`:
 
 ```ts
 import { defaultHandler } from "@fiveway/core";
 
 // defaultHandler is a basic composed handler
 // that can be extended with custom functionality
-const customHandler = defaultHandler.prepend((node, action, next) => {
+const customHandler = defaultHandler.compose((node, action, next) => {
 	if (action.kind === "move" && action.direction === "up") {
 		console.log("moving up");
 	}
@@ -80,7 +80,7 @@ and passes it to the next handler in line, in this case the `defaultHandler`.
 Sometimes you might want to create a completely new handler by combining multiple primitive handlers together. This is a more advanced approach used by the library itself.
 
 ```ts
-export const horizontalHandler = chainedHandler([
+export const horizontalHandler = composeHandlers([
 	focusHandler({ skipEmpty: true, direction: horizontalFocusDirection }),
 	horizontalMovementHandler,
 	parentHandler,

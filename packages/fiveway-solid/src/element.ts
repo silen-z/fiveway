@@ -1,16 +1,16 @@
 import {
-	chainedHandler,
+	composeHandlers,
 	dispatchAction,
 	spatialItemHandler,
 	registerListener,
-	type ChainedHandler,
+	type ComposedHandler,
 	type NavigationAction,
 	type NavigationTree,
 } from "@fiveway/core";
 import { defaultEventMapping, elementHandler } from "@fiveway/core/dom";
 import { createEffect, createSignal, onCleanup } from "solid-js";
 
-export type ElementHandler = ChainedHandler & {
+export type ElementHandler = ComposedHandler & {
 	register: (e: HTMLElement | null) => void;
 };
 
@@ -19,7 +19,7 @@ export function createElementHandler(): ElementHandler {
 	const position = () => element()?.getBoundingClientRect() ?? null;
 
 	// handlers doen't need to be reactive
-	const handler = chainedHandler([
+	const handler = composeHandlers([
 		// eslint-disable-next-line solid/reactivity
 		elementHandler(element),
 		// eslint-disable-next-line solid/reactivity

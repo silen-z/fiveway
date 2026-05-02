@@ -20,7 +20,7 @@ type ExampleBoxProps = {
 export function ExampleBox(props: ExampleBoxProps) {
 	const nav = useNavigationNode({
 		id: props.navId,
-		handler: containerHandler.prepend(gridItemHandler(props.gridPos)),
+		handler: containerHandler.compose(gridItemHandler(props.gridPos)),
 	});
 
 	return (

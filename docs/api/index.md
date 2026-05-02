@@ -96,7 +96,7 @@ Walks active children from `nodeId`. If `depth` is a number, only that many leve
 function dispatchAction(tree: NavigationTree, action: NavigationAction, node?: NodeId): void;
 ```
 
-Runs the current focus node’s handler chain with `action`. If the handler chain returns a target id, focus moves there via `focusNode`.
+Runs the focused node’s handler with `action`. If the handler returns a target id, focus moves there via `focusNode`.
 
 Typical source of actions: keyboard mapping (see [DOM](#dom)) or framework helpers.
 
@@ -257,7 +257,7 @@ type NavigationAction = NavigationActions[keyof NavigationActions];
 
 ## Handlers {#handlers}
 
-Handlers implement navigation behavior. Each node has a `NavigationHandler`; composite behavior is built with `chainedHandler` and specialized handlers.
+Handlers implement navigation behavior. Each node has a `NavigationHandler`; composite behavior is built with `composeHandlers` and specialized handlers.
 
 ### `HandlerNext`
 
@@ -277,30 +277,36 @@ type NavigationHandler = (
 ) => NodeId | null;
 ```
 
-### `chainedHandler`
+### `composeHandlers`
 
 ```ts
-type ChainedHandler = NavigationHandler & {
-	prepend(another: NavigationHandler | ChainedHandler): ChainedHandler;
+type HandlerLink = {
+	handler: NavigationHandler;
+	next: HandlerLink | null;
 };
 
-function chainedHandler(handlers: NavigationHandler | NavigationHandler[] | null): ChainedHandler;
+type ComposedHandler = NavigationHandler & {
+	link: HandlerLink | null;
+	compose(handler: NavigationHandler | ComposedHandler): ComposedHandler;
+};
+
+function composeHandlers(handlers: NavigationHandler | NavigationHandler[] | null): ComposedHandler;
 ```
 
-Combines handlers so each receives `next` wired to the rest of the chain. Use `.prepend()` to add behavior at the front (for example `selectHandler` on items).
+Combines handlers so each receives `next` wired to the handlers that follow. Use `.compose()` to add behavior at the front (for example `selectHandler` on items).
 
 ### `defaultHandler`
 
 ```ts
-const defaultHandler: ChainedHandler;
+const defaultHandler: ComposedHandler;
 ```
 
-Chains `focusHandler()` with `parentHandler` — typical leaf and general-purpose default.
+Composes `focusHandler()` with `parentHandler` — typical leaf and general-purpose default.
 
 ### `containerHandler`
 
 ```ts
-const containerHandler: ChainedHandler;
+const containerHandler: ComposedHandler;
 ```
 
 Like `defaultHandler`, but empty containers do not keep focus (`focusHandler({ focusWhenEmpty: false })`).
@@ -316,10 +322,10 @@ Delegates most actions to the parent node; ignores `query` (returns `null`).
 ### `itemHandler`
 
 ```ts
-function itemHandler(onSelect?: () => void): ChainedHandler;
+function itemHandler(onSelect?: () => void): ComposedHandler;
 ```
 
-If `onSelect` is provided, prepends `selectHandler(onSelect)` to `defaultHandler`; otherwise returns `defaultHandler`.
+If `onSelect` is provided, composes `selectHandler(onSelect)` onto `defaultHandler` via `.compose()`; otherwise returns `defaultHandler`.
 
 ### `focusHandler`
 
@@ -334,7 +340,7 @@ type FocusHandlerOptions = {
 function focusHandler(config?: FocusHandlerOptions): NavigationHandler;
 ```
 
-Resolves `focus` actions by walking children (respecting `initialHandler` metadata when direction is initial). When `focusWhenEmpty` is `false`, an empty container does not receive focus (used by `containerHandler`, grid, and spatial chains).
+Resolves `focus` actions by walking children (respecting `initialHandler` metadata when direction is initial). When `focusWhenEmpty` is `false`, an empty container does not receive focus (used by `containerHandler`, grid, and spatial handlers).
 
 ### `initialHandler`
 
@@ -373,11 +379,11 @@ Handle `move` for up/down (vertical) or left/right (horizontal) by walking order
 ### `verticalHandler` / `horizontalHandler`
 
 ```ts
-const verticalHandler: ChainedHandler;
-const horizontalHandler: ChainedHandler;
+const verticalHandler: ComposedHandler;
+const horizontalHandler: ComposedHandler;
 ```
 
-Prebuilt chains: `focusHandler` with direction mapping, movement handler, and `parentHandler`.
+Prebuilt compositions: `focusHandler` with direction mapping, movement handler, and `parentHandler`.
 
 ### `GridItem`
 
@@ -406,10 +412,10 @@ Lower-level movement handler used inside `gridHandler`; picks the nearest cell u
 ```ts
 function gridHandler(config?: {
 	distance?: (direction: NavigationDirection) => (a: GridItem, b: GridItem) => number | null;
-}): ChainedHandler;
+}): ComposedHandler;
 ```
 
-Chains `focusHandler({ focusWhenEmpty: false })`, `gridMovement` (with optional `distance`), and `parentHandler`.
+Composes `focusHandler({ focusWhenEmpty: false })`, `gridMovement` (with optional `distance`), and `parentHandler`.
 
 Optional `distance` overrides how the nearest cell is chosen for each arrow direction; defaults use row/column heuristics.
 
@@ -443,7 +449,7 @@ const spatialMovement: NavigationHandler;
 ### `spatialHandler`
 
 ```ts
-const spatialHandler: ChainedHandler;
+const spatialHandler: ComposedHandler;
 ```
 
 Combines spatial movement with defaults for arrow-key style navigation using rects.
@@ -466,7 +472,7 @@ type SelectNodeOptions = {
 function selectNode(tree: NavigationTree, nodeId: NodeId, options?: SelectNodeOptions): void;
 ```
 
-By default focuses `nodeId` first (`focus` defaults to `true`), then runs the `select` action through that node’s handler chain.
+By default focuses `nodeId` first (`focus` defaults to `true`), then runs the `select` action through that node’s handler.
 
 ## Metadata & introspection {#metadata-and-introspection}
 

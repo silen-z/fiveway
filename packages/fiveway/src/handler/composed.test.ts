@@ -5,13 +5,13 @@ import {
 	createNode,
 	createNavigationTree,
 	insertNode,
-	chainedHandler,
+	composeHandlers,
 	defaultHandler,
 	dataHandler,
 	dispatchAction,
 } from "../index.ts";
 
-test("chainedHandler", () => {
+test("composedHandler", () => {
 	const tree = createNavigationTree();
 	const logs: string[] = [];
 
@@ -24,17 +24,17 @@ test("chainedHandler", () => {
 			return next();
 		};
 
-	const subChain = chainedHandler()
-		.prepend(logHandler("4"))
-		.prepend(logHandler("3"))
-		.prepend(logHandler("2"));
+	const subComposition = composeHandlers()
+		.compose(logHandler("4"))
+		.compose(logHandler("3"))
+		.compose(logHandler("2"));
 
-	const handler = chainedHandler()
-		.prepend(logHandler("5"))
-		.prepend(subChain)
-		.prepend(logHandler("1"));
+	const handler = composeHandlers()
+		.compose(logHandler("5"))
+		.compose(subComposition)
+		.compose(logHandler("1"));
 
-	const node = createNode({ id: "node1", parent: "#", handler: defaultHandler.prepend(handler) });
+	const node = createNode({ id: "node1", parent: "#", handler: defaultHandler.compose(handler) });
 	insertNode(tree, node);
 
 	dispatchAction(tree, { kind: "query", key: "log", value: null });
@@ -42,7 +42,7 @@ test("chainedHandler", () => {
 	expect(logs).toEqual(["#/node1:1", "#/node1:2", "#/node1:3", "#/node1:4", "#/node1:5"]);
 });
 
-test("chainedHandler: meta", () => {
+test("composedHandler: meta", () => {
 	const tree = createNavigationTree();
 
 	const testHandler = dataHandler("test");
@@ -50,14 +50,14 @@ test("chainedHandler: meta", () => {
 	const node = createNode({
 		id: "node",
 		parent: "#",
-		handler: defaultHandler.prepend(testHandler("test-value")),
+		handler: defaultHandler.compose(testHandler("test-value")),
 	});
 	insertNode(tree, node);
 
 	const node2 = createNode({
 		id: "node2",
 		parent: "#",
-		handler: defaultHandler.prepend(testHandler(() => "test-value")),
+		handler: defaultHandler.compose(testHandler(() => "test-value")),
 	});
 	insertNode(tree, node2);
 

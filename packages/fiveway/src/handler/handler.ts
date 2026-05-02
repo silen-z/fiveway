@@ -3,7 +3,7 @@ import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavtreeNode } from "../tree/node.ts";
 import { type NavigationTree } from "../tree/tree.ts";
-import { chainedHandler, type ChainedHandler } from "./chained.ts";
+import { composeHandlers, type ComposedHandler } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { selectHandler } from "./select.ts";
 
@@ -52,17 +52,17 @@ export const parentHandler: NavigationHandler = (node, action, next) => {
 	return next();
 };
 
-export const defaultHandler: ChainedHandler = chainedHandler([focusHandler(), parentHandler]);
+export const defaultHandler: ComposedHandler = composeHandlers([focusHandler(), parentHandler]);
 
-export const containerHandler: ChainedHandler = chainedHandler([
+export const containerHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false }),
 	parentHandler,
 ]);
 
-export const itemHandler = (onSelect?: () => void): ChainedHandler => {
+export const itemHandler = (onSelect?: () => void): ComposedHandler => {
 	if (onSelect == null) {
 		return defaultHandler;
 	}
 
-	return defaultHandler.prepend(selectHandler(onSelect));
+	return defaultHandler.compose(selectHandler(onSelect));
 };

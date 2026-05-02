@@ -8,7 +8,7 @@ import css from "./SpatialExample.module.css";
 export function SpatialExample() {
 	const nav = createNavigationNode({
 		id: "spatial",
-		handler: spatialHandler.prepend(captureHandler),
+		handler: spatialHandler.compose(captureHandler),
 	});
 
 	return (

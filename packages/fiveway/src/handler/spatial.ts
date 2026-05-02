@@ -2,7 +2,7 @@ import { type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { traverseNodes } from "../tree/tree.ts";
-import { type ChainedHandler, chainedHandler } from "./chained.ts";
+import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { type NavigationHandler } from "./handler.ts";
 import { parentHandler } from "./handler.ts";
@@ -59,7 +59,7 @@ export const spatialMovement: NavigationHandler = (node, action, next) => {
 	return closestId ?? next();
 };
 
-export const spatialHandler: ChainedHandler = chainedHandler([
+export const spatialHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false }),
 	spatialMovement,
 	parentHandler,

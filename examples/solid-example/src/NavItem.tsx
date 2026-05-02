@@ -2,7 +2,7 @@ import {
 	createElementHandler,
 	createNavigationNode,
 	itemHandler,
-	type ChainedHandler,
+	type ComposedHandler,
 	type NavigationHandler,
 	type NodeId,
 } from "@fiveway/solid";
@@ -13,7 +13,7 @@ type NavItemProps = {
 	navId: NodeId;
 	order?: number;
 	label: string;
-	handler?: ChainedHandler;
+	handler?: ComposedHandler;
 };
 
 const goBackHandler: NavigationHandler = (_, action, next) => {
@@ -29,7 +29,7 @@ export function NavItem(props: NavItemProps) {
 	const nav = createNavigationNode({
 		id: props.navId,
 		order: props.order,
-		handler: (props.handler ?? itemHandler()).prepend(goBackHandler).prepend(elementHandler),
+		handler: (props.handler ?? itemHandler()).compose(goBackHandler).compose(elementHandler),
 	});
 
 	return (

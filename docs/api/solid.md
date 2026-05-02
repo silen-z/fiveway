@@ -159,7 +159,7 @@ function useSelect(scope?: NodeId): (nodeId: NodeId, options?: SelectNodeOptions
 
 ### `ElementHandler`
 
-Same shape as [React](/api/react): `ChainedHandler` plus `register`.
+Same shape as [React](/api/react): `ComposedHandler` plus `register`.
 
 ### `createElementHandler`
 
