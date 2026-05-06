@@ -24,6 +24,10 @@ export type SelectNodeOptions = {
 	focus?: boolean;
 };
 
+/**
+ * By default focuses `nodeId` first (`focus` defaults to `true`), then runs the `select`
+ * action through that node’s handler.
+ */
 export function selectNode(
 	tree: NavigationTree,
 	nodeId: NodeId,
@@ -36,4 +40,9 @@ export function selectNode(
 	runHandler(tree, nodeId, { kind: "select" });
 }
 
+/**
+ * Invokes `onSelect` when the action is `select`.
+ *
+ * Used inside `itemHandler`.
+ */
 export { createSelectHandler as selectHandler };

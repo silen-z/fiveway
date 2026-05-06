@@ -15,8 +15,16 @@ export type SpatialItem = {
 	height: number;
 };
 
+/**
+ * Stores layout bounds per node (query key `core:node-position`).
+ */
 export const spatialItemHandler: DataHandler<SpatialItem> = dataHandler("core:node-position");
 
+/**
+ * Spatial movement handler used by `spatialHandler`.
+ *
+ * Combines spatial movement with defaults for arrow-key style navigation using rects.
+ */
 export const spatialMovement: NavigationHandler = (node, action, next) => {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 		describeHandler(action, { name: "core:spatial" });
@@ -59,6 +67,9 @@ export const spatialMovement: NavigationHandler = (node, action, next) => {
 	return closestId ?? next();
 };
 
+/**
+ * Combines spatial movement with defaults for arrow-key style navigation using rects.
+ */
 export const spatialHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false }),
 	spatialMovement,

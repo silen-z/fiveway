@@ -14,10 +14,16 @@ export type CreatedNavtreeNode = {
 	children: NodeChild[];
 };
 
+/**
+ * A node stored inside a `NavigationTree`.
+ */
 export type NavtreeNode = CreatedNavtreeNode & {
 	tree: NavigationTree;
 };
 
+/**
+ * Child reference stored on a node.
+ */
 export type NodeChild = { id: NodeId; order: number | null; active: boolean };
 
 export type NodeOptions = {
@@ -27,6 +33,12 @@ export type NodeOptions = {
 	handler?: NavigationHandler;
 };
 
+/**
+ * Builds an unattached node description.
+ *
+ * The `id` is combined with `parent` via `joinId`. If `handler` is omitted,
+ * `defaultHandler` is used.
+ */
 export function createNode(options: NodeOptions): CreatedNavtreeNode {
 	return {
 		id: joinId(options.parent, options.id),
@@ -39,6 +51,11 @@ export function createNode(options: NodeOptions): CreatedNavtreeNode {
 	};
 }
 
+/**
+ * Updates `handler` and/or `order` on an existing node.
+ *
+ * Changing `order` repositions the node among its parent’s children.
+ */
 export function updateNode(
 	node: CreatedNavtreeNode,
 	options: Omit<NodeOptions, "id" | "parent">,

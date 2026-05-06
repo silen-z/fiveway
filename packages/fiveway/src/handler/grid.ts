@@ -12,7 +12,88 @@ export type GridItem = {
 	col: number;
 };
 
+/**
+ * Associates each item with grid coordinates (query key `gridItem`).
+ */
 export const gridItemHandler: DataHandler<GridItem> = dataHandler("gridItem");
+
+/**
+ * Lower-level movement handler used inside `gridHandler`; picks the nearest cell using
+ * `gridItemHandler` positions.
+ */
+function createGridMovement(options: GridHandlerOptions = {}): NavigationHandler {
+	const gridMovementHandler: NavigationHandler = (node, action, next) => {
+		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
+			describeHandler(action, { name: "core:grid" });
+		}
+
+		if (action.kind !== "move" || action.direction === "back") {
+			return next();
+		}
+
+		const focusedId = childLocalId(node.id, node.tree.focus);
+		if (focusedId === null) {
+			return next();
+		}
+
+		const focusedPos = gridItemHandler.query(node.tree, focusedId);
+		if (focusedPos == null) {
+			return next();
+		}
+
+		const getDistance =
+			options.distance != null
+				? options.distance(action.direction)
+				: defaultDistance(action.direction);
+
+		let closestId: NodeId | null = null;
+		let shortestDistance: number | null = null;
+
+		traverseNodes(node.tree, node.id, 1, (id) => {
+			const pos = gridItemHandler.query(node.tree, id);
+			if (pos === null) {
+				return;
+			}
+
+			const distance = getDistance(focusedPos, pos);
+			if (distance === null) {
+				return;
+			}
+
+			if (
+				(shortestDistance === null || distance < shortestDistance) &&
+				next(id, { kind: "focus", direction: null }) !== null
+			) {
+				closestId = id;
+				shortestDistance = distance;
+			}
+		});
+
+		if (closestId != null) {
+			return next(closestId, { kind: "focus", direction: action.direction });
+		}
+
+		return next();
+	};
+
+	return gridMovementHandler;
+}
+
+export { createGridMovement as gridMovementHandler };
+
+/**
+ * Composes `focusHandler({ focusWhenEmpty: false })`, `gridMovement` (with optional
+ * `distance`), and `parentHandler`.
+ *
+ * Optional `distance` overrides how the nearest cell is chosen for each arrow direction;
+ * defaults use row/column heuristics.
+ */
+export const gridHandler = (options: GridHandlerOptions = {}): ComposedHandler =>
+	composeHandlers([
+		focusHandler({ focusWhenEmpty: false }),
+		createGridMovement(options),
+		parentHandler,
+	]);
 
 const defaultDistanceDown = (current: GridItem, potential: GridItem) => {
 	const rowDistance = potential.row - current.row;
@@ -93,70 +174,3 @@ type DistanceFunction = (
 type GridHandlerOptions = {
 	distance?: DistanceFunction;
 };
-
-function createGridMovement(options: GridHandlerOptions = {}): NavigationHandler {
-	const gridMovement: NavigationHandler = (node, action, next) => {
-		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-			describeHandler(action, { name: "core:grid" });
-		}
-
-		if (action.kind !== "move" || action.direction === "back") {
-			return next();
-		}
-
-		const focusedId = childLocalId(node.id, node.tree.focus);
-		if (focusedId === null) {
-			return next();
-		}
-
-		const focusedPos = gridItemHandler.query(node.tree, focusedId);
-		if (focusedPos == null) {
-			return next();
-		}
-
-		const getDistance =
-			options.distance != null
-				? options.distance(action.direction)
-				: defaultDistance(action.direction);
-
-		let closestId: NodeId | null = null;
-		let shortestDistance: number | null = null;
-
-		traverseNodes(node.tree, node.id, 1, (id) => {
-			const pos = gridItemHandler.query(node.tree, id);
-			if (pos === null) {
-				return;
-			}
-
-			const distance = getDistance(focusedPos, pos);
-			if (distance === null) {
-				return;
-			}
-
-			if (
-				(shortestDistance === null || distance < shortestDistance) &&
-				next(id, { kind: "focus", direction: null }) !== null
-			) {
-				closestId = id;
-				shortestDistance = distance;
-			}
-		});
-
-		if (closestId != null) {
-			return next(closestId, { kind: "focus", direction: action.direction });
-		}
-
-		return next();
-	};
-
-	return gridMovement;
-}
-
-export { createGridMovement as gridMovement };
-
-export const gridHandler = (options: GridHandlerOptions = {}): ComposedHandler =>
-	composeHandlers([
-		focusHandler({ focusWhenEmpty: false }),
-		createGridMovement(options),
-		parentHandler,
-	]);

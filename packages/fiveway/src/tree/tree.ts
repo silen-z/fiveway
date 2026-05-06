@@ -21,6 +21,12 @@ export type NavigationTree = {
 	focusLock: "free" | "locked" | "updatePending";
 };
 
+/**
+ * Creates a navigation tree with a single root node.
+ *
+ * You can give the tree an optional `label`, used for identification in the inspector
+ * in case there are multiple trees.
+ */
 export function createNavigationTree(options: { label?: string } = {}): NavigationTree {
 	const tree: NavigationTree = {
 		label: options.label ?? randomLabel(),
@@ -48,6 +54,20 @@ export function createNavigationTree(options: { label?: string } = {}): Navigati
 	return tree;
 }
 
+/**
+ * Registers a node created by `createNode` in the tree.
+ *
+ * Returns a cleanup function that removes the node.
+ *
+ * Nodes can be inserted before their parents exist. In that case they are kept in a
+ * disconnected state (not participating in navigation) until their parent is inserted.
+ * Similarly, upon parent removal they go back to a disconnected state and must be removed
+ * explicitly.
+ *
+ * When a tree already contains a node with the same id, it is replaced by the new node.
+ *
+ * This function is mainly meant to be used by framework integrations.
+ */
 export function insertNode(tree: NavigationTree, node: CreatedNavtreeNode): () => void {
 	if (node.parent === null) {
 		throw new Error("trying to insert root (or node without parent)");
@@ -101,6 +121,14 @@ function connectNode(tree: NavigationTree, parentNode: NavtreeNode, node: Navtre
 	}
 }
 
+/**
+ * Removes a node by id or by reference.
+ *
+ * Removing a node does not remove its children — they are put into a disconnected state
+ * until they are explicitly removed or their parent is connected again.
+ *
+ * This function is mainly meant to be used by framework integrations.
+ */
 export function removeNode(tree: NavigationTree, node: NodeId | NavtreeNode): void {
 	const id = typeof node === "string" ? node : node.id;
 	if (id === "#") {
@@ -191,6 +219,16 @@ function updateFocus(tree: NavigationTree) {
 	return;
 }
 
+/**
+ * Temporarily locks focus from changing while the tree structure changes to allow
+ * inserting multiple nodes at once.
+ *
+ * Returns a function that releases the lock. If a lock is already held, returns `null`.
+ * Calling the release function may apply a pending focus update.
+ *
+ * Used by framework integrations to make initial focus work in frameworks that run
+ * effects top-down.
+ */
 export function holdFocus(tree: NavigationTree): (() => void) | null {
 	if (tree.focusLock !== "free") {
 		return null;
@@ -214,6 +252,15 @@ export type FocusNodeOptions = {
 	direction?: NavigationDirection | "initial";
 };
 
+/**
+ * Attempts to focus `targetId`.
+ *
+ * Returns `true` if focusing succeeds.
+ *
+ * Calling `focusNode` dispatches a `focus` action, so focus is resolved via handlers.
+ * For example if a container contains children, calling `focusNode(tree, "#/container")`
+ * will typically focus a descendant like `#/container/item1`.
+ */
 export function focusNode(
 	tree: NavigationTree,
 	targetId: NodeId,
@@ -251,6 +298,14 @@ export function focusNode(
 	return true;
 }
 
+/**
+ * Calls the focused node's handler with the given navigation action.
+ *
+ * You can also specify a node other than the focused one.
+ *
+ * Typical sources of actions: keyboard mapping (see `@fiveway/core/dom`) or framework
+ * helpers.
+ */
 export function dispatchAction(
 	tree: NavigationTree,
 	action: NavigationAction,
@@ -262,12 +317,22 @@ export function dispatchAction(
 	}
 }
 
+/**
+ * Checks whether `nodeId` is focused.
+ *
+ * A node is also considered focused when its descendant is focused.
+ */
 export function isFocused(focused: NavigationTree | NodeId, nodeId: NodeId): boolean {
 	const focusedId = typeof focused === "string" ? focused : focused.focus;
 
 	return focusedId === nodeId || isParent(nodeId, focusedId);
 }
 
+/**
+ * Calls `callback` with descendants of `nodeId`.
+ *
+ * You can specify depth up to which nodes are traversed; `null` means no limit.
+ */
 export function traverseNodes(
 	tree: NavigationTree,
 	nodeId: NodeId,

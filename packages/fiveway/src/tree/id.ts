@@ -1,5 +1,13 @@
+/**
+ * Node id forms a path from the root `"#"`, e.g. `"#/list/item-1"`.
+ */
 export type NodeId = string;
 
+/**
+ * Joins a parent scope with a local segment.
+ *
+ * If `nodeId` starts with `#/`, it is treated as absolute and returned as-is.
+ */
 export function joinId(scope: NodeId, nodeId: NodeId): NodeId {
 	if (nodeId.startsWith("#/")) {
 		return nodeId;
@@ -8,10 +16,17 @@ export function joinId(scope: NodeId, nodeId: NodeId): NodeId {
 	return scope + "/" + nodeId;
 }
 
+/**
+ * True when `childId` is a descendant path of `parentId` (path-prefix semantics).
+ */
 export function isParent(parentId: NodeId, childId: NodeId): boolean {
 	return childId.startsWith(parentId + "/");
 }
 
+/**
+ * Returns the id of the direct child of `parentId` on the path to `descendantId`,
+ * or `null` if not a descendant.
+ */
 export function childLocalId(parentId: NodeId, descendantId: NodeId): NodeId | null {
 	if (!isParent(parentId, descendantId)) {
 		return null;
