@@ -6,6 +6,14 @@ import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { type HandlerNext, parentHandler } from "./handler.ts";
 
+/**
+ * Primitive handler that only handles `move` actions in up and down directions
+ * by focusing the previous or next child respectively.
+ *
+ * This is a primitive handler and as such is meant to be used as part of a composed handler.
+ *
+ * @see {@link verticalHandler} for a composed handler that uses `verticalMovementHandler`.
+ */
 export function verticalMovementHandler(
 	node: NavtreeNode,
 	action: NavigationAction,
@@ -39,20 +47,33 @@ export function verticalMovementHandler(
 function verticalFocusDirection(dir: NavigationDirection | "initial" | null) {
 	switch (dir) {
 		case "up":
-			return "back";
+			return "backwards";
 		case "down":
-			return "front";
+			return "forwards";
 		default:
 			return null;
 	}
 }
 
+/**
+ * Composed handler that handles `move` actions in up and down directions by focusing the previous or next child respectively.
+ *
+ * It respects direction of incoming focus and can't be focused by itself when it it has no children.
+ */
 export const verticalHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false, direction: verticalFocusDirection }),
 	verticalMovementHandler,
 	parentHandler,
 ]);
 
+/**
+ * Primitive handler that only handles `move` actions in left and right directions
+ * by focusing the previous or next child respectively.
+ *
+ * This is a primitive handler and as such is meant to be used as part of a composed handler.
+ *
+ * @see {@link horizontalHandler} for a composed handler that uses `horizontalMovementHandler`.
+ */
 export function horizontalMovementHandler(
 	node: NavtreeNode,
 	action: NavigationAction,
@@ -86,14 +107,19 @@ export function horizontalMovementHandler(
 function horizontalFocusDirection(dir: NavigationDirection | "initial" | null) {
 	switch (dir) {
 		case "left":
-			return "back";
+			return "backwards";
 		case "right":
-			return "front";
+			return "forwards";
 		default:
 			return null;
 	}
 }
 
+/**
+ * Composed handler that handles `move` actions in left and right directions by focusing the previous or next child respectively.
+ *
+ * It respects direction of incoming focus and can't be focused by itself when it it has no children.
+ */
 export const horizontalHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false, direction: horizontalFocusDirection }),
 	horizontalMovementHandler,

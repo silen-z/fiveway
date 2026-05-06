@@ -1,11 +1,23 @@
 import { type NavigationAction } from "../action.ts";
-import { describeHandler, INSPECT_HANLDER, type HandlerDescription } from "../inspector.ts";
+import { describeHandler, INSPECT_QUERY_KEY, type HandlerDescription } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavtreeNode } from "../tree/node.ts";
 import { type NavigationHandler } from "./handler.ts";
 
+/**
+ * A navigation handler composed from multiple other handlers.
+ *
+ * It can be further extended further via its `compose` method.
+ */
 export type ComposedHandler = NavigationHandler & {
 	link: HandlerLink | null;
+
+	/**
+	 * Creates a new composed handler with the given handler added to the front of the chain.
+	 *
+	 * @param handler - The handler to add to the front of the chain.
+	 * @returns A new composed handler.
+	 */
 	compose(handler: NavigationHandler | ComposedHandler): ComposedHandler;
 };
 
@@ -15,13 +27,11 @@ type HandlerLink = {
 };
 
 /**
- * Take handlers and combines them into one so the next handler function
- * automatically passes action to the next handler
+ * Composes multiple navigation handlers so they run in a sequence.
  *
- * @param handlers handlers that will be called in order first to last
- * @returns handler that will pipe navigation actions through via the next function
+ * Also adds `.compose()` method to allow further composition.
  */
-function composeHandlers(
+export function composeHandlers(
 	link: HandlerLink | NavigationHandler | NavigationHandler[] | null = null,
 ): ComposedHandler {
 	if (typeof link === "function") {
@@ -56,18 +66,18 @@ function composeHandlers(
 
 	composedHandler.link = link;
 
-	composedHandler.compose = (prepended) => {
-		if ("link" in prepended) {
-			if (prepended.link === null) {
+	composedHandler.compose = (handler) => {
+		if ("link" in handler) {
+			if (handler.link === null) {
 				return composedHandler;
 			}
 
-			const cloned = cloneChain(prepended.link);
+			const cloned = cloneChain(handler.link);
 			appendChain(cloned, link);
 			return composeHandlers(cloned);
 		}
 
-		return composeHandlers({ handler: prepended, next: link });
+		return composeHandlers({ handler, next: link });
 	};
 
 	return composedHandler;
@@ -111,22 +121,16 @@ function cloneChain(original: HandlerLink) {
 	return cloned;
 }
 
-export function describeLinkHandler(
+function describeLinkHandler(
 	handler: NavigationHandler,
 	node: NavtreeNode,
 	action: NavigationAction,
 ): void {
-	if (action.kind !== "query" || action.key !== INSPECT_HANLDER) {
-		return;
-	}
-
-	const value: Array<HandlerDescription> = [];
-	handler(node, { kind: "query", key: INSPECT_HANLDER, value }, () => null);
-	if (value.length === 0) {
-		describeHandler(action, {
-			name: handler.name !== "" ? handler.name : "custom",
-		});
+	if (action.kind === "query" && action.key === INSPECT_QUERY_KEY) {
+		const value: Array<HandlerDescription> = [];
+		handler(node, { kind: "query", key: INSPECT_QUERY_KEY, value }, () => null);
+		if (value.length === 0) {
+			describeHandler(action, { name: handler.name });
+		}
 	}
 }
-
-export { composeHandlers };

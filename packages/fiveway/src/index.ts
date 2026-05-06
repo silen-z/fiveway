@@ -37,7 +37,7 @@ export { type NavtreeListener, registerListener } from "./tree/events.ts";
 
 export {
 	type NavigationDirection,
-	type NavigationActions,
+	type DefinedNavigationActions as NavigationActions,
 	type NavigationAction,
 	type SelectAction,
 	type MoveAction,

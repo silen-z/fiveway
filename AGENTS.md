@@ -6,7 +6,7 @@ This project is using Vite+, a unified toolchain built on top of Vite, Rolldown,
 
 ## Vite+ Workflow
 
-`vp` is a global binary that handles the full development lifecycle. Run `vp help` to print a list of commands and `vp <command> --help` for information about a specific command.
+`vp` is a global binary that handles the full development lifecycle. Run `vp help` to print a list of commands and `vp <command> --help` for information about a specific command. If `vp` is not available globally assume `node_modules` are present and use it like this: `./node_modules/.bin/vp`
 
 ### Start
 

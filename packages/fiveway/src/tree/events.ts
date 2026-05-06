@@ -4,6 +4,14 @@ import { type NavigationTree } from "./tree.ts";
 
 export type NavtreeListener = () => void;
 
+/**
+ * Registers `handler` on `id`.
+ *
+ * The handler runs when a focus transition affects that node (along the converging path
+ * between old and new focus).
+ *
+ * Returns an unsubscribe function.
+ */
 export function registerListener(
 	tree: NavigationTree,
 	id: NodeId,

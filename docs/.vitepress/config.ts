@@ -19,17 +19,6 @@ export default defineConfig({
 		],
 
 		sidebar: {
-			"/api/": [
-				{
-					text: "API Reference",
-					items: [
-						{ text: "Core API", link: "/api/" },
-						{ text: "React", link: "/api/react" },
-						{ text: "Solid", link: "/api/solid" },
-					],
-				},
-			],
-
 			"/": [
 				{
 					text: "Introduction",
@@ -48,7 +37,7 @@ export default defineConfig({
 				},
 				{
 					text: "Reference",
-					items: [{ text: "Core API", link: "/api/" }],
+					items: [{ text: "API reference", link: "/api/" }],
 				},
 			],
 		},

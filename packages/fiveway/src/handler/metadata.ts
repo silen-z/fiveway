@@ -10,6 +10,13 @@ export type DataHandler<T> = {
 	query: (tree: NavigationTree, id: NodeId) => T | null;
 };
 
+/**
+ * Factory for custom metadata keys.
+ *
+ * Calling `dataHandler(key)` returns a factory: given a value (or getter), it produces a
+ * handler that answers `query` actions for that key. The `.query(tree, id)` helper runs
+ * the query and returns the stored value.
+ */
 export function dataHandler<T>(key: string): DataHandler<T> {
 	const handler = (value: unknown) => {
 		const dataHandler: NavigationHandler = (_, action, next) => {

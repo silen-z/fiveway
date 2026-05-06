@@ -9,6 +9,11 @@ export type InspectorCommand =
 	| { kind: "requestCompleteSnapshot"; tree: string }
 	| { kind: "inspectHandler"; tree: string; node: NodeId };
 
+/**
+ * Subscribes to inspector commands targeting this tree.
+ *
+ * Commands mirror the protocol used between the library and the inspector UI.
+ */
 export function subscribeToInspectorCommands(
 	tree: NavigationTree,
 	callback: (command: InspectorCommand) => void,
@@ -63,6 +68,9 @@ export type InspectorNode = {
 	handler?: HandlerDescription[];
 };
 
+/**
+ * Converts an internal node into the inspector wire format.
+ */
 export function inspectNode(node: NavtreeNode, handler = false): InspectorNode {
 	const children: string[] = [];
 
@@ -83,10 +91,10 @@ export function inspectNode(node: NavtreeNode, handler = false): InspectorNode {
 
 export type HandlerDescription = Record<string, unknown>;
 
-export const INSPECT_HANLDER = "inspectHandler";
+export const INSPECT_QUERY_KEY = "inspect";
 
 export function describeHandler(action: NavigationAction, info: HandlerDescription): void {
-	if (action.kind === "query" && action.key === INSPECT_HANLDER) {
+	if (action.kind === "query" && action.key === INSPECT_QUERY_KEY) {
 		if (!Array.isArray(action.value)) {
 			action.value = [];
 		}
@@ -99,7 +107,7 @@ export function inspectHandler(tree: NavigationTree, id: NodeId): HandlerDescrip
 	const value = [] as HandlerDescription[];
 	runHandler(tree, id, {
 		kind: "query",
-		key: INSPECT_HANLDER,
+		key: INSPECT_QUERY_KEY,
 		value,
 	});
 
