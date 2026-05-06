@@ -1,4 +1,4 @@
-import { isParent } from "@fiveway/core";
+import { isFocused } from "@fiveway/core";
 import { clsx } from "clsx";
 import { createMemo, createSignal, For, Show } from "solid-js";
 
@@ -23,14 +23,11 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 
 	const [isNodeExpanded, setExpanded] = createSignal(false);
 
-	const isFocused = createMemo(() => {
-		if (props.tree.focus == null) {
-			return false;
-		}
-		return props.tree.focus === props.node || isParent(props.node, props.tree.focus);
-	});
+	const isNodeFocused = createMemo(
+		() => props.tree.focus != null && isFocused(props.tree.focus, props.node),
+	);
 
-	const isExpanded = createMemo(() => props.tree.expanded || isNodeExpanded() || isFocused());
+	const isExpanded = createMemo(() => props.tree.expanded || isNodeExpanded() || isNodeFocused());
 
 	const isInspected = createMemo(() => (props.tree.inspected ?? "#") === props.node);
 
@@ -50,7 +47,7 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 			<div
 				class={styles.node}
 				data-root={isRoot() ? "true" : "false"}
-				data-focused={isFocused() ? "true" : "false"}
+				data-focused={isNodeFocused() ? "true" : "false"}
 				data-inspected={isInspected() ? "true" : "false"}
 				data-children={childCount() > 0 ? "true" : "false"}
 			>
@@ -89,10 +86,10 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 					<Show when={isRoot()}>
 						<ExpandButton expanded={props.tree.expanded} onToggle={devtools.toggleExpand} />
 					</Show>
-					<Show when={!isFocused() && childCount() > 0}>
+					<Show when={!isNodeFocused() && childCount() > 0}>
 						<ExpandButton expanded={isExpanded()} onToggle={() => setExpanded((o) => !o)} />
 					</Show>
-					<Show when={!isFocused()}>
+					<Show when={!isNodeFocused()}>
 						<button
 							type="button"
 							class={clsx(styles.nodeActionButton, styles.nodeActionButtonRevealOnHover)}

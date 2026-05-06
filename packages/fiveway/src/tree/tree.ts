@@ -262,12 +262,10 @@ export function dispatchAction(
 	}
 }
 
-export function isFocused(tree: NavigationTree, nodeId: NodeId): boolean {
-	if (tree.focus === nodeId) {
-		return true;
-	}
+export function isFocused(focused: NavigationTree | NodeId, nodeId: NodeId): boolean {
+	const focusedId = typeof focused === "string" ? focused : focused.focus;
 
-	return isParent(nodeId, tree.focus);
+	return focusedId === nodeId || isParent(nodeId, focusedId);
 }
 
 export function traverseNodes(
