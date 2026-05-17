@@ -12,7 +12,8 @@
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": "./dist/index.js",
-		"./dom": "./dist/dom.js"
+		"./dom": "./dist/dom.js",
+		"./inspector": "./dist/inspector.js"
 	},
 	"publishConfig": {
 		"access": "public",

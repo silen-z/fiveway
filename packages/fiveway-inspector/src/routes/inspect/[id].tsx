@@ -1,4 +1,4 @@
-import { type InspectorCommand, type InspectorMessage } from "@fiveway/core";
+import { type InspectorCommand, type InspectorMessage } from "@fiveway/core/inspector";
 import { useParams } from "@solidjs/router";
 import { createSignal, Show } from "solid-js";
 

@@ -1,4 +1,8 @@
-import { type InspectorMessage, type InspectorCommand, type InspectorNode } from "@fiveway/core";
+import {
+	type InspectorMessage,
+	type InspectorCommand,
+	type InspectorNode,
+} from "@fiveway/core/inspector";
 import { createContext, useContext, createEffect, createMemo, onCleanup } from "solid-js";
 import {} from "solid-js";
 import { createStore, produce } from "solid-js/store";

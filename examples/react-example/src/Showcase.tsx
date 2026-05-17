@@ -6,10 +6,9 @@ import {
 	initialHandler,
 	itemHandler,
 	useNavigationContext,
-	useNavigationNode,
+	useNav,
 	useOnFocusChange,
 } from "@fiveway/react";
-import { useEffect } from "react";
 
 import { ExampleBox } from "./ExampleBox.tsx";
 import { ListExample } from "./ListExample.tsx";
@@ -22,10 +21,7 @@ import css from "./Showcase.module.css";
 
 export function Showcase() {
 	const { tree } = useNavigationContext();
-	const nav = useNavigationNode({
-		id: "showcase",
-		handler: gridHandler().compose(initialHandler("start")),
-	});
+	const nav = useNav("showcase", gridHandler().compose(initialHandler("start")));
 
 	useOnFocusChange(nav.id, (id) => {
 		if (id === null) {
@@ -36,19 +32,6 @@ export function Showcase() {
 			el.scrollIntoView({ block: "center", behavior: "smooth" });
 		}
 	});
-
-	useEffect(() => {
-		const handler = (e: KeyboardEvent) => {
-			if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-				e.preventDefault();
-			}
-		};
-
-		window.addEventListener("keydown", handler);
-		return () => {
-			window.removeEventListener("keydown", handler);
-		};
-	}, []);
 
 	return (
 		<nav.Context>

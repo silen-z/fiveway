@@ -4,7 +4,7 @@ import { binarySearch } from "../lib/array.ts";
 import { joinId, type NodeId } from "./id.ts";
 import { type NavigationTree } from "./tree.ts";
 
-export type CreatedNavtreeNode = {
+export type CreatedNavigationNode = {
 	tree: NavigationTree | null;
 	id: NodeId;
 	connected: boolean;
@@ -17,7 +17,7 @@ export type CreatedNavtreeNode = {
 /**
  * A node stored inside a `NavigationTree`.
  */
-export type NavtreeNode = CreatedNavtreeNode & {
+export type NavigationNode = CreatedNavigationNode & {
 	tree: NavigationTree;
 };
 
@@ -39,7 +39,11 @@ export type NodeOptions = {
  * The `id` is combined with `parent` via `joinId`. If `handler` is omitted,
  * `defaultHandler` is used.
  */
-export function createNode(options: NodeOptions): CreatedNavtreeNode {
+export function createNode(options: NodeOptions): CreatedNavigationNode {
+	if (options.id.includes("/")) {
+		throw new Error("local node id cannot contain slashes");
+	}
+
 	return {
 		id: joinId(options.parent, options.id),
 		connected: false,
@@ -57,7 +61,7 @@ export function createNode(options: NodeOptions): CreatedNavtreeNode {
  * Changing `order` repositions the node among its parent’s children.
  */
 export function updateNode(
-	node: CreatedNavtreeNode,
+	node: CreatedNavigationNode,
 	options: Omit<NodeOptions, "id" | "parent">,
 ): void {
 	if (options.handler != null) {
@@ -69,7 +73,7 @@ export function updateNode(
 	}
 }
 
-function updateNodeOrder(node: CreatedNavtreeNode, order: number) {
+function updateNodeOrder(node: CreatedNavigationNode, order: number) {
 	if (node.order === order || node.parent === null) {
 		return;
 	}

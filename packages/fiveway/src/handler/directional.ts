@@ -1,7 +1,7 @@
 import { type NavigationAction, type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId, childLocalId } from "../tree/id.ts";
-import { type NavtreeNode } from "../tree/node.ts";
+import { type NavigationNode } from "../tree/node.ts";
 import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { type HandlerNext, parentHandler } from "./handler.ts";
@@ -15,12 +15,12 @@ import { type HandlerNext, parentHandler } from "./handler.ts";
  * @see {@link verticalHandler} for a composed handler that uses `verticalMovementHandler`.
  */
 export function verticalMovementHandler(
-	node: NavtreeNode,
+	node: NavigationNode,
 	action: NavigationAction,
 	next: HandlerNext,
 ): NodeId | null {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-		describeHandler(action, { name: "core:vertical-movement" });
+		describeHandler(action, { name: "vertical-movement" });
 	}
 
 	if (action.kind !== "move") {
@@ -75,12 +75,12 @@ export const verticalHandler: ComposedHandler = composeHandlers([
  * @see {@link horizontalHandler} for a composed handler that uses `horizontalMovementHandler`.
  */
 export function horizontalMovementHandler(
-	node: NavtreeNode,
+	node: NavigationNode,
 	action: NavigationAction,
 	next: HandlerNext,
 ): NodeId | null {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-		describeHandler(action, { name: "core:horizontal-movement" });
+		describeHandler(action, { name: "horizontal-movement" });
 	}
 
 	if (action.kind !== "move") {
@@ -126,7 +126,7 @@ export const horizontalHandler: ComposedHandler = composeHandlers([
 	parentHandler,
 ]);
 
-function findNextChild(node: NavtreeNode, check: (id: NodeId) => NodeId | null) {
+function findNextChild(node: NavigationNode, check: (id: NodeId) => NodeId | null) {
 	const currentChildId = childLocalId(node.id, node.tree.focus);
 	if (currentChildId === null) {
 		return null;
@@ -149,7 +149,7 @@ function findNextChild(node: NavtreeNode, check: (id: NodeId) => NodeId | null) 
 	return null;
 }
 
-function findPreviousChild(node: NavtreeNode, check: (id: NodeId) => NodeId | null) {
+function findPreviousChild(node: NavigationNode, check: (id: NodeId) => NodeId | null) {
 	const currentChildId = childLocalId(node.id, node.tree.focus);
 	if (currentChildId === null) {
 		return null;

@@ -6,7 +6,7 @@ import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { type NavigationHandler } from "./handler.ts";
 import { parentHandler } from "./handler.ts";
-import { type DataHandler, dataHandler } from "./metadata.ts";
+import { type DataHandler, createDataHandler } from "./metadata.ts";
 
 export type SpatialItem = {
 	left: number;
@@ -16,18 +16,18 @@ export type SpatialItem = {
 };
 
 /**
- * Stores layout bounds per node (query key `core:node-position`).
+ * Stores layout bounds per node (query key `spatialItem`).
  */
-export const spatialItemHandler: DataHandler<SpatialItem> = dataHandler("core:node-position");
+export const spatialItemHandler: DataHandler<SpatialItem> = createDataHandler("spatialItem");
 
 /**
  * Spatial movement handler used by `spatialHandler`.
  *
  * Combines spatial movement with defaults for arrow-key style navigation using rects.
  */
-export const spatialMovement: NavigationHandler = (node, action, next) => {
+export const spatialMovementHandler: NavigationHandler = (node, action, next) => {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-		describeHandler(action, { name: "core:spatial" });
+		describeHandler(action, { name: "spatial" });
 	}
 
 	if (action.kind !== "move" || action.direction === "back") {
@@ -72,7 +72,7 @@ export const spatialMovement: NavigationHandler = (node, action, next) => {
  */
 export const spatialHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false }),
-	spatialMovement,
+	spatialMovementHandler,
 	parentHandler,
 ]);
 

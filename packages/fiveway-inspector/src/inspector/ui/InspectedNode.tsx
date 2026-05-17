@@ -1,4 +1,4 @@
-import { type InspectorNode } from "@fiveway/core";
+import { type InspectorNode } from "@fiveway/core/inspector";
 import { For } from "solid-js";
 
 export function InspectedNode(props: { node: InspectorNode }) {

@@ -8,16 +8,30 @@ import {
 	inspectNode,
 } from "../inspector.ts";
 import { binarySearch } from "../lib/array.ts";
-import { notifyListeners, type NavtreeListener } from "./events.ts";
+import { notifyListeners, type FocusListener } from "./events.ts";
 import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
-import { type CreatedNavtreeNode, type NavtreeNode } from "./node.ts";
+import { type CreatedNavigationNode, type NavigationNode } from "./node.ts";
 
 export type NavigationTree = {
-	label: string;
-	nodes: Map<NodeId, NavtreeNode>;
+	/** ID of the currently focused node */
 	focus: NodeId;
+
+	/** Label of the tree, used for identification in the inspector */
+	label: string;
+
+	/**
+	 * Map of all nodes in the tree
+	 * @internal
+	 */
+	nodes: Map<NodeId, NavigationNode>;
+
+	/** @internal */
 	orphans: Map<NodeId, NodeId[]>;
-	listeners: Map<NodeId, NavtreeListener[]>;
+
+	/** @internal */
+	listeners: Map<NodeId, FocusListener[]>;
+
+	/** @internal */
 	focusLock: "free" | "locked" | "updatePending";
 };
 
@@ -29,8 +43,8 @@ export type NavigationTree = {
  */
 export function createNavigationTree(options: { label?: string } = {}): NavigationTree {
 	const tree: NavigationTree = {
-		label: options.label ?? randomLabel(),
 		focus: "#",
+		label: options.label ?? randomLabel(),
 		nodes: new Map(),
 		orphans: new Map(),
 		listeners: new Map(),
@@ -68,7 +82,7 @@ export function createNavigationTree(options: { label?: string } = {}): Navigati
  *
  * This function is mainly meant to be used by framework integrations.
  */
-export function insertNode(tree: NavigationTree, node: CreatedNavtreeNode): () => void {
+export function insertNode(tree: NavigationTree, node: CreatedNavigationNode): () => void {
 	if (node.parent === null) {
 		throw new Error("trying to insert root (or node without parent)");
 	}
@@ -79,7 +93,7 @@ export function insertNode(tree: NavigationTree, node: CreatedNavtreeNode): () =
 	}
 
 	node.tree = tree;
-	const insertedNode = node as NavtreeNode;
+	const insertedNode = node as NavigationNode;
 
 	tree.nodes.set(node.id, insertedNode);
 
@@ -95,7 +109,7 @@ export function insertNode(tree: NavigationTree, node: CreatedNavtreeNode): () =
 	};
 }
 
-function connectNode(tree: NavigationTree, parentNode: NavtreeNode, node: NavtreeNode) {
+function connectNode(tree: NavigationTree, parentNode: NavigationNode, node: NavigationNode) {
 	insertChildInOrder(parentNode, node);
 	node.connected = true;
 
@@ -129,7 +143,7 @@ function connectNode(tree: NavigationTree, parentNode: NavtreeNode, node: Navtre
  *
  * This function is mainly meant to be used by framework integrations.
  */
-export function removeNode(tree: NavigationTree, node: NodeId | NavtreeNode): void {
+export function removeNode(tree: NavigationTree, node: NodeId | NavigationNode): void {
 	const id = typeof node === "string" ? node : node.id;
 	if (id === "#") {
 		throw new Error("cannot remove root node");
@@ -356,7 +370,7 @@ export function traverseNodes(
 	}
 }
 
-function insertChildInOrder(parentNode: NavtreeNode, childNode: NavtreeNode) {
+function insertChildInOrder(parentNode: NavigationNode, childNode: NavigationNode) {
 	const oldIndex = parentNode.children.findIndex((child) => child.id === childNode.id);
 
 	if (oldIndex !== -1) {
@@ -382,11 +396,12 @@ function insertChildInOrder(parentNode: NavtreeNode, childNode: NavtreeNode) {
 	});
 }
 
-function removeChildFromParent(parentNode: NavtreeNode, childNode: NavtreeNode) {
+function removeChildFromParent(parentNode: NavigationNode, childNode: NavigationNode) {
 	// tombstone id of removed node in parent
-	const parentChildIndex = parentNode.children.findIndex((child) => child.id === childNode.id);
+	let parentChildIndex = parentNode.children.findIndex((child) => child.id === childNode.id);
 	if (parentChildIndex === -1) {
 		console.error("encountered broken tree");
+		return;
 	}
 
 	// remember the position if its not explicitly set

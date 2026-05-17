@@ -23,8 +23,8 @@ export {
 } from "./tree/tree.ts";
 
 export {
-	type CreatedNavtreeNode,
-	type NavtreeNode,
+	type CreatedNavigationNode,
+	type NavigationNode,
 	type NodeChild,
 	type NodeOptions,
 	createNode,
@@ -33,11 +33,11 @@ export {
 
 export { type NodeId, joinId, isParent, childLocalId } from "./tree/id.ts";
 
-export { type NavtreeListener, registerListener } from "./tree/events.ts";
+export { type FocusListener, registerListener } from "./tree/events.ts";
 
 export {
 	type NavigationDirection,
-	type DefinedNavigationActions as NavigationActions,
+	type DefinedNavigationActions,
 	type NavigationAction,
 	type SelectAction,
 	type MoveAction,
@@ -84,15 +84,7 @@ export {
 	type SpatialItem,
 	spatialHandler,
 	spatialItemHandler,
-	spatialMovement,
+	spatialMovementHandler,
 } from "./handler/spatial.ts";
 
-export { type DataHandler, dataHandler } from "./handler/metadata.ts";
-
-export {
-	type HandlerDescription,
-	type InspectorMessage,
-	type InspectorCommand,
-	type InspectorNode,
-	describeHandler,
-} from "./inspector.ts";
+export { type DataHandler, createDataHandler } from "./handler/metadata.ts";

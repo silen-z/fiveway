@@ -47,12 +47,12 @@ test("defaultHandler", () => {
 	insertNode(tree, item);
 
 	expect(inspectHandler(tree, container.id)).toEqual([
-		{ name: "core:focus", focusWhenEmpty: false, direction: "default" },
-		{ name: "core:parent" },
+		{ name: "focus", focusWhenEmpty: false, direction: "default" },
+		{ name: "parent" },
 	]);
 
 	expect(inspectHandler(tree, item.id)).toEqual([
-		{ name: "core:focus", focusWhenEmpty: true, direction: "default" },
-		{ name: "core:parent" },
+		{ name: "focus", focusWhenEmpty: true, direction: "default" },
+		{ name: "parent" },
 	]);
 });

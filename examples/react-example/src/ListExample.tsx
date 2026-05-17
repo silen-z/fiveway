@@ -3,7 +3,7 @@ import {
 	verticalHandler,
 	type ComposedHandler,
 	type NavigationHandler,
-	useNavigationNode,
+	useNav,
 } from "@fiveway/react";
 
 import { NavItem } from "./NavItem";
@@ -15,10 +15,7 @@ export function ListExample(props: {
 }) {
 	const handler = props.direction === "vertical" ? verticalHandler : horizontalHandler;
 
-	const nav = useNavigationNode({
-		id: "list",
-		handler: props.handler ? props.handler(handler) : handler,
-	});
+	const nav = useNav("list", props.handler ? props.handler(handler) : handler);
 
 	return (
 		<div

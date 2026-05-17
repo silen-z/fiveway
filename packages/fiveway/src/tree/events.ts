@@ -2,12 +2,12 @@ import { swapRemove } from "../lib/array.ts";
 import { type NodeId } from "./id.ts";
 import { type NavigationTree } from "./tree.ts";
 
-export type NavtreeListener = () => void;
+export type FocusListener = () => void;
 
 /**
- * Registers `handler` on `id`.
+ * Registers `listener` on `id`.
  *
- * The handler runs when a focus transition affects that node (along the converging path
+ * The listener runs when a focus transition affects that node (along the converging path
  * between old and new focus).
  *
  * Returns an unsubscribe function.
@@ -15,13 +15,13 @@ export type NavtreeListener = () => void;
 export function registerListener(
 	tree: NavigationTree,
 	id: NodeId,
-	handler: NavtreeListener,
+	listener: FocusListener,
 ): () => void {
 	const listeners = tree.listeners.get(id);
 	if (listeners != null) {
-		listeners.push(handler);
+		listeners.push(listener);
 	} else {
-		tree.listeners.set(id, [handler]);
+		tree.listeners.set(id, [listener]);
 	}
 
 	return () => {
@@ -30,7 +30,7 @@ export function registerListener(
 			return;
 		}
 
-		const index = listeners.findIndex((l) => l === handler);
+		const index = listeners.findIndex((l) => l === listener);
 		if (index === -1) {
 			return;
 		}

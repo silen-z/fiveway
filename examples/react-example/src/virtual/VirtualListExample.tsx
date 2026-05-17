@@ -1,4 +1,4 @@
-import { childLocalId, useNavigationNode, useOnFocusChange, verticalHandler } from "@fiveway/react";
+import { childLocalId, useNav, useOnFocusChange, verticalHandler } from "@fiveway/react";
 import { useState } from "react";
 
 import { NavItem } from "../NavItem.tsx";
@@ -12,9 +12,9 @@ export function VirtualListExample() {
 	const [listPosition, setListPosition] = useState(0);
 	const windowRange = offsetWindow(items.length, listPosition, 3);
 
-	const nav = useNavigationNode({
-		id: "virtual-list",
-		handler: verticalHandler.compose((node, action, next) => {
+	const nav = useNav(
+		"virtual-list",
+		verticalHandler.compose((node, action, next) => {
 			if (action.kind === "focus") {
 				const item = items[listPosition];
 				if (item == null) {
@@ -30,7 +30,7 @@ export function VirtualListExample() {
 
 			return next();
 		}),
-	});
+	);
 
 	useOnFocusChange(nav.id, (id) => {
 		if (id === null) {

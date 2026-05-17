@@ -6,7 +6,7 @@ import { type NavigationHandler, runHandler } from "./handler.ts";
 function createSelectHandler(onSelect: () => void): NavigationHandler {
 	const selectHandler: NavigationHandler = (_, action, next) => {
 		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-			describeHandler(action, { name: "core:select" });
+			describeHandler(action, { name: "select" });
 		}
 
 		if (action.kind === "select") {

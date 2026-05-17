@@ -105,14 +105,14 @@ export function useOnBlur(nodeId: NodeId | Accessor<NodeId>, handler: () => void
 	});
 }
 
-type FocusFn = (nodeId: NodeId, options?: FocusNodeOptions) => boolean;
+type FocusFn = (nodeId: NodeId, options?: FocusNodeOptions) => void;
 
 export function useFocus(scope?: NodeId): FocusFn {
 	const { tree, parentNode } = useNavigationContext();
 	scope ??= parentNode();
 
 	return (nodeId: NodeId, options?: FocusNodeOptions) => {
-		return focusNode(tree, joinId(scope, nodeId), options);
+		focusNode(tree, joinId(scope, nodeId), options);
 	};
 }
 

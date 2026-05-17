@@ -18,7 +18,6 @@ import {
 	type ParentProps,
 	createEffect,
 	createMemo,
-	on,
 	onCleanup,
 	untrack,
 } from "solid-js";
@@ -26,14 +25,12 @@ import {
 import { useNavigationContext, NavigationContext } from "./context.tsx";
 import { useIsFocused, useOnFocus } from "./hooks.ts";
 
-export type NavigationNodeOptions = {
-	id: NodeId | Accessor<NodeId>;
-	parent?: NodeId | Accessor<NodeId | undefined>;
-	order?: number | Accessor<number | undefined>;
-	handler?: NavigationHandler;
+export type NavOptions = {
+	order?: number;
+	parent?: NodeId;
 };
 
-export type NavigationNodeHandle = {
+export type Nav = {
 	(): NodeId;
 	isFocused: Accessor<boolean>;
 	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
@@ -42,35 +39,26 @@ export type NavigationNodeHandle = {
 	Context: Component<ParentProps>;
 };
 
-export function createNavigationNode(options: NavigationNodeOptions): NavigationNodeHandle {
+export function createNav(
+	id: NodeId | Accessor<NodeId>,
+	handler?: NavigationHandler,
+	options: NavOptions = {},
+): Nav {
 	const { tree, parentNode } = useNavigationContext();
 
-	const localId = () => (typeof options.id === "function" ? options.id() : options.id);
+	const parent = () => options.parent ?? parentNode();
 
-	const id = () => joinId(parent(), localId());
+	const localId = () => (typeof id === "function" ? id() : id);
 
-	const parent = () => {
-		if (typeof options.parent === "function") {
-			return options.parent() ?? parentNode();
-		}
-
-		return options.parent ?? parentNode();
-	};
-
-	const order = () => (typeof options.order === "function" ? options.order() : options.order);
+	const nodeId = () => joinId(parent(), localId());
 
 	const node = createMemo(() => {
 		return createNode({
 			parent: parent(),
 			id: localId(),
-			handler: options.handler,
-			order: untrack(order),
+			handler,
+			order: untrack(() => options.order),
 		});
-	});
-
-	const updatable = () => ({
-		handler: options.handler,
-		order: order(),
 	});
 
 	createEffect(() => {
@@ -81,10 +69,7 @@ export function createNavigationNode(options: NavigationNodeOptions): Navigation
 
 		const n = node();
 
-		// prettier-ignore
-		createEffect(on(updatable, (options) => {
-      updateNode(n, options);
-    }, { defer: true }));
+		createEffect(() => updateNode(n, { order: options.order }), { defer: true });
 
 		const cleanupNode = insertNode(tree, n);
 		onCleanup(cleanupNode);
@@ -96,7 +81,7 @@ export function createNavigationNode(options: NavigationNodeOptions): Navigation
 
 	const focus = (nodeId?: NodeId, options?: FocusNodeOptions) => {
 		const id = nodeId != null ? joinId(node().id, nodeId) : node().id;
-		return focusNode(tree, id, options);
+		focusNode(tree, id, options);
 	};
 
 	const select = (nodeId?: NodeId, options?: SelectNodeOptions) => {
@@ -106,7 +91,7 @@ export function createNavigationNode(options: NavigationNodeOptions): Navigation
 
 	// workaround for: https://github.com/solidjs/solid/issues/2352
 	// reding from node() was returning undefined
-	const handle = () => id();
+	const handle = () => nodeId();
 
 	handle.focus = focus;
 	handle.select = select;
@@ -124,24 +109,21 @@ export function createNavigationNode(options: NavigationNodeOptions): Navigation
 	return handle;
 }
 
-type NavigationNodeChildren =
-	| JSX.Element
-	| ((props: Omit<NavigationNodeHandle, "Context">) => JSX.Element);
+type NavChildren = JSX.Element | ((props: Omit<Nav, "Context">) => JSX.Element);
 
-export type NavigationNodeProps = NavigationNodeOptions & {
-	children?: NavigationNodeChildren;
+export type NavProps = NavOptions & {
+	id: NodeId;
+	handler?: NavigationHandler;
+	children?: NavChildren;
 };
 
-export function NavigationNode(props: NavigationNodeProps): JSX.Element {
-	const node = createNavigationNode(props);
+export function Nav(props: NavProps): JSX.Element {
+	const node = createNav(props.id, props.handler, props);
 
 	return <node.Context>{resolveNodeChildren(props.children, node)}</node.Context>;
 }
 
-function resolveNodeChildren(
-	children: NavigationNodeChildren,
-	node: NavigationNodeHandle,
-): JSX.Element {
+function resolveNodeChildren(children: NavChildren, node: Nav): JSX.Element {
 	return createMemo(() =>
 		typeof children === "function" ? children(node) : children,
 	) as unknown as JSX.Element;
