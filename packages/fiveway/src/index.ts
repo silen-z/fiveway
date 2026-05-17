@@ -71,7 +71,12 @@ export {
 	horizontalMovementHandler,
 } from "./handler/directional.ts";
 
-export { type GridItem, gridHandler, gridItemHandler, gridMovement } from "./handler/grid.ts";
+export {
+	type GridItem,
+	gridHandler,
+	gridItemHandler,
+	gridMovementHandler,
+} from "./handler/grid.ts";
 
 export { type SelectNodeOptions, selectNode, selectHandler } from "./handler/select.ts";
 

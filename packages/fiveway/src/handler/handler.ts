@@ -13,7 +13,7 @@ export type HandlerNext = (id?: NodeId, action?: NavigationAction) => NodeId | n
  * Handler invoked on nodes when dispatching actions.
  *
  * Composite behavior is built with `composeHandlers` and specialized handlers.
- * 
+ *
  * @see {@link NavigationAction} for available actions.
  */
 export type NavigationHandler = (

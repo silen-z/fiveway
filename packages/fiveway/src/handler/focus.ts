@@ -29,7 +29,7 @@ export type FocusHandlerOptions = {
 /**
  * Handler factory that creates a primitive focusHandler that resolves `focus` actions by walking children.
  * It can be configured by passing options.
- * 
+ *
  * This handler is the most important handler that makes focus work and is used by all core composed handlers.
  */
 function createFocusHandler(options: FocusHandlerOptions = {}): NavigationHandler {
@@ -105,9 +105,9 @@ export { createFocusHandler as focusHandler };
 
 /**
  * Data handler that provides id for the preferred first child for initial focus.
- * 
+ *
  * Requires subsequent handler such as `focusHandler` to use the provided initial child id.
- * 
+ *
  * ```ts
  * import { initialHandler, verticalHandler } from "@fiveway/core";
  *
