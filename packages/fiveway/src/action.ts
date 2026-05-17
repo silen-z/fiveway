@@ -1,5 +1,8 @@
-import { dataHandler } from "./handler/metadata.ts";
+// https://github.com/oxc-project/oxc/issues/11639
+// oxlint-disable no-unused-vars
 import { type NavigationHandler } from "./handler/handler.ts";
+import { dataHandler } from "./handler/metadata.ts";
+// oxlint-enable no-unused-vars
 
 /**
  * Basic movement directions.
@@ -70,7 +73,7 @@ export interface DefinedNavigationActions {
 
 /**
  * Type of actions dispatched to nodes in navigation tree and handled by node handlers.
- * 
+ *
  * @see {@link NavigationHandler}.
  * @see {@link DefinedNavigationActions} to extend this type with custom actions.
  */
