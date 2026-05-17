@@ -1,7 +1,7 @@
 import { type NavigationAction } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
-import { type NavtreeNode } from "../tree/node.ts";
+import { type NavigationNode } from "../tree/node.ts";
 import { type NavigationTree } from "../tree/tree.ts";
 import { composeHandlers, type ComposedHandler } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
@@ -17,7 +17,7 @@ export type HandlerNext = (id?: NodeId, action?: NavigationAction) => NodeId | n
  * @see {@link NavigationAction} for available actions.
  */
 export type NavigationHandler = (
-	node: NavtreeNode,
+	node: NavigationNode,
 	action: NavigationAction,
 	next: HandlerNext,
 ) => NodeId | null;
@@ -56,7 +56,7 @@ export function runHandler(
  */
 export const parentHandler: NavigationHandler = (node, action, next) => {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-		describeHandler(action, { name: "core:parent" });
+		describeHandler(action, { name: "parent" });
 	}
 
 	if (action.kind === "query") {

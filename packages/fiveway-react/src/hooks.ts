@@ -46,30 +46,32 @@ export function useOnFocusChange(nodeId: NodeId, handler: (id: NodeId | null) =>
 }
 
 export function useOnFocus(nodeId: NodeId, handler: () => void): void {
-	let lastFocused = false;
+	const lastFocused = useRef(false);
+
 	useOnFocusChange(nodeId, (id) => {
 		const isFocused = id !== null;
-		if (!lastFocused && isFocused) {
+		if (!lastFocused.current && isFocused) {
 			handler();
 		}
 
-		lastFocused = isFocused;
+		lastFocused.current = isFocused;
 	});
 }
 
 export function useOnBlur(nodeId: NodeId, handler: () => void): void {
-	let lastFocused = false;
+	const lastFocused = useRef(false);
+
 	useOnFocusChange(nodeId, (id) => {
 		const isFocused = id !== null;
-		if (lastFocused && !isFocused) {
+		if (lastFocused.current && !isFocused) {
 			handler();
 		}
 
-		lastFocused = isFocused;
+		lastFocused.current = isFocused;
 	});
 }
 
-type FocusFn = (nodeId: NodeId, options?: FocusNodeOptions) => boolean;
+type FocusFn = (nodeId: NodeId, options?: FocusNodeOptions) => void;
 
 export function useFocus(scope?: NodeId): FocusFn {
 	const { tree, parentNode } = useNavigationContext();
@@ -77,7 +79,7 @@ export function useFocus(scope?: NodeId): FocusFn {
 
 	return useCallback(
 		(nodeId: NodeId, options?: FocusNodeOptions) => {
-			return focusNode(tree, joinId(scope, nodeId), options);
+			focusNode(tree, joinId(scope, nodeId), options);
 		},
 		[tree, scope],
 	);

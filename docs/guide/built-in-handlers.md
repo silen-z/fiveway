@@ -82,7 +82,7 @@ The grid handler provides navigation based on a 2D grid layout.
 import { gridHandler, gridItemHandler } from "@fiveway/core";
 
 // Set grid position for a node
-gridItemHandler({ row: 0, col: 0 })(nodeHandler);
+gridItemHandler({ row: 0, col: 0 });
 
 // Create grid navigation handler
 const handler = gridHandler();
@@ -97,14 +97,14 @@ The spatial handler provides navigation based on actual DOM element positions.
 ```ts
 import { spatialHandler, spatialItemHandler } from "@fiveway/core";
 
-// Set spatial position for a node
-spatialItemHandler(element.getBoundingClientRect())(nodeHandler);
+// Attach layout bounds (query key `spatialItem`) for spatial navigation
+spatialItemHandler(() => element.getBoundingClientRect());
 
 // Create spatial navigation handler
 const handler = spatialHandler();
 ```
 
-The `spatialHandler` finds the closest node in the direction of movement based on actual DOM element positions. Each node needs to have its position set using `spatialItemHandler`.
+The `spatialHandler` finds the closest node in the direction of movement based on actual DOM element positions. Each node needs layout bounds attached with `spatialItemHandler` (query key `spatialItem`).
 
 ## Primitive handlers
 
@@ -118,17 +118,17 @@ The focus handler might be the most important handler (and the most complicated 
 import { focusHandler } from "@fiveway/core";
 
 const handler = focusHandler({
-	skipEmpty: true,
+	focusWhenEmpty: false,
 	direction: (dir) => {
 		// Custom focus direction logic
-		return dir === "up" ? "back" : "front";
+		return dir === "up" ? "backwards" : "forwards";
 	},
 });
 ```
 
 The `focusHandler` can be configured to:
 
-- Skip empty nodes when focusing
+- Allow or disallow focusing empty containers (`focusWhenEmpty`)
 - Use custom focus direction logic
 - Control which child gets focused when entering a node
 

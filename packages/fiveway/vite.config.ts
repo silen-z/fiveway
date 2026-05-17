@@ -3,7 +3,7 @@ import { defineProject } from "vite-plus";
 export default defineProject({
 	pack: {
 		platform: "neutral",
-		entry: ["src/index.ts", "src/dom.ts"],
+		entry: ["src/index.ts", "src/dom.ts", "src/inspector.ts"],
 		format: ["esm"],
 		dts: true,
 		unbundle: true,

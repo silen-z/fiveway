@@ -1,9 +1,9 @@
 import { type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId, isParent } from "../tree/id.ts";
-import { type NavtreeNode } from "../tree/node.ts";
+import { type NavigationNode } from "../tree/node.ts";
 import { type NavigationHandler } from "./handler.ts";
-import { type DataHandler, dataHandler } from "./metadata.ts";
+import { type DataHandler, createDataHandler } from "./metadata.ts";
 
 /**
  * Direction in which node children are considered for focus.
@@ -38,7 +38,7 @@ function createFocusHandler(options: FocusHandlerOptions = {}): NavigationHandle
 	const focusHandler: NavigationHandler = (node, action, next) => {
 		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 			describeHandler(action, {
-				name: "core:focus",
+				name: "focus",
 				focusWhenEmpty,
 				direction: options.direction != null ? "custom" : "default",
 			});
@@ -114,7 +114,7 @@ export { createFocusHandler as focusHandler };
  * const handler = verticalHandler.compose(initialHandler('item2'));
  * ```
  */
-export const initialHandler: DataHandler<string> = dataHandler("core:initial");
+export const initialHandler: DataHandler<string> = createDataHandler("initial");
 
 /**
  * Primitive handler that ensures the focus stays under the current node.
@@ -131,7 +131,7 @@ export const initialHandler: DataHandler<string> = dataHandler("core:initial");
  */
 export const captureHandler: NavigationHandler = (node, action, next) => {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-		describeHandler(action, { name: "core:capture" });
+		describeHandler(action, { name: "capture" });
 	}
 
 	const id = next();
@@ -142,7 +142,7 @@ export const captureHandler: NavigationHandler = (node, action, next) => {
 	return id;
 };
 
-function findInitialChild(node: NavtreeNode): NodeId | null {
+function findInitialChild(node: NavigationNode): NodeId | null {
 	const initialItem = initialHandler.query(node.tree, node.id);
 	if (initialItem === null) {
 		return null;

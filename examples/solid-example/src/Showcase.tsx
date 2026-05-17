@@ -1,6 +1,6 @@
 import {
 	captureHandler,
-	createNavigationNode,
+	createNav,
 	elementHandler,
 	gridHandler,
 	gridItemHandler,
@@ -9,7 +9,6 @@ import {
 	useNavigationContext,
 	useOnFocusChange,
 } from "@fiveway/solid";
-import { onCleanup, onMount } from "solid-js";
 
 import { ExampleBox } from "./ExampleBox.tsx";
 import { ListExample } from "./ListExample.tsx";
@@ -22,10 +21,7 @@ import css from "./Showcase.module.css";
 
 export function Showcase() {
 	const { tree } = useNavigationContext();
-	const nav = createNavigationNode({
-		id: "showcase",
-		handler: gridHandler().compose(initialHandler("start")),
-	});
+	const nav = createNav("showcase", gridHandler().compose(initialHandler("start")));
 
 	useOnFocusChange(nav, (id) => {
 		if (id === null) {
@@ -35,19 +31,6 @@ export function Showcase() {
 		if (el != null) {
 			el.scrollIntoView({ block: "center", behavior: "smooth" });
 		}
-	});
-
-	onMount(() => {
-		const handler = (e: KeyboardEvent) => {
-			if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-				e.preventDefault();
-			}
-		};
-
-		window.addEventListener("keydown", handler);
-		onCleanup(() => {
-			window.removeEventListener("keydown", handler);
-		});
 	});
 
 	return (

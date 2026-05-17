@@ -3,13 +3,7 @@ export * from "@fiveway/core/dom";
 
 export { NavigationContext, NavigationProvider, useNavigationContext } from "./context.tsx";
 
-export {
-	type NavigationNodeOptions,
-	type NavigationNodeHandle,
-	type NavigationNodeProps,
-	useNavigationNode,
-	NavigationNode,
-} from "./node.tsx";
+export { type NavOptions, type NavProps, useNav, Nav } from "./node.tsx";
 
 export {
 	useIsFocused,

@@ -48,12 +48,12 @@ export function useDispatchOnEvent(
 
 		const handler = (e: Event) => {
 			const action = mapper(e);
-			if (action === null) {
-				return;
+			if (action !== null) {
+				e.preventDefault();
+				dispatchAction(tree, action);
 			}
-
-			dispatchAction(tree, action);
 		};
+
 		target.addEventListener(eventType, handler);
 
 		onCleanup(() => {

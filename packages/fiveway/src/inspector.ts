@@ -1,7 +1,7 @@
 import { type NavigationAction } from "./action.ts";
 import { runHandler } from "./handler/handler.ts";
 import { type NodeId } from "./tree/id.ts";
-import { type NavtreeNode } from "./tree/node.ts";
+import { type NavigationNode } from "./tree/node.ts";
 import { type NavigationTree } from "./tree/tree.ts";
 
 export type InspectorCommand =
@@ -71,7 +71,7 @@ export type InspectorNode = {
 /**
  * Converts an internal node into the inspector wire format.
  */
-export function inspectNode(node: NavtreeNode, handler = false): InspectorNode {
+export function inspectNode(node: NavigationNode, handler = false): InspectorNode {
 	const children: string[] = [];
 
 	for (const child of node.children) {

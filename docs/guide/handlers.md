@@ -7,7 +7,7 @@ The handler function is defined like this:
 
 ```ts
 export type NavigationHandler = (
-	node: NavtreeNode,
+	node: NavigationNode,
 	action: NavigationAction,
 	next: (id?: NodeId, action?: NavigationAction) => NodeId | null,
 ) => NodeId | null;
@@ -30,20 +30,20 @@ Here is an example of a handler that handles `focus` and `move` actions and pass
 
 ```ts
 function exampleHandler(
-  node: NavtreeNode,
-  action: NavigationAction,
-  next: HandlerNext
-) => NodeId | null) {
-  if (action.kind === "focus") {
-    // handle focus
-  }
+	node: NavigationNode,
+	action: NavigationAction,
+	next: HandlerNext,
+): NodeId | null {
+	if (action.kind === "focus") {
+		// handle focus
+	}
 
-  if (action.kind === "move") {
-    // handle movement
-  }
+	if (action.kind === "move") {
+		// handle movement
+	}
 
-  // pass action to next handler in line
-  return next();
+	// pass action to next handler in line
+	return next();
 }
 ```
 
@@ -81,7 +81,7 @@ Sometimes you might want to create a completely new handler by combining multipl
 
 ```ts
 export const horizontalHandler = composeHandlers([
-	focusHandler({ skipEmpty: true, direction: horizontalFocusDirection }),
+	focusHandler({ focusWhenEmpty: false, direction: horizontalFocusDirection }),
 	horizontalMovementHandler,
 	parentHandler,
 ]);

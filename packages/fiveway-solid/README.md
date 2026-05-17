@@ -42,7 +42,7 @@ render(App, rootElement);
 Now your components can become navigation nodes:
 
 ```tsx
-import { createNavigationNode, horizontalHandler } from "@fiveway/solid";
+import { createNav, horizontalHandler } from "@fiveway/solid";
 import { For } from "solid-js";
 
 const items = [
@@ -52,7 +52,7 @@ const items = [
 ];
 
 function List() {
-	const nav = createNavigationNode({ id: "list", handler: horizontalHandler });
+	const nav = createNav("list", horizontalHandler);
 
 	return (
 		<nav.Context>
@@ -64,7 +64,11 @@ function List() {
 }
 
 function Item(props) {
-	const nav = createNavigationNode({ id: props.item.id, order: () => props.order });
+	const nav = createNav(props.item.id, undefined, {
+		get order() {
+			return props.order;
+		},
+	});
 
 	return <li classList={{ focused: nav.isFocused() }}>{props.item.label}</li>;
 }

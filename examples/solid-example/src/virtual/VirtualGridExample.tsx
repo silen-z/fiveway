@@ -1,5 +1,5 @@
 import {
-	createNavigationNode,
+	createNav,
 	childLocalId,
 	gridHandler,
 	gridItemHandler,
@@ -31,9 +31,9 @@ export function VirtualGridExample() {
 		(windowRange()[1] + 1) * cols - 1,
 	];
 
-	const nav = createNavigationNode({
-		id: "virtual-grid",
-		handler: gridHandler().compose((node, action, next) => {
+	const nav = createNav(
+		"virtual-grid",
+		gridHandler().compose((node, action, next) => {
 			if (action.kind === "focus") {
 				const lp = listPosition();
 				const item = items[lp - (lp % cols)];
@@ -50,7 +50,7 @@ export function VirtualGridExample() {
 
 			return next();
 		}),
-	});
+	);
 
 	useOnFocusChange(nav, (id) => {
 		if (id === null) {

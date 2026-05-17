@@ -1,7 +1,7 @@
 import { type NavigationAction } from "../action.ts";
 import { describeHandler, INSPECT_QUERY_KEY, type HandlerDescription } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
-import { type NavtreeNode } from "../tree/node.ts";
+import { type NavigationNode } from "../tree/node.ts";
 import { type NavigationHandler } from "./handler.ts";
 
 /**
@@ -10,8 +10,6 @@ import { type NavigationHandler } from "./handler.ts";
  * It can be further extended further via its `compose` method.
  */
 export type ComposedHandler = NavigationHandler & {
-	link: HandlerLink | null;
-
 	/**
 	 * Creates a new composed handler with the given handler added to the front of the chain.
 	 *
@@ -19,6 +17,9 @@ export type ComposedHandler = NavigationHandler & {
 	 * @returns A new composed handler.
 	 */
 	compose(handler: NavigationHandler | ComposedHandler): ComposedHandler;
+
+	/** @internal */
+	link: HandlerLink | null;
 };
 
 type HandlerLink = {
@@ -123,7 +124,7 @@ function cloneChain(original: HandlerLink) {
 
 function describeLinkHandler(
 	handler: NavigationHandler,
-	node: NavtreeNode,
+	node: NavigationNode,
 	action: NavigationAction,
 ): void {
 	if (action.kind === "query" && action.key === INSPECT_QUERY_KEY) {

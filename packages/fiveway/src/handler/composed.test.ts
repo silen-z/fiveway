@@ -7,7 +7,7 @@ import {
 	insertNode,
 	composeHandlers,
 	defaultHandler,
-	dataHandler,
+	createDataHandler,
 	dispatchAction,
 } from "../index.ts";
 
@@ -45,7 +45,7 @@ test("composedHandler", () => {
 test("composedHandler: meta", () => {
 	const tree = createNavigationTree();
 
-	const testHandler = dataHandler("test");
+	const testHandler = createDataHandler("test");
 
 	const node = createNode({
 		id: "node",

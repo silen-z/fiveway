@@ -51,6 +51,7 @@ export function useDispatchOnEvent(
 	handlerRef.current = (e: Event) => {
 		const action = mapper(e);
 		if (action !== null) {
+			e.preventDefault();
 			dispatchAction(tree, action);
 		}
 	};

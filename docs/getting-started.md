@@ -44,7 +44,7 @@ now your components can become navigation nodes
 ::: code-group
 
 ```jsx [React]
-import { useNavigationNode, horizontalHandler } from "@fiveway/react";
+import { useNav, horizontalHandler } from "@fiveway/react";
 
 const items = [
 	{ id: "1", label: "One" },
@@ -53,7 +53,7 @@ const items = [
 ];
 
 function List() {
-	const nav = useNavigationNode({ id: "list", handler: horizontalHandler });
+	const nav = useNav("list", horizontalHandler);
 
 	return (
 		<nav.Context>
@@ -67,7 +67,7 @@ function List() {
 }
 
 function Item(props) {
-	const nav = useNavigationNode({ id: props.item.id, order: props.order });
+	const nav = useNav(props.item.id, undefined, { order: props.order });
 
 	return <li className={nav.isFocused() && "focused"}>{props.item.label}</li>;
 }

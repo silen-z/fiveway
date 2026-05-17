@@ -4,7 +4,7 @@ import {
 	type NavigationHandler,
 	type NodeId,
 	useElementHandler,
-	useNavigationNode,
+	useNav,
 } from "@fiveway/react";
 
 import css from "./NavItem.module.css";
@@ -27,11 +27,11 @@ const goBackHandler: NavigationHandler = (_, action, next) => {
 export function NavItem(props: NavItemProps) {
 	const elementHandler = useElementHandler();
 
-	const nav = useNavigationNode({
-		id: props.navId,
-		order: props.order,
-		handler: (props.handler ?? itemHandler()).compose(goBackHandler).compose(elementHandler),
-	});
+	const nav = useNav(
+		props.navId,
+		(props.handler ?? itemHandler()).compose(goBackHandler).compose(elementHandler),
+		{ order: props.order },
+	);
 
 	return (
 		<div

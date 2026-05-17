@@ -1,7 +1,7 @@
 // https://github.com/oxc-project/oxc/issues/11639
 // oxlint-disable no-unused-vars
 import { type NavigationHandler } from "./handler/handler.ts";
-import { dataHandler } from "./handler/metadata.ts";
+import { createDataHandler } from "./handler/metadata.ts";
 // oxlint-enable no-unused-vars
 
 /**
@@ -10,10 +10,10 @@ import { dataHandler } from "./handler/metadata.ts";
 export type NavigationDirection = "up" | "down" | "left" | "right";
 
 /**
- * Action dispatched to check which node to potentianaly focus.
+ * Action dispatched to check which node to potentially focus.
  *
  * Receiving this action does not guarantee that the node will be focused,
- * only that other nodes are interested if it or its chidren can be focused.
+ * only that other nodes are interested if it or its children can be focused.
  *
  * Focus action can contain direction of movement.
  */
@@ -40,7 +40,7 @@ export type SelectAction = {
 /**
  * Action dispatched to query node metadata based on key.
  *
- * This action is meant to be used via query method of object returned from {@link dataHandler}.
+ * This action is meant to be used via the `.query()` method on handlers from {@link createDataHandler}.
  * QueryAction is resolved directly on given node and is not passed to parent nodes.
  */
 export type QueryAction = {
@@ -56,7 +56,7 @@ export type QueryAction = {
  *
  * ```ts
  * declare module "@fiveway/core" {
- * 	interface NavigationActions {
+ * 	interface DefinedNavigationActions {
  * 		["library:action"]: { kind: "library:action"; ... };
  * 	}
  * }

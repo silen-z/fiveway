@@ -5,7 +5,7 @@ import { traverseNodes } from "../tree/tree.ts";
 import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { type NavigationHandler, parentHandler } from "./handler.ts";
-import { type DataHandler, dataHandler } from "./metadata.ts";
+import { type DataHandler, createDataHandler } from "./metadata.ts";
 
 export type GridItem = {
 	row: number;
@@ -15,7 +15,7 @@ export type GridItem = {
 /**
  * Associates each item with grid coordinates (query key `gridItem`).
  */
-export const gridItemHandler: DataHandler<GridItem> = dataHandler("gridItem");
+export const gridItemHandler: DataHandler<GridItem> = createDataHandler("gridItem");
 
 /**
  * Lower-level movement handler used inside `gridHandler`; picks the nearest cell using
@@ -24,7 +24,7 @@ export const gridItemHandler: DataHandler<GridItem> = dataHandler("gridItem");
 function createGridMovement(options: GridHandlerOptions = {}): NavigationHandler {
 	const gridMovementHandler: NavigationHandler = (node, action, next) => {
 		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-			describeHandler(action, { name: "core:grid" });
+			describeHandler(action, { name: "grid" });
 		}
 
 		if (action.kind !== "move" || action.direction === "back") {

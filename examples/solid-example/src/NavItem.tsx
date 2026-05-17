@@ -1,6 +1,6 @@
 import {
 	createElementHandler,
-	createNavigationNode,
+	createNav,
 	itemHandler,
 	type ComposedHandler,
 	type NavigationHandler,
@@ -26,10 +26,12 @@ const goBackHandler: NavigationHandler = (_, action, next) => {
 export function NavItem(props: NavItemProps) {
 	const elementHandler = createElementHandler();
 
-	const nav = createNavigationNode({
-		id: props.navId,
-		order: props.order,
-		handler: (props.handler ?? itemHandler()).compose(goBackHandler).compose(elementHandler),
+	const baseHandler = props.handler ?? itemHandler();
+
+	const nav = createNav(props.navId, baseHandler.compose(goBackHandler).compose(elementHandler), {
+		get order() {
+			return props.order;
+		},
 	});
 
 	return (
