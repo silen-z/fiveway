@@ -4,21 +4,17 @@ import { binarySearch } from "../lib/array.ts";
 import { joinId, type NodeId } from "./id.ts";
 import { type NavigationTree } from "./tree.ts";
 
-export type CreatedNavigationNode = {
-	tree: NavigationTree | null;
+/**
+ * A node stored inside a `NavigationTree`.
+ */
+export type NavigationNode = {
+	tree: NavigationTree;
 	id: NodeId;
 	connected: boolean;
 	parent: NodeId | null;
 	order: number | null;
 	handler: NavigationHandler;
 	children: NodeChild[];
-};
-
-/**
- * A node stored inside a `NavigationTree`.
- */
-export type NavigationNode = CreatedNavigationNode & {
-	tree: NavigationTree;
 };
 
 /**
@@ -31,6 +27,13 @@ export type NodeOptions = {
 	parent: NodeId;
 	order?: number;
 	handler?: NavigationHandler;
+};
+
+/**
+ * Special case of {@link NavigationNode} that might not be inserted into a tree yet
+ */
+export type CreatedNavigationNode = Omit<NavigationNode, "tree"> & {
+	tree: NavigationTree | null;
 };
 
 /**
