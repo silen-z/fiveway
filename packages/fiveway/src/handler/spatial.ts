@@ -9,10 +9,8 @@ import { parentHandler } from "./handler.ts";
 import { type DataHandler, createDataHandler } from "./metadata.ts";
 
 export type SpatialItem = {
-	left: number;
-	top: number;
-	width: number;
-	height: number;
+	x: number;
+	y: number;
 };
 
 /**
@@ -39,10 +37,10 @@ export const spatialMovementHandler: NavigationHandler = (node, action, next) =>
 		return next();
 	}
 
-	const isCorrectDirection = directionFilters[action.direction];
-
 	let closestId: NodeId | null = null;
 	let shortestDistance: number | null = null;
+
+	const direction = action.direction;
 
 	traverseNodes(node.tree, node.id, 1, (id) => {
 		const pos = spatialItemHandler.query(node.tree, id);
@@ -50,12 +48,9 @@ export const spatialMovementHandler: NavigationHandler = (node, action, next) =>
 			return;
 		}
 
-		if (!isCorrectDirection(focusedPos, pos)) {
-			return;
-		}
-
-		const distance = distanceSquared(focusedPos, pos);
+		const distance = distanceSquared(focusedPos, pos, direction);
 		if (
+			distance !== null &&
 			(shortestDistance === null || distance < shortestDistance) &&
 			next(id, { kind: "focus", direction: null }) !== null
 		) {
@@ -76,28 +71,22 @@ export const spatialHandler: ComposedHandler = composeHandlers([
 	parentHandler,
 ]);
 
-type DirectionFilter = (current: SpatialItem, potential: SpatialItem) => boolean;
-
-const directionFilters: Record<NavigationDirection, DirectionFilter> = {
-	up: (current, potential) =>
-		Math.floor(potential.top + potential.height) <= Math.ceil(current.top),
-	down: (current, potential) =>
-		Math.ceil(potential.top) >= Math.floor(current.top + current.height),
-	left: (current, potential) =>
-		Math.floor(potential.left + potential.width) <= Math.ceil(current.left),
-	right: (current, potential) =>
-		Math.ceil(potential.left) >= Math.floor(current.left + current.width),
+/** Unit vectors from candidate toward focused, per move direction. */
+const directionVector: Record<NavigationDirection, readonly [number, number]> = {
+	left: [1, 0],
+	right: [-1, 0],
+	up: [0, 1],
+	down: [0, -1],
 };
 
-function distanceSquared(a: SpatialItem, b: SpatialItem) {
-	const ax = a.left + a.width * 0.5;
-	const ay = a.top + a.height * 0.5;
+function distanceSquared(a: SpatialItem, b: SpatialItem, direction: NavigationDirection) {
+	const dx = a.x - b.x;
+	const dy = a.y - b.y;
 
-	const bx = b.left + b.width * 0.5;
-	const by = b.top + b.height * 0.5;
-
-	const dx = ax - bx;
-	const dy = ay - by;
+	const [sx, sy] = directionVector[direction];
+	if (dx * sx + dy * sy <= 0) {
+		return null;
+	}
 
 	return dx * dx + dy * dy;
 }
