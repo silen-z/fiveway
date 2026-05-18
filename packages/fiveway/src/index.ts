@@ -72,7 +72,10 @@ export {
 } from "./handler/directional.ts";
 
 export {
+	type GridHandler,
 	type GridItem,
+	type GridHandlerOptions,
+	type GridDistanceFunction,
 	gridHandler,
 	gridItemHandler,
 	gridMovementHandler,

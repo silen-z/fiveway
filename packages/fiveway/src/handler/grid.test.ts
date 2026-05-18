@@ -17,7 +17,7 @@ import {
 test("gridHandler", async () => {
 	const { tree, nodes } = createTreeFromSpec({
 		id: "grid",
-		handler: gridHandler(),
+		handler: gridHandler,
 	});
 
 	for (let row = 1; row <= 3; row++) {

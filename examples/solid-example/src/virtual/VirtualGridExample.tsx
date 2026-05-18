@@ -33,7 +33,7 @@ export function VirtualGridExample() {
 
 	const nav = createNavnode(
 		"virtual-grid",
-		gridHandler().compose((node, action, next) => {
+		gridHandler.compose((node, action, next) => {
 			if (action.kind === "focus") {
 				const lp = listPosition();
 				const item = items[lp - (lp % cols)];
