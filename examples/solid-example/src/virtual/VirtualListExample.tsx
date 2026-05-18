@@ -1,4 +1,4 @@
-import { createNav, childLocalId, useOnFocusChange, verticalHandler } from "@fiveway/solid";
+import { createNavnode, childLocalId, useOnFocusChange, verticalHandler } from "@fiveway/solid";
 import { createMemo, createSignal, For } from "solid-js";
 
 import { NavItem } from "../NavItem.tsx";
@@ -12,7 +12,7 @@ export function VirtualListExample() {
 	const [listPosition, setListPosition] = createSignal(0);
 	const windowRange = () => offsetWindow(items.length, listPosition(), 3);
 
-	const nav = createNav(
+	const nav = createNavnode(
 		"virtual-list",
 		verticalHandler.compose((node, action, next) => {
 			if (action.kind === "focus") {

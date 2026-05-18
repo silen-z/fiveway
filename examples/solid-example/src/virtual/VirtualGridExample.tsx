@@ -1,5 +1,5 @@
 import {
-	createNav,
+	createNavnode,
 	childLocalId,
 	gridHandler,
 	gridItemHandler,
@@ -31,7 +31,7 @@ export function VirtualGridExample() {
 		(windowRange()[1] + 1) * cols - 1,
 	];
 
-	const nav = createNav(
+	const nav = createNavnode(
 		"virtual-grid",
 		gridHandler().compose((node, action, next) => {
 			if (action.kind === "focus") {

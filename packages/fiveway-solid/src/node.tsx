@@ -25,12 +25,12 @@ import {
 import { useNavigationContext, NavigationContext } from "./context.tsx";
 import { useIsFocused, useOnFocus } from "./hooks.ts";
 
-export type NavOptions = {
+export type NavnodeOptions = {
 	order?: number;
 	parent?: NodeId;
 };
 
-export type Nav = {
+export type Navnode = {
 	(): NodeId;
 	isFocused: Accessor<boolean>;
 	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
@@ -39,11 +39,11 @@ export type Nav = {
 	Context: Component<ParentProps>;
 };
 
-export function createNav(
+export function createNavnode(
 	id: NodeId | Accessor<NodeId>,
 	handler?: NavigationHandler,
-	options: NavOptions = {},
-): Nav {
+	options: NavnodeOptions = {},
+): Navnode {
 	const { tree, parentNode } = useNavigationContext();
 
 	const parent = () => options.parent ?? parentNode();
@@ -109,21 +109,21 @@ export function createNav(
 	return handle;
 }
 
-type NavChildren = JSX.Element | ((props: Omit<Nav, "Context">) => JSX.Element);
+type NavnodeChildren = JSX.Element | ((props: Omit<Navnode, "Context">) => JSX.Element);
 
-export type NavProps = NavOptions & {
+export type NavnodeProps = NavnodeOptions & {
 	id: NodeId;
 	handler?: NavigationHandler;
-	children?: NavChildren;
+	children?: NavnodeChildren;
 };
 
-export function Nav(props: NavProps): JSX.Element {
-	const node = createNav(props.id, props.handler, props);
+export function Navnode(props: NavnodeProps): JSX.Element {
+	const node = createNavnode(props.id, props.handler, props);
 
 	return <node.Context>{resolveNodeChildren(props.children, node)}</node.Context>;
 }
 
-function resolveNodeChildren(children: NavChildren, node: Nav): JSX.Element {
+function resolveNodeChildren(children: NavnodeChildren, node: Navnode): JSX.Element {
 	return createMemo(() =>
 		typeof children === "function" ? children(node) : children,
 	) as unknown as JSX.Element;

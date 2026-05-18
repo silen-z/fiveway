@@ -1,5 +1,5 @@
 import {
-	createNav,
+	createNavnode,
 	horizontalHandler,
 	verticalHandler,
 	type ComposedHandler,
@@ -16,7 +16,7 @@ export function ListExample(props: {
 }) {
 	const baseHandler = props.direction === "vertical" ? verticalHandler : horizontalHandler;
 
-	const nav = createNav("list", props.handler ? props.handler(baseHandler) : baseHandler);
+	const nav = createNavnode("list", props.handler ? props.handler(baseHandler) : baseHandler);
 
 	return (
 		<div

@@ -26,12 +26,12 @@ import {
 
 import { NavigationContext, useNavigationContext } from "./context.tsx";
 
-export type NavOptions = {
+export type NavnodeOptions = {
 	parent?: NodeId;
 	order?: number;
 };
 
-export type Nav = {
+export type Navnode = {
 	id: NodeId;
 	isFocused: () => boolean;
 	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
@@ -41,7 +41,11 @@ export type Nav = {
 
 const NULL_NODE = {} as CreatedNavigationNode;
 
-export function useNav(id: NodeId, handler?: NavigationHandler, options: NavOptions = {}): Nav {
+export function useNavnode(
+	id: NodeId,
+	handler?: NavigationHandler,
+	options: NavnodeOptions = {},
+): Navnode {
 	const { tree, parentNode } = useNavigationContext();
 	const parent = options.parent ?? parentNode;
 
@@ -78,7 +82,7 @@ export function useNav(id: NodeId, handler?: NavigationHandler, options: NavOpti
 		selectNode(tree, id, options);
 	};
 
-	const Context: Nav["Context"] = useCallback(
+	const Context: Navnode["Context"] = useCallback(
 		(props: { children: ReactNode }) => {
 			const context = {
 				tree: tree,
@@ -97,14 +101,14 @@ export function useNav(id: NodeId, handler?: NavigationHandler, options: NavOpti
 	return { id: nodeId, isFocused, focus, select, Context };
 }
 
-export type NavProps = NavOptions & {
+export type NavnodeProps = NavnodeOptions & {
 	id: NodeId;
 	handler?: NavigationHandler;
-	children?: ReactNode | ((props: Omit<Nav, "Context">) => ReactNode);
+	children?: ReactNode | ((props: Omit<Navnode, "Context">) => ReactNode);
 };
 
-export function Nav({ children, ...props }: NavProps): ReactNode {
-	const { Context, ...node } = useNav(props.id, props.handler, props);
+export function Navnode({ children, ...props }: NavnodeProps): ReactNode {
+	const { Context, ...node } = useNavnode(props.id, props.handler, props);
 
 	return <Context>{typeof children === "function" ? children(node) : children}</Context>;
 }
