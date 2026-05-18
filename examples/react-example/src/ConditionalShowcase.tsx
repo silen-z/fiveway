@@ -1,11 +1,17 @@
-import { containerHandler, horizontalHandler, itemHandler, Nav, useNav } from "@fiveway/react";
+import {
+	containerHandler,
+	horizontalHandler,
+	itemHandler,
+	Navnode,
+	useNavnode,
+} from "@fiveway/react";
 import { useState } from "react";
 import { flushSync } from "react-dom";
 
 import css from "./Showcase.module.css";
 
 export function ConditionalShowcase() {
-	const nav = useNav("section", horizontalHandler);
+	const nav = useNavnode("section", horizontalHandler);
 
 	const [isOn, setOn] = useState(false);
 
@@ -13,7 +19,7 @@ export function ConditionalShowcase() {
 		<div className={css.section} data-is-focused={nav.isFocused()}>
 			<div style={{ display: "flex" }}>
 				<nav.Context>
-					<Nav
+					<Navnode
 						id="toggle"
 						handler={itemHandler(() => {
 							flushSync(() => {
@@ -29,11 +35,11 @@ export function ConditionalShowcase() {
 								{isOn ? "hide" : "show"}
 							</button>
 						)}
-					</Nav>
+					</Navnode>
 
-					<Nav id="content" handler={containerHandler}>
+					<Navnode id="content" handler={containerHandler}>
 						{isOn && (
-							<Nav
+							<Navnode
 								id="parking"
 								handler={itemHandler(() => {
 									setOn(false);
@@ -45,9 +51,9 @@ export function ConditionalShowcase() {
 										remove
 									</button>
 								)}
-							</Nav>
+							</Navnode>
 						)}
-					</Nav>
+					</Navnode>
 				</nav.Context>
 			</div>
 		</div>

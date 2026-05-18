@@ -1,4 +1,4 @@
-import { captureHandler, spatialHandler, useNav } from "@fiveway/react";
+import { captureHandler, spatialHandler, useNavnode } from "@fiveway/react";
 import { type CSSProperties } from "react";
 
 import { NavItem } from "./NavItem.tsx";
@@ -6,7 +6,7 @@ import { NavItem } from "./NavItem.tsx";
 import css from "./SpatialExample.module.css";
 
 export function SpatialExample() {
-	const nav = useNav("spatial", spatialHandler.compose(captureHandler));
+	const nav = useNavnode("spatial", spatialHandler.compose(captureHandler));
 
 	return (
 		<nav.Context>

@@ -1,6 +1,6 @@
 import {
 	createElementHandler,
-	createNav,
+	createNavnode,
 	itemHandler,
 	type ComposedHandler,
 	type NavigationHandler,
@@ -28,11 +28,15 @@ export function NavItem(props: NavItemProps) {
 
 	const baseHandler = props.handler ?? itemHandler();
 
-	const nav = createNav(props.navId, baseHandler.compose(goBackHandler).compose(elementHandler), {
-		get order() {
-			return props.order;
+	const nav = createNavnode(
+		props.navId,
+		baseHandler.compose(goBackHandler).compose(elementHandler),
+		{
+			get order() {
+				return props.order;
+			},
 		},
-	});
+	);
 
 	return (
 		<div tabIndex={0} onFocus={() => nav.focus()} ref={elementHandler.register} class={css.item}>

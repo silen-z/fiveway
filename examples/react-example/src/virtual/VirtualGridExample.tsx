@@ -3,7 +3,7 @@ import {
 	gridHandler,
 	gridItemHandler,
 	itemHandler,
-	useNav,
+	useNavnode,
 	useOnFocusChange,
 } from "@fiveway/react";
 import { type CSSProperties, useState } from "react";
@@ -28,7 +28,7 @@ export function VirtualGridExample() {
 	const windowRange = offsetWindow(rows, itemRowIndex, 1, 2);
 	const gridRange: [number, number] = [windowRange[0] * cols, (windowRange[1] + 1) * cols - 1];
 
-	const nav = useNav(
+	const nav = useNavnode(
 		"virtual-grid",
 		gridHandler().compose((node, action, next) => {
 			if (action.kind === "focus") {

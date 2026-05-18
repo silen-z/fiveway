@@ -3,7 +3,7 @@ import {
 	containerHandler,
 	gridItemHandler,
 	type NodeId,
-	useNav,
+	useNavnode,
 } from "@fiveway/react";
 import { type ReactNode } from "react";
 
@@ -18,7 +18,7 @@ type ExampleBoxProps = {
 };
 
 export function ExampleBox(props: ExampleBoxProps) {
-	const nav = useNav(props.navId, containerHandler.compose(gridItemHandler(props.gridPos)));
+	const nav = useNavnode(props.navId, containerHandler.compose(gridItemHandler(props.gridPos)));
 
 	return (
 		<nav.Context>

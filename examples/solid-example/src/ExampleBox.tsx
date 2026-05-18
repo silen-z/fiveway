@@ -1,7 +1,7 @@
 import {
 	type GridItem,
 	containerHandler,
-	createNav,
+	createNavnode,
 	gridItemHandler,
 	type NodeId,
 } from "@fiveway/solid";
@@ -18,7 +18,7 @@ type ExampleBoxProps = {
 };
 
 export function ExampleBox(props: ExampleBoxProps) {
-	const nav = createNav(
+	const nav = createNavnode(
 		() => props.navId,
 		containerHandler.compose(gridItemHandler(props.gridPos)),
 	);

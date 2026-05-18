@@ -41,7 +41,7 @@ ReactDOM.createRoot(rootElement).render(<App />);
 Now your components can become navigation nodes:
 
 ```tsx
-import { useNav, horizontalHandler } from "@fiveway/react";
+import { useNavnode, horizontalHandler } from "@fiveway/react";
 
 const items = [
 	{ id: "1", label: "One" },
@@ -50,7 +50,7 @@ const items = [
 ];
 
 function List() {
-	const nav = useNav("list", horizontalHandler);
+	const nav = useNavnode("list", horizontalHandler);
 
 	return (
 		<nav.Context>
@@ -64,7 +64,7 @@ function List() {
 }
 
 function Item(props) {
-	const nav = useNav(props.item.id, undefined, { order: props.order });
+	const nav = useNavnode(props.item.id, undefined, { order: props.order });
 
 	return <li className={nav.isFocused() && "focused"}>{props.item.label}</li>;
 }

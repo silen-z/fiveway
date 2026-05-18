@@ -1,4 +1,4 @@
-import { captureHandler, createNav, spatialHandler } from "@fiveway/solid";
+import { captureHandler, createNavnode, spatialHandler } from "@fiveway/solid";
 import { type JSX } from "solid-js";
 
 import { NavItem } from "./NavItem.tsx";
@@ -6,7 +6,7 @@ import { NavItem } from "./NavItem.tsx";
 import css from "./SpatialExample.module.css";
 
 export function SpatialExample() {
-	const nav = createNav("spatial", spatialHandler.compose(captureHandler));
+	const nav = createNavnode("spatial", spatialHandler.compose(captureHandler));
 
 	return (
 		<nav.Context>

@@ -39,7 +39,7 @@ ReactDOM.createRoot(rootElement).render(<App />);
 Now your components can become navigation nodes:
 
 ```tsx
-import { useNav, horizontalHandler } from "@fiveway/react";
+import { useNavnode, horizontalHandler } from "@fiveway/react";
 
 const items = [
 	{ id: "1", label: "One" },
@@ -48,7 +48,7 @@ const items = [
 ];
 
 function List() {
-	const nav = useNav("list", horizontalHandler);
+	const nav = useNavnode("list", horizontalHandler);
 
 	return (
 		<nav.Context>
@@ -62,7 +62,7 @@ function List() {
 }
 
 function Item(props) {
-	const nav = useNav(props.item.id, undefined, { order: props.order });
+	const nav = useNavnode(props.item.id, undefined, { order: props.order });
 
 	return <li className={nav.isFocused() && "focused"}>{props.item.label}</li>;
 }
@@ -73,6 +73,6 @@ Check out the full guide at: https://fiveway.io/getting-started
 ## Packages
 
 - **@fiveway/core** — Core library: navigation tree, nodes, handlers, actions, and DOM utilities
-- **@fiveway/react** — React integration (NavigationProvider, useNav, useDispatchOnEvent)
-- **@fiveway/solid** — SolidJS integration (NavigationProvider, createNav, useDispatchOnEvent)
+- **@fiveway/react** — React integration (NavigationProvider, useNavnode, useDispatchOnEvent)
+- **@fiveway/solid** — SolidJS integration (NavigationProvider, createNavnode, useDispatchOnEvent)
 - **@fiveway/inspector** — Inspector UI for inspecting and debugging the navigation tree in the browser
