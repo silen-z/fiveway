@@ -20,7 +20,7 @@
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 
-		"types": ["vite/client"]
+		"types": ["vite-plus/client"]
 	},
 	"include": ["src/**/*.ts", "src/**/*.tsx"],
 	"exclude": ["node_modules"],
