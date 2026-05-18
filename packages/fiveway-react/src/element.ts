@@ -21,7 +21,14 @@ export function useElementHandler(): ElementHandler {
 		const handler = composeHandlers([
 			elementHandler(() => elementRef.current),
 			spatialItemHandler(() => {
-				return elementRef.current?.getBoundingClientRect() ?? null;
+				const rect = elementRef.current?.getBoundingClientRect();
+				if (rect == null) {
+					return null;
+				}
+				return {
+					x: rect.left + rect.width * 0.5,
+					y: rect.top + rect.height * 0.5,
+				};
 			}),
 		]) as ElementHandler;
 

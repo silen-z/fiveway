@@ -16,7 +16,16 @@ export type ElementHandler = ComposedHandler & {
 
 export function createElementHandler(): ElementHandler {
 	const [element, setElement] = createSignal<HTMLElement | null>(null);
-	const position = () => element()?.getBoundingClientRect() ?? null;
+	const position = () => {
+		const rect = element()?.getBoundingClientRect();
+		if (rect == null) {
+			return null;
+		}
+		return {
+			x: rect.left + rect.width * 0.5,
+			y: rect.top + rect.height * 0.5,
+		};
+	};
 
 	// handlers doen't need to be reactive
 	const handler = composeHandlers([
