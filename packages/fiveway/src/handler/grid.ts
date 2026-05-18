@@ -31,6 +31,8 @@ function createGridMovement(options: GridHandlerOptions = {}): NavigationHandler
 			return next();
 		}
 
+		const direction = action.direction;
+
 		const focusedId = childLocalId(node.id, node.tree.focus);
 		if (focusedId === null) {
 			return next();
@@ -41,10 +43,7 @@ function createGridMovement(options: GridHandlerOptions = {}): NavigationHandler
 			return next();
 		}
 
-		const getDistance =
-			options.distance != null
-				? options.distance(action.direction)
-				: defaultDistance(action.direction);
+		const getDistance = options.distance ?? defaultDistance;
 
 		let closestId: NodeId | null = null;
 		let shortestDistance: number | null = null;
@@ -55,7 +54,7 @@ function createGridMovement(options: GridHandlerOptions = {}): NavigationHandler
 				return;
 			}
 
-			const distance = getDistance(focusedPos, pos);
+			const distance = getDistance(focusedPos, pos, direction);
 			if (distance === null) {
 				return;
 			}
@@ -70,7 +69,7 @@ function createGridMovement(options: GridHandlerOptions = {}): NavigationHandler
 		});
 
 		if (closestId != null) {
-			return next(closestId, { kind: "focus", direction: action.direction });
+			return next(closestId, { kind: "focus", direction });
 		}
 
 		return next();
@@ -81,6 +80,16 @@ function createGridMovement(options: GridHandlerOptions = {}): NavigationHandler
 
 export { createGridMovement as gridMovementHandler };
 
+export type GridDistanceFunction = (
+	a: GridItem,
+	b: GridItem,
+	direction: NavigationDirection,
+) => number | null;
+
+export type GridHandlerOptions = {
+	distance?: GridDistanceFunction;
+};
+
 /**
  * Composes `focusHandler({ focusWhenEmpty: false })`, `gridMovement` (with optional
  * `distance`), and `parentHandler`.
@@ -88,14 +97,39 @@ export { createGridMovement as gridMovementHandler };
  * Optional `distance` overrides how the nearest cell is chosen for each arrow direction;
  * defaults use row/column heuristics.
  */
-export const gridHandler = (options: GridHandlerOptions = {}): ComposedHandler =>
+const createGridHandler = (options: GridHandlerOptions = {}): ComposedHandler =>
 	composeHandlers([
 		focusHandler({ focusWhenEmpty: false }),
 		createGridMovement(options),
 		parentHandler,
 	]);
 
-const defaultDistanceDown = (current: GridItem, potential: GridItem) => {
+export type GridHandler = ComposedHandler & {
+	withOptions: (options: GridHandlerOptions) => ComposedHandler;
+};
+
+const gridHandler = createGridHandler() as GridHandler;
+gridHandler.withOptions = createGridHandler;
+
+export { gridHandler };
+
+function defaultDistance(a: GridItem, b: GridItem, direction: NavigationDirection) {
+	switch (direction) {
+		case "up":
+			return defaultDistanceUp(a, b);
+
+		case "down":
+			return defaultDistanceDown(a, b);
+
+		case "left":
+			return defaultDistanceLeft(a, b);
+
+		case "right":
+			return defaultDistanceRight(a, b);
+	}
+}
+
+function defaultDistanceDown(current: GridItem, potential: GridItem) {
 	const rowDistance = potential.row - current.row;
 	if (rowDistance <= 0) {
 		return null;
@@ -107,9 +141,9 @@ const defaultDistanceDown = (current: GridItem, potential: GridItem) => {
 	}
 
 	return rowDistance + Math.abs(colDistance);
-};
+}
 
-const defaultDistanceUp = (current: GridItem, potential: GridItem) => {
+function defaultDistanceUp(current: GridItem, potential: GridItem) {
 	const rowDistance = current.row - potential.row;
 	if (rowDistance <= 0) {
 		return null;
@@ -121,9 +155,9 @@ const defaultDistanceUp = (current: GridItem, potential: GridItem) => {
 	}
 
 	return rowDistance + Math.abs(colDistance);
-};
+}
 
-const defaultDistanceLeft = (current: GridItem, potential: GridItem) => {
+function defaultDistanceLeft(current: GridItem, potential: GridItem) {
 	const colDistance = current.col - potential.col;
 	if (colDistance <= 0) {
 		return null;
@@ -135,9 +169,9 @@ const defaultDistanceLeft = (current: GridItem, potential: GridItem) => {
 	}
 
 	return colDistance + Math.abs(rowDistance);
-};
+}
 
-const defaultDistanceRight = (current: GridItem, potential: GridItem) => {
+function defaultDistanceRight(current: GridItem, potential: GridItem) {
 	const colDistance = potential.col - current.col;
 	if (colDistance <= 0) {
 		return null;
@@ -149,28 +183,4 @@ const defaultDistanceRight = (current: GridItem, potential: GridItem) => {
 	}
 
 	return colDistance + Math.abs(rowDistance);
-};
-
-const defaultDistance: DistanceFunction = (direction: NavigationDirection) => {
-	switch (direction) {
-		case "up":
-			return defaultDistanceUp;
-
-		case "down":
-			return defaultDistanceDown;
-
-		case "left":
-			return defaultDistanceLeft;
-
-		case "right":
-			return defaultDistanceRight;
-	}
-};
-
-type DistanceFunction = (
-	direction: NavigationDirection,
-) => (a: GridItem, b: GridItem) => number | null;
-
-type GridHandlerOptions = {
-	distance?: DistanceFunction;
-};
+}

@@ -1,6 +1,5 @@
 import { type NavigationAction, type NavigationDirection } from "../action.ts";
-import { focusHandler } from "../handler/focus.ts";
-import { runHandler } from "../handler/handler.ts";
+import { defaultHandler, runHandler } from "../handler/handler.ts";
 import {
 	type InspectorCommand,
 	emitInspectorMessage,
@@ -57,7 +56,7 @@ export function createNavigationTree(options: { label?: string } = {}): Navigati
 		connected: true,
 		parent: null,
 		order: 0,
-		handler: focusHandler(),
+		handler: defaultHandler,
 		children: [],
 	});
 

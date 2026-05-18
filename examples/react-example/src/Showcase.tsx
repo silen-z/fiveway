@@ -21,7 +21,7 @@ import css from "./Showcase.module.css";
 
 export function Showcase() {
 	const { tree } = useNavigationContext();
-	const nav = useNavnode("showcase", gridHandler().compose(initialHandler("start")));
+	const nav = useNavnode("showcase", gridHandler.compose(initialHandler("start")));
 
 	useOnFocusChange(nav.id, (id) => {
 		if (id === null) {
