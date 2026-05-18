@@ -21,7 +21,7 @@
 		"target": "es2022",
 		"lib": ["es2022", "dom", "dom.iterable"],
 
-		"types": ["vitest/importMeta"]
+		"types": ["vite-plus/test/importMeta"]
 	},
 	"include": ["src/**/*.ts"],
 	"exclude": ["node_modules"]

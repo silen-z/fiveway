@@ -1,5 +1,5 @@
 import solid from "vite-plugin-solid";
-import { defineProject } from "vite-plus";
+import { defineProject, type Plugin } from "vite-plus";
 
 export default defineProject({
 	pack: [
@@ -22,7 +22,7 @@ export default defineProject({
 			outDir: "dist/esm",
 			dts: true,
 			unbundle: true,
-			plugins: [solid()],
+			plugins: [solid() as Plugin],
 		},
 	],
 });
