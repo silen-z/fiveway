@@ -1,10 +1,11 @@
-import { type NavigationDirection } from "../action.ts";
+import { type NavigationAction, type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId, childLocalId } from "../tree/id.ts";
+import { type NavigationNode } from "../tree/node.ts";
 import { traverseNodes } from "../tree/tree.ts";
 import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
-import { type NavigationHandler, parentHandler } from "./handler.ts";
+import { type HandlerNext, parentHandler } from "./handler.ts";
 import { type DataHandler, createDataHandler } from "./metadata.ts";
 
 export type GridItem = {
@@ -18,169 +19,160 @@ export type GridItem = {
 export const gridItemHandler: DataHandler<GridItem> = createDataHandler("gridItem");
 
 /**
- * Lower-level movement handler used inside `gridHandler`; picks the nearest cell using
- * `gridItemHandler` positions.
+ * Grid movement handler used by `gridHandler`.
+ *
+ * Picks the nearest cell using {@link defaultDistance} and `gridItemHandler` positions.
  */
-function createGridMovement(options: GridHandlerOptions = {}): NavigationHandler {
-	const gridMovementHandler: NavigationHandler = (node, action, next) => {
-		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-			describeHandler(action, { name: "grid" });
-		}
+export function gridMovementHandler(
+	node: NavigationNode,
+	action: NavigationAction,
+	next: HandlerNext,
+): NodeId | null {
+	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
+		describeHandler(action, { name: "grid" });
+	}
 
-		if (action.kind !== "move" || action.direction === "back") {
-			return next();
-		}
-
-		const direction = action.direction;
-
-		const focusedId = childLocalId(node.id, node.tree.focus);
-		if (focusedId === null) {
-			return next();
-		}
-
-		const focusedPos = gridItemHandler.query(node.tree, focusedId);
-		if (focusedPos == null) {
-			return next();
-		}
-
-		const getDistance = options.distance ?? defaultDistance;
-
-		let closestId: NodeId | null = null;
-		let shortestDistance: number | null = null;
-
-		traverseNodes(node.tree, node.id, 1, (id) => {
-			const pos = gridItemHandler.query(node.tree, id);
-			if (pos === null) {
-				return;
-			}
-
-			const distance = getDistance(focusedPos, pos, direction);
-			if (distance === null) {
-				return;
-			}
-
-			if (
-				(shortestDistance === null || distance < shortestDistance) &&
-				next(id, { kind: "focus", direction: null }) !== null
-			) {
-				closestId = id;
-				shortestDistance = distance;
-			}
-		});
-
-		if (closestId != null) {
-			return next(closestId, { kind: "focus", direction });
-		}
-
+	if (action.kind !== "move" || action.direction === "back") {
 		return next();
-	};
+	}
 
-	return gridMovementHandler;
+	const direction = action.direction;
+
+	const focusedId = childLocalId(node.id, node.tree.focus);
+	if (focusedId === null) {
+		return next();
+	}
+
+	const focusedPos = gridItemHandler.query(node.tree, focusedId);
+	if (focusedPos == null) {
+		return next();
+	}
+
+	// const focusDirection = direction === "forwards" || direction === "backwards" ? direction : null;
+
+	let closestId: NodeId | null = null;
+	let shortestDistance: number | null = null;
+
+	traverseNodes(node.tree, node.id, 1, (id) => {
+		const pos = gridItemHandler.query(node.tree, id);
+		if (pos === null) {
+			return;
+		}
+
+		const distance = getDistance(focusedPos, pos, direction);
+		if (distance === null) {
+			return;
+		}
+
+		if (
+			(shortestDistance === null || distance < shortestDistance) &&
+			next(id, { kind: "focus", direction: null }) !== null
+		) {
+			closestId = id;
+			shortestDistance = distance;
+		}
+	});
+
+	if (closestId != null) {
+		return next(closestId, { kind: "focus", direction });
+	}
+
+	return next();
 }
 
-export { createGridMovement as gridMovementHandler };
+/**
+ * Combines grid movement with defaults for arrow-key and reading-order navigation.
+ */
+export const gridHandler: ComposedHandler = composeHandlers([
+	focusHandler({ focusWhenEmpty: false }),
+	gridMovementHandler,
+	parentHandler,
+]);
 
-export type GridDistanceFunction = (
-	a: GridItem,
-	b: GridItem,
-	direction: NavigationDirection,
-) => number | null;
-
-export type GridHandlerOptions = {
-	distance?: GridDistanceFunction;
+/**
+ * Vectors from candidate toward current in (col, row) space — same convention as
+ * {@link spatial.ts} spatial navigation (x = col, y = row).
+ */
+const directionVector: Record<NavigationDirection, readonly [number, number] | []> = {
+	forwards: [],
+	backwards: [],
+	left: [1, 0],
+	right: [-1, 0],
+	up: [0, 1],
+	down: [0, -1],
 };
 
 /**
- * Composes `focusHandler({ focusWhenEmpty: false })`, `gridMovement` (with optional
- * `distance`), and `parentHandler`.
+ * Default distance between grid cells for a move direction; lower is closer.
  *
- * Optional `distance` overrides how the nearest cell is chosen for each arrow direction;
- * defaults use row/column heuristics.
+ * Arrow directions use primary-axis distance plus penalized misalignment on the other axis.
+ * `forwards` / `backwards` use reading-order distance (right then next row, or the reverse).
  */
-const createGridHandler = (options: GridHandlerOptions = {}): ComposedHandler =>
-	composeHandlers([
-		focusHandler({ focusWhenEmpty: false }),
-		createGridMovement(options),
-		parentHandler,
-	]);
-
-export type GridHandler = ComposedHandler & {
-	withOptions: (options: GridHandlerOptions) => ComposedHandler;
-};
-
-const gridHandler = createGridHandler() as GridHandler;
-gridHandler.withOptions = createGridHandler;
-
-export { gridHandler };
-
-function defaultDistance(a: GridItem, b: GridItem, direction: NavigationDirection) {
-	switch (direction) {
-		case "up":
-			return defaultDistanceUp(a, b);
-
-		case "down":
-			return defaultDistanceDown(a, b);
-
-		case "left":
-			return defaultDistanceLeft(a, b);
-
-		case "right":
-			return defaultDistanceRight(a, b);
+function getDistance(
+	current: GridItem,
+	potential: GridItem,
+	direction: NavigationDirection,
+): number | null {
+	if (direction === "forwards") {
+		return forwardsDistance(current, potential);
 	}
-}
 
-function defaultDistanceDown(current: GridItem, potential: GridItem) {
-	const rowDistance = potential.row - current.row;
-	if (rowDistance <= 0) {
+	if (direction === "backwards") {
+		return backwardsDistance(current, potential);
+	}
+
+	const [sx, sy] = directionVector[direction];
+	if (sx == null || sy == null) {
 		return null;
 	}
 
-	let colDistance = potential.col - current.col;
-	if (colDistance < 0) {
-		colDistance += 0.5;
-	}
-
-	return rowDistance + Math.abs(colDistance);
-}
-
-function defaultDistanceUp(current: GridItem, potential: GridItem) {
-	const rowDistance = current.row - potential.row;
-	if (rowDistance <= 0) {
+	const dCol = current.col - potential.col;
+	const dRow = current.row - potential.row;
+	const primaryDistance = dCol * sx + dRow * sy;
+	if (primaryDistance <= 0) {
 		return null;
 	}
 
-	let colDistance = current.col - potential.col;
-	if (colDistance < 0) {
-		colDistance += 0.5;
-	}
+	const secondaryDelta =
+		sx === 0 ? (potential.col - current.col) * -sy : (current.row - potential.row) * -sx;
 
-	return rowDistance + Math.abs(colDistance);
+	const secondaryDistance = secondaryDelta < 0 ? secondaryDelta + 0.5 : secondaryDelta;
+
+	return primaryDistance + Math.abs(secondaryDistance);
 }
 
-function defaultDistanceLeft(current: GridItem, potential: GridItem) {
-	const colDistance = current.col - potential.col;
-	if (colDistance <= 0) {
+/**
+ * Separates row tiers in {@link forwardsDistance} / {@link backwardsDistance} so any
+ * same-row candidate beats any candidate in a later/previous row.
+ */
+const ROW_STRIDE = 1_000_000;
+
+/** Reading order: nearest column to the right, else first cell in the next row. */
+function forwardsDistance(current: GridItem, potential: GridItem): number | null {
+	const dRow = potential.row - current.row;
+	const dCol = potential.col - current.col;
+	if (dRow < 0 || (dRow === 0 && dCol <= 0)) {
 		return null;
 	}
 
-	let rowDistance = potential.row - current.row;
-	if (rowDistance < 0) {
-		rowDistance += 0.5;
+	if (dRow === 0) {
+		return dCol;
 	}
 
-	return colDistance + Math.abs(rowDistance);
+	return dRow * ROW_STRIDE + dCol;
 }
 
-function defaultDistanceRight(current: GridItem, potential: GridItem) {
-	const colDistance = potential.col - current.col;
-	if (colDistance <= 0) {
+/** Reading order reversed: nearest column to the left, else last cell in the previous row. */
+function backwardsDistance(current: GridItem, potential: GridItem): number | null {
+	const dRow = current.row - potential.row;
+	const dCol = current.col - potential.col;
+	if (dRow < 0 || (dRow === 0 && dCol <= 0)) {
 		return null;
 	}
 
-	let rowDistance = current.row - potential.row;
-	if (rowDistance < 0) {
-		rowDistance += 0.5;
+	if (dRow === 0) {
+		return dCol;
 	}
 
-	return colDistance + Math.abs(rowDistance);
+	return dRow * ROW_STRIDE + (ROW_STRIDE - potential.col);
 }
