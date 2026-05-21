@@ -7,7 +7,7 @@ import { createDataHandler } from "./handler/metadata.ts";
 /**
  * Basic movement directions.
  */
-export type NavigationDirection = "up" | "down" | "left" | "right";
+export type NavigationDirection = "forwards" | "backwards" | "up" | "down" | "left" | "right";
 
 /**
  * Action dispatched to check which node to potentially focus.

@@ -27,7 +27,7 @@ export function verticalMovementHandler(
 		return next();
 	}
 
-	if (action.direction === "up") {
+	if (action.direction === "up" || action.direction === "backwards") {
 		const previousId = findPreviousChild(node, (id) =>
 			next(id, { kind: "focus", direction: "up" }),
 		);
@@ -35,7 +35,7 @@ export function verticalMovementHandler(
 		return previousId ?? next();
 	}
 
-	if (action.direction === "down") {
+	if (action.direction === "down" || action.direction === "forwards") {
 		const nextId = findNextChild(node, (id) => next(id, { kind: "focus", direction: "down" }));
 
 		return nextId ?? next();
@@ -45,14 +45,15 @@ export function verticalMovementHandler(
 }
 
 function verticalFocusDirection(dir: NavigationDirection | "initial" | null) {
-	switch (dir) {
-		case "up":
-			return "backwards";
-		case "down":
-			return "forwards";
-		default:
-			return null;
+	if (dir === "up" || dir === "backwards") {
+		return "backwards";
 	}
+
+	if (dir === "down" || dir === "forwards") {
+		return "forwards";
+	}
+
+	return null;
 }
 
 /**
@@ -87,7 +88,7 @@ export function horizontalMovementHandler(
 		return next();
 	}
 
-	if (action.direction === "left") {
+	if (action.direction === "left" || action.direction === "backwards") {
 		const previousId = findPreviousChild(node, (id) =>
 			next(id, { kind: "focus", direction: "left" }),
 		);
@@ -95,7 +96,7 @@ export function horizontalMovementHandler(
 		return previousId ?? next();
 	}
 
-	if (action.direction === "right") {
+	if (action.direction === "right" || action.direction === "forwards") {
 		const nextId = findNextChild(node, (id) => next(id, { kind: "focus", direction: "right" }));
 
 		return nextId ?? next();
@@ -105,14 +106,15 @@ export function horizontalMovementHandler(
 }
 
 function horizontalFocusDirection(dir: NavigationDirection | "initial" | null) {
-	switch (dir) {
-		case "left":
-			return "backwards";
-		case "right":
-			return "forwards";
-		default:
-			return null;
+	if (dir === "left" || dir === "backwards") {
+		return "backwards";
 	}
+
+	if (dir === "right" || dir === "forwards") {
+		return "forwards";
+	}
+
+	return null;
 }
 
 /**

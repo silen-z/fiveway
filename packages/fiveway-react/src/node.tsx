@@ -50,7 +50,7 @@ export function useNavnode(
 	const parent = options.parent ?? parentNode;
 
 	const nodeRef = useRef(NULL_NODE);
-	if (nodeRef.current === NULL_NODE) {
+	if (nodeRef.current === NULL_NODE || nodeRef.current.parent !== parent) {
 		nodeRef.current = createNode({
 			id,
 			parent,
@@ -58,7 +58,7 @@ export function useNavnode(
 			order: options.order,
 		});
 	} else {
-		updateNode(nodeRef.current, options);
+		updateNode(nodeRef.current, { order: options.order, handler });
 	}
 	const nodeId = nodeRef.current.id;
 

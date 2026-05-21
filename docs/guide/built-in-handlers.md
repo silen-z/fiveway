@@ -85,7 +85,7 @@ import { gridHandler, gridItemHandler } from "@fiveway/core";
 gridItemHandler({ row: 0, col: 0 });
 
 // Create grid navigation handler
-const handler = gridHandler();
+const handler = gridHandler;
 ```
 
 The `gridHandler` finds the closest node in the direction of movement based on grid positions. Each node needs to have its grid position set using `gridItemHandler`.

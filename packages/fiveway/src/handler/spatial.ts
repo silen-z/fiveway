@@ -1,4 +1,3 @@
-import { type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { traverseNodes } from "../tree/tree.ts";
@@ -28,7 +27,13 @@ export const spatialMovementHandler: NavigationHandler = (node, action, next) =>
 		describeHandler(action, { name: "spatial" });
 	}
 
-	if (action.kind !== "move" || action.direction === "back") {
+	if (action.kind !== "move") {
+		return next();
+	}
+
+	const direction = action.direction;
+
+	if (direction === "forwards" || direction === "backwards" || direction === "back") {
 		return next();
 	}
 
@@ -39,8 +44,6 @@ export const spatialMovementHandler: NavigationHandler = (node, action, next) =>
 
 	let closestId: NodeId | null = null;
 	let shortestDistance: number | null = null;
-
-	const direction = action.direction;
 
 	traverseNodes(node.tree, node.id, 1, (id) => {
 		const pos = spatialItemHandler.query(node.tree, id);
@@ -72,14 +75,18 @@ export const spatialHandler: ComposedHandler = composeHandlers([
 ]);
 
 /** Unit vectors from candidate toward focused, per move direction. */
-const directionVector: Record<NavigationDirection, readonly [number, number]> = {
+const directionVector: Record<"up" | "down" | "left" | "right", readonly [number, number]> = {
 	left: [1, 0],
 	right: [-1, 0],
 	up: [0, 1],
 	down: [0, -1],
 };
 
-function distanceSquared(a: SpatialItem, b: SpatialItem, direction: NavigationDirection) {
+function distanceSquared(
+	a: SpatialItem,
+	b: SpatialItem,
+	direction: "up" | "down" | "left" | "right",
+) {
 	const dx = a.x - b.x;
 	const dy = a.y - b.y;
 

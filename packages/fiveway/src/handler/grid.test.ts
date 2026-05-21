@@ -76,3 +76,68 @@ test("gridHandler", async () => {
 
 	expect(tree.focus).toBe("#/grid/item-3-2");
 });
+
+test("gridHandler forwards and backwards", () => {
+	const { tree, nodes } = createTreeFromSpec({
+		id: "grid",
+		handler: gridHandler,
+	});
+
+	for (let row = 1; row <= 3; row++) {
+		for (let col = 1; col <= 3; col++) {
+			const node = createNode({
+				id: `item-${row}-${col}`,
+				parent: nodes.grid.id,
+				handler: defaultHandler.compose(gridItemHandler({ row, col })),
+			});
+			insertNode(tree, node);
+		}
+	}
+
+	removeNode(tree, "#/grid/item-2-2");
+	removeNode(tree, "#/grid/item-3-3");
+
+	expect(tree.focus).toBe("#/grid/item-1-1");
+
+	dispatchAction(tree, { kind: "move", direction: "forwards" });
+	expect(tree.focus).toBe("#/grid/item-1-2");
+
+	dispatchAction(tree, { kind: "move", direction: "forwards" });
+	expect(tree.focus).toBe("#/grid/item-1-3");
+
+	dispatchAction(tree, { kind: "move", direction: "forwards" });
+	expect(tree.focus).toBe("#/grid/item-2-1");
+
+	dispatchAction(tree, { kind: "move", direction: "forwards" });
+	expect(tree.focus).toBe("#/grid/item-2-3");
+
+	dispatchAction(tree, { kind: "move", direction: "forwards" });
+	expect(tree.focus).toBe("#/grid/item-3-1");
+
+	dispatchAction(tree, { kind: "move", direction: "forwards" });
+	expect(tree.focus).toBe("#/grid/item-3-2");
+
+	dispatchAction(tree, { kind: "move", direction: "forwards" });
+	expect(tree.focus).toBe("#/grid/item-3-2");
+
+	dispatchAction(tree, { kind: "move", direction: "backwards" });
+	expect(tree.focus).toBe("#/grid/item-3-1");
+
+	dispatchAction(tree, { kind: "move", direction: "backwards" });
+	expect(tree.focus).toBe("#/grid/item-2-3");
+
+	dispatchAction(tree, { kind: "move", direction: "backwards" });
+	expect(tree.focus).toBe("#/grid/item-2-1");
+
+	dispatchAction(tree, { kind: "move", direction: "backwards" });
+	expect(tree.focus).toBe("#/grid/item-1-3");
+
+	dispatchAction(tree, { kind: "move", direction: "backwards" });
+	expect(tree.focus).toBe("#/grid/item-1-2");
+
+	dispatchAction(tree, { kind: "move", direction: "backwards" });
+	expect(tree.focus).toBe("#/grid/item-1-1");
+
+	dispatchAction(tree, { kind: "move", direction: "backwards" });
+	expect(tree.focus).toBe("#/grid/item-1-1");
+});
