@@ -21,9 +21,11 @@ jobs:
           node-version: "24"
           cache: false
 
-        # workaround for voidzero-dev/setup-vp@v1 not putting pnpm in PATH
-      - run: vp install -g pnpm
+      - run: "npm install -g npm@11.15.0"
 
       - run: "vp run preparePublish"
 
-      - run: "pnpm publish -r --no-git-checks --tag latest"
+      - run: |
+          for f in ./dist/*.tgz; do
+            npm stage publish "$f" --tag latest
+          done

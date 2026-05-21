@@ -13,7 +13,7 @@ export default defineConfig({
 				],
 			},
 			preparePublish: {
-				command: "true",
+				command: "pnpm -r --filter=!@fiveway/extension pack --pack-destination dist",
 				dependsOn: [
 					"@fiveway/core#build",
 					"@fiveway/react#build",

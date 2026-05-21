@@ -1,6 +1,6 @@
 {
 	"name": "@fiveway/solid",
-	"version": "1.0.0-rc.1",
+	"version": "1.0.0-rc.2",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/silen-z/fiveway.git"
