@@ -3,14 +3,16 @@ import { type NodeId } from "../tree/id.ts";
 import { type NavigationTree, focusNode } from "../tree/tree.ts";
 import { type NavigationHandler, runHandler } from "./handler.ts";
 
-function createSelectHandler(onSelect: () => void): NavigationHandler {
+export type SelectCallback = (options: { longpress: boolean }) => void;
+
+function createSelectHandler(onSelect: SelectCallback): NavigationHandler {
 	const selectHandler: NavigationHandler = (_, action, next) => {
 		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 			describeHandler(action, { name: "select" });
 		}
 
 		if (action.kind === "select") {
-			onSelect();
+			onSelect({ longpress: action.longpress === true });
 			return null;
 		}
 

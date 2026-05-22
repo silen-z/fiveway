@@ -1,13 +1,11 @@
 import {
 	composeHandlers,
-	dispatchAction,
-	spatialItemHandler,
 	registerListener,
+	spatialItemHandler,
 	type ComposedHandler,
-	type NavigationAction,
 	type NavigationTree,
 } from "@fiveway/core";
-import { defaultEventMapping, elementHandler } from "@fiveway/core/dom";
+import { elementHandler } from "@fiveway/core/dom";
 import { createEffect, createSignal, onCleanup } from "solid-js";
 
 export type ElementHandler = ComposedHandler & {
@@ -38,37 +36,6 @@ export function createElementHandler(): ElementHandler {
 	handler.register = setElement;
 
 	return handler;
-}
-
-export type DispatchOnEventOptions = {
-	target?: EventTarget;
-	event?: string;
-	eventToAction?: (e: Event) => NavigationAction | null;
-};
-
-export function useDispatchOnEvent(
-	tree: NavigationTree,
-	options: DispatchOnEventOptions = {},
-): void {
-	createEffect(() => {
-		const target = options.target ?? window;
-		const eventType = options.event ?? "keydown";
-		const mapper = options.eventToAction ?? defaultEventMapping;
-
-		const handler = (e: Event) => {
-			const action = mapper(e);
-			if (action !== null) {
-				e.preventDefault();
-				dispatchAction(tree, action);
-			}
-		};
-
-		target.addEventListener(eventType, handler);
-
-		onCleanup(() => {
-			target.removeEventListener(eventType, handler);
-		});
-	});
 }
 
 export function useFocusSync(tree: NavigationTree): void {

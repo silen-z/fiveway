@@ -78,7 +78,14 @@ export {
 	gridMovementHandler,
 } from "./handler/grid.ts";
 
-export { type SelectNodeOptions, selectNode, selectHandler } from "./handler/select.ts";
+export {
+	type SelectNodeOptions,
+	type SelectCallback,
+	selectNode,
+	selectHandler,
+} from "./handler/select.ts";
+
+export { type LongPressOptions, longPressHandler } from "./handler/longpress.ts";
 
 export {
 	type SpatialItem,

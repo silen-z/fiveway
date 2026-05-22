@@ -13,6 +13,7 @@ import {
 	createNode,
 	itemHandler,
 	selectNode,
+	type SelectCallback,
 } from "../index.ts";
 
 test("insertNode", () => {
@@ -202,7 +203,7 @@ test("selectNode", async () => {
 		parent: "#",
 	});
 
-	const onSelect = vi.fn<() => void>();
+	const onSelect = vi.fn<SelectCallback>();
 
 	const targetNode = createNode({
 		id: "node",

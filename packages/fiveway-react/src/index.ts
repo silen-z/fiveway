@@ -15,10 +15,4 @@ export {
 	useSelect,
 } from "./hooks.ts";
 
-export {
-	type ElementHandler,
-	type DispatchOnEventOptions,
-	useElementHandler,
-	useDispatchOnEvent,
-	useFocusSync,
-} from "./element.ts";
+export { type ElementHandler, useElementHandler, useFocusSync } from "./element.ts";

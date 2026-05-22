@@ -1,5 +1,6 @@
 import {
 	captureHandler,
+	longPressHandler,
 	elementHandler,
 	gridHandler,
 	gridItemHandler,
@@ -70,9 +71,17 @@ export function Showcase() {
 					<NavItem
 						navId="start"
 						label="Start"
-						handler={itemHandler(() => {
+						handler={itemHandler(({ longpress }) => {
+							if (longpress) {
+								console.log("[Start] long press");
+								return;
+							}
+
+							console.log("[Start] short press");
 							nav.focus("vertical-list");
-						}).compose(gridItemHandler({ row: 0, col: 0 }))}
+						})
+							.compose(gridItemHandler({ row: 0, col: 0 }))
+							.compose(longPressHandler({ threshold: 600 }))}
 					></NavItem>
 				</div>
 

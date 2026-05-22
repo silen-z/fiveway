@@ -1,13 +1,11 @@
 import {
 	type NavigationTree,
-	type NavigationAction,
 	type ComposedHandler,
-	dispatchAction,
 	composeHandlers,
 	registerListener,
 	spatialItemHandler,
 } from "@fiveway/core";
-import { defaultEventMapping, elementHandler } from "@fiveway/core/dom";
+import { elementHandler } from "@fiveway/core/dom";
 import { useRef, useMemo, useEffect } from "react";
 
 export type ElementHandler = ComposedHandler & {
@@ -38,42 +36,6 @@ export function useElementHandler(): ElementHandler {
 
 		return handler;
 	}, []);
-}
-
-export type DispatchOnEventOptions = {
-	target?: EventTarget;
-	event?: string;
-	eventToAction?: (e: Event) => NavigationAction | null;
-};
-
-export function useDispatchOnEvent(
-	tree: NavigationTree,
-	options: DispatchOnEventOptions = {},
-): void {
-	const target = options.target ?? window;
-	const eventType = options.event ?? "keydown";
-	const mapper = options.eventToAction ?? defaultEventMapping;
-
-	const handlerRef = useRef<(e: Event) => void>(() => {});
-	handlerRef.current = (e: Event) => {
-		const action = mapper(e);
-		if (action !== null) {
-			e.preventDefault();
-			dispatchAction(tree, action);
-		}
-	};
-
-	useEffect(() => {
-		const handler = (e: Event) => {
-			handlerRef.current(e);
-		};
-
-		target.addEventListener(eventType, handler);
-
-		return () => {
-			target.removeEventListener(eventType, handler);
-		};
-	}, [tree, target, eventType]);
 }
 
 export function useFocusSync(tree: NavigationTree): void {

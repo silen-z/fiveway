@@ -25,13 +25,11 @@ npm install @fiveway/solid
 Create a navigation tree and provide it to the application:
 
 ```tsx
-import { createNavigationTree, NavigationProvider, useDispatchOnEvent } from "@fiveway/solid";
+import { createNavigationTree, NavigationProvider } from "@fiveway/solid";
 import { render } from "solid-js/web";
 
 function App() {
 	const navtree = createNavigationTree();
-
-	useDispatchOnEvent(navtree);
 
 	return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
 }
