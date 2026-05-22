@@ -3,10 +3,11 @@ import {
 	registerListener,
 	spatialItemHandler,
 	type ComposedHandler,
-	type NavigationTree,
 } from "@fiveway/core";
 import { elementHandler } from "@fiveway/core/dom";
 import { createEffect, createSignal, onCleanup } from "solid-js";
+
+import { useNavigationContext } from "./context.tsx";
 
 export type ElementHandler = ComposedHandler & {
 	register: (e: HTMLElement | null) => void;
@@ -38,7 +39,9 @@ export function createElementHandler(): ElementHandler {
 	return handler;
 }
 
-export function useFocusSync(tree: NavigationTree): void {
+export function useFocusSync(): void {
+	const { tree } = useNavigationContext();
+
 	createEffect(() => {
 		const cleanup = registerListener(tree, "#", () => {
 			const el = elementHandler.query(tree, tree.focus);

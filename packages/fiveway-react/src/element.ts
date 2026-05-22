@@ -1,5 +1,4 @@
 import {
-	type NavigationTree,
 	type ComposedHandler,
 	composeHandlers,
 	registerListener,
@@ -7,6 +6,8 @@ import {
 } from "@fiveway/core";
 import { elementHandler } from "@fiveway/core/dom";
 import { useRef, useMemo, useEffect } from "react";
+
+import { useNavigationContext } from "./context.tsx";
 
 export type ElementHandler = ComposedHandler & {
 	register: (e: HTMLElement | null) => void;
@@ -38,7 +39,9 @@ export function useElementHandler(): ElementHandler {
 	}, []);
 }
 
-export function useFocusSync(tree: NavigationTree): void {
+export function useFocusSync(): void {
+	const { tree } = useNavigationContext();
+
 	useEffect(() => {
 		const handler = () => {
 			const el = elementHandler.query(tree, tree.focus);

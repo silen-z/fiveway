@@ -1,6 +1,6 @@
 /* @refresh reload */
 
-import { createNavigationTree, NavigationProvider, useFocusSync } from "@fiveway/solid";
+import { createNavigationTree, NavigationProvider } from "@fiveway/solid";
 import { render } from "solid-js/web";
 
 import { Showcase } from "./Showcase.tsx";
@@ -9,8 +9,6 @@ import "./styles.css";
 
 function App() {
 	const navigationTree = createNavigationTree();
-
-	useFocusSync(navigationTree);
 
 	return (
 		<NavigationProvider tree={navigationTree}>
