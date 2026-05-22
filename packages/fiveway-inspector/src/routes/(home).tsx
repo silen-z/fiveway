@@ -57,7 +57,7 @@ export default function HomePage() {
 
 						<div class="shrink-0 self-end min-[600px]:self-center">
 							<div class="flex flex-col items-end gap-0.5 text-right text-sm sm:text-base">
-								<a class="link link-primary" href="https://fiveway.io">
+								<a class="link link-primary" href="https://fiveway.dev">
 									Documentation
 								</a>
 								<a
@@ -67,6 +67,14 @@ export default function HomePage() {
 									rel="noreferrer"
 								>
 									GitHub
+								</a>
+								<a
+									class="link link-primary"
+									href="https://bsky.app/profile/fiveway.dev"
+									target="_blank"
+									rel="noreferrer"
+								>
+									Bluesky
 								</a>
 							</div>
 						</div>

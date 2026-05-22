@@ -45,8 +45,9 @@ export function Showcase() {
 							<strong>fiveway</strong> / solid
 						</h1>
 						<div class={css.titleLinks}>
-							<a href="https://fiveway.io">Documentation</a>
+							<a href="https://fiveway.dev">Documentation</a>
 							<a href="https://github.com/silen-z/fiveway">GitHub</a>
+							<a href="https://bsky.app/profile/fiveway.dev">Bluesky</a>
 						</div>
 					</div>
 				</header>
@@ -55,7 +56,7 @@ export function Showcase() {
 					<p>
 						<strong>fiveway</strong> is a TypeScript library for rich web applications that want to
 						support keyboard navigation and have precise control over what is focused{" "}
-						<a href="https://fiveway.io/what-is-fiveway">Get to know more</a>
+						<a href="https://fiveway.dev/what-is-fiveway">Get to know more</a>
 					</p>
 
 					<p>

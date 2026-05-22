@@ -66,7 +66,7 @@ function Item(props) {
 }
 ```
 
-Check out the full guide at: https://fiveway.io/getting-started
+Check out the full guide at: https://fiveway.dev/getting-started
 
 ## Packages
 
