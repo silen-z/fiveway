@@ -6,6 +6,7 @@ import {
 	gridItemHandler,
 	initialHandler,
 	itemHandler,
+	useFocusSync,
 	useNavigationContext,
 	useOnFocusChange,
 } from "@fiveway/solid";
@@ -22,6 +23,8 @@ import css from "./Showcase.module.css";
 export function Showcase() {
 	const { tree } = useNavigationContext();
 	const nav = createNavnode("showcase", gridHandler.compose(initialHandler("start")));
+
+	useFocusSync();
 
 	useOnFocusChange(nav, (id) => {
 		if (id === null) {

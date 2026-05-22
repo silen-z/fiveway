@@ -1,4 +1,4 @@
-import { createNavigationTree, NavigationProvider, useFocusSync } from "@fiveway/react";
+import { createNavigationTree, NavigationProvider } from "@fiveway/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
@@ -10,8 +10,6 @@ import "./styles.css";
 const navigationTree = createNavigationTree();
 
 function App() {
-	useFocusSync(navigationTree);
-
 	return (
 		<NavigationProvider tree={navigationTree}>
 			<Showcase />

@@ -6,6 +6,7 @@ import {
 	gridItemHandler,
 	initialHandler,
 	itemHandler,
+	useFocusSync,
 	useNavigationContext,
 	useNavnode,
 	useOnFocusChange,
@@ -23,6 +24,8 @@ import css from "./Showcase.module.css";
 export function Showcase() {
 	const { tree } = useNavigationContext();
 	const nav = useNavnode("showcase", gridHandler.compose(initialHandler("start")));
+
+	useFocusSync();
 
 	useOnFocusChange(nav.id, (id) => {
 		if (id === null) {
