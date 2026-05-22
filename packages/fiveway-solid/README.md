@@ -72,4 +72,4 @@ function Item(props) {
 }
 ```
 
-Checkout the full guide at: https://fiveway.io/getting-started
+Checkout the full guide at: https://fiveway.dev/getting-started

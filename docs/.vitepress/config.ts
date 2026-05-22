@@ -15,7 +15,8 @@ export default defineConfig({
 		nav: [
 			{ text: "Guide", link: "/what-is-fiveway" },
 			{ text: "API", link: "/api/" },
-			{ text: "Demo", link: "https://react-demo.fiveway.io" },
+			{ text: "React demo", link: "https://react.fiveway.dev" },
+			{ text: "Solid demo", link: "https://solid.fiveway.dev" },
 		],
 
 		sidebar: {
@@ -42,7 +43,14 @@ export default defineConfig({
 			],
 		},
 
-		socialLinks: [{ icon: "github", link: "https://github.com/silen-z/fiveway" }],
+		socialLinks: [
+			{ icon: "github", link: "https://github.com/silen-z/fiveway" },
+			{
+				icon: "bluesky",
+				link: "https://bsky.app/profile/fiveway.dev",
+				ariaLabel: "Bluesky",
+			},
+		],
 	},
 	head: [["link", { rel: "icon", type: "image/png", href: "/logo-small.png" }]],
 });
