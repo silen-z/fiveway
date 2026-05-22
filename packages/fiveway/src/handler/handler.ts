@@ -5,7 +5,7 @@ import { type NavigationNode } from "../tree/node.ts";
 import { type NavigationTree } from "../tree/tree.ts";
 import { composeHandlers, type ComposedHandler } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
-import { selectHandler } from "./select.ts";
+import { selectHandler, type SelectCallback } from "./select.ts";
 
 export type HandlerNext = (id?: NodeId, action?: NavigationAction) => NodeId | null;
 
@@ -88,7 +88,7 @@ export const containerHandler: ComposedHandler = composeHandlers([
  * If `onSelect` is provided, composes `selectHandler(onSelect)` onto `defaultHandler`;
  * otherwise returns `defaultHandler`.
  */
-export const itemHandler = (onSelect?: () => void): ComposedHandler => {
+export const itemHandler = (onSelect?: SelectCallback): ComposedHandler => {
 	if (onSelect == null) {
 		return defaultHandler;
 	}

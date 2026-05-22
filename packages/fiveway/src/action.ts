@@ -24,17 +24,26 @@ export type FocusAction = {
 
 /**
  * Action dispatched to move focus in a specific direction.
+ *
+ * `longpress` is set by the long-press listener when resolving a press:
+ * - omitted — immediate keydown dispatch (default behavior)
+ * - `false` — short press committed on keyup
+ * - `true` — long press committed when the hold threshold elapses
  */
 export type MoveAction = {
 	kind: "move";
 	direction: NavigationDirection | "back";
+	longpress?: boolean;
 };
 
 /**
  * Action dispatched to select a node.
+ *
+ * @see {@link MoveAction} for `longpress` semantics.
  */
 export type SelectAction = {
 	kind: "select";
+	longpress?: boolean;
 };
 
 /**

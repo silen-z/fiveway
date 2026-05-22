@@ -6,11 +6,11 @@ import { test, expect } from "vite-plus/test";
 // prettier-ignore
 import { createTreeFromSpec } from "./test/treeSpec.ts";
 
-import { defaultEventMapping } from "./dom.ts";
+import { defaultKeybinds } from "./dom.ts";
 import { verticalHandler, defaultHandler, dispatchAction } from "./index.ts";
 
 test("defaultKeyMapping", async () => {
-	expect(defaultEventMapping(new MouseEvent("mouseover"))).toBeNull();
+	expect(defaultKeybinds(new MouseEvent("mouseover"))).toBeNull();
 
 	const { tree, nodes } = createTreeFromSpec({
 		id: "container",
@@ -23,7 +23,7 @@ test("defaultKeyMapping", async () => {
 
 	expect(tree.focus).toBe(nodes.item1.id);
 
-	const action = defaultEventMapping(new KeyboardEvent("keydown", { key: "ArrowDown" }));
+	const action = defaultKeybinds(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 	expect(action).not.toBeNull();
 	dispatchAction(tree, action!);
 	expect(tree.focus).toBe(nodes.item2.id);

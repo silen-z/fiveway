@@ -1,6 +1,7 @@
 import { test, expect, vi } from "vite-plus/test";
 
 import {
+	type SelectCallback,
 	createNavigationTree,
 	insertNode,
 	createNode,
@@ -12,7 +13,7 @@ import {
 test("selectHandler", async () => {
 	const tree = createNavigationTree();
 
-	const onSelect = vi.fn<() => void>();
+	const onSelect = vi.fn<SelectCallback>();
 
 	const node = createNode({
 		id: "test",
@@ -26,4 +27,5 @@ test("selectHandler", async () => {
 	dispatchAction(tree, { kind: "select" });
 
 	expect(onSelect).toHaveBeenCalledTimes(1);
+	expect(onSelect).toHaveBeenCalledWith({ longpress: false });
 });

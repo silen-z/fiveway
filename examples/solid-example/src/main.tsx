@@ -1,11 +1,6 @@
 /* @refresh reload */
 
-import {
-	useDispatchOnEvent,
-	createNavigationTree,
-	NavigationProvider,
-	useFocusSync,
-} from "@fiveway/solid";
+import { createNavigationTree, NavigationProvider, useFocusSync } from "@fiveway/solid";
 import { render } from "solid-js/web";
 
 import { Showcase } from "./Showcase.tsx";
@@ -15,7 +10,6 @@ import "./styles.css";
 function App() {
 	const navigationTree = createNavigationTree();
 
-	useDispatchOnEvent(navigationTree);
 	useFocusSync(navigationTree);
 
 	return (
@@ -25,9 +19,7 @@ function App() {
 	);
 }
 
-const root = document.getElementById("root");
-if (root == null) {
-	throw new Error("root element not found");
-}
+const root = document.createElement("div");
+document.body.appendChild(root);
 
 render(App, root);

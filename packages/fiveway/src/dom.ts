@@ -1,32 +1,7 @@
-import { type NavigationAction } from "./action.ts";
-import { createDataHandler, type DataHandler } from "./handler/metadata.ts";
+import { type DataHandler, createDataHandler } from "./handler/metadata.ts";
 
-const eventKeyToAction: Record<string, NavigationAction> = {
-	ArrowUp: { kind: "move", direction: "up" },
-	ArrowDown: { kind: "move", direction: "down" },
-	ArrowLeft: { kind: "move", direction: "left" },
-	ArrowRight: { kind: "move", direction: "right" },
-	Enter: { kind: "select" },
-	" ": { kind: "select" },
-	Backspace: { kind: "move", direction: "back" },
-};
-
-/**
- * Maps `keydown`-like events to default actions:
- *
- * - Arrow keys → `move`
- * - Enter / Space → `select`
- * - Backspace → `move` with direction `"back"`
- *
- * Returns `null` when unmapped.
- */
-export function defaultEventMapping(e: Event): NavigationAction | null {
-	if ("key" in e && typeof e.key === "string") {
-		return eventKeyToAction[e.key] ?? null;
-	}
-
-	return null;
-}
+export { type Keybinds, defaultKeybinds } from "./dom/keybinds.ts";
+export { registerKeyboardListener } from "./dom/listener.ts";
 
 /**
  * Metadata handler (query key `element`) that ties a node to a focusable DOM element

@@ -1,9 +1,4 @@
-import {
-	createNavigationTree,
-	NavigationProvider,
-	useDispatchOnEvent,
-	useFocusSync,
-} from "@fiveway/react";
+import { createNavigationTree, NavigationProvider, useFocusSync } from "@fiveway/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
@@ -15,7 +10,6 @@ import "./styles.css";
 const navigationTree = createNavigationTree();
 
 function App() {
-	useDispatchOnEvent(navigationTree);
 	useFocusSync(navigationTree);
 
 	return (
@@ -25,10 +19,8 @@ function App() {
 	);
 }
 
-const root = document.getElementById("root");
-if (root == null) {
-	throw new Error("root element not found");
-}
+const root = document.createElement("div");
+document.body.appendChild(root);
 
 ReactDOM.createRoot(root).render(
 	<React.StrictMode>
