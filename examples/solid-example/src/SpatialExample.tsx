@@ -6,7 +6,7 @@ import { NavItem } from "./NavItem.tsx";
 import css from "./SpatialExample.module.css";
 
 export function SpatialExample() {
-	const nav = createNavnode("spatial", spatialHandler.compose(captureHandler));
+	const nav = createNavnode("spatial", [captureHandler, spatialHandler]);
 
 	return (
 		<nav.Context>

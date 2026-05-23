@@ -9,7 +9,7 @@ import { type NavigationHandler } from "./handler.ts";
  *
  * It can be further extended further via its `compose` method.
  */
-export type ComposedHandler = NavigationHandler & {
+export interface ComposedHandler extends NavigationHandler {
 	/**
 	 * Creates a new composed handler with the given handler added to the front of the chain.
 	 *
@@ -19,12 +19,12 @@ export type ComposedHandler = NavigationHandler & {
 	compose(handler: NavigationHandler | ComposedHandler): ComposedHandler;
 
 	/** @internal */
-	link: HandlerLink | null;
-};
+	chain: HandlerChainLink | null;
+}
 
-type HandlerLink = {
+type HandlerChainLink = {
 	handler: NavigationHandler;
-	next: HandlerLink | null;
+	next: HandlerChainLink | null;
 };
 
 /**
@@ -32,18 +32,23 @@ type HandlerLink = {
  *
  * Also adds `.compose()` method to allow further composition.
  */
-export function composeHandlers(
-	link: HandlerLink | NavigationHandler | NavigationHandler[] | null = null,
-): ComposedHandler {
-	if (typeof link === "function") {
-		link = { handler: link, next: null };
-	} else if (Array.isArray(link)) {
-		link = createChain(link);
+export function composeHandlers(handlers: (NavigationHandler | undefined)[]): ComposedHandler {
+	let chain = null;
+	for (let i = handlers.length - 1; i >= 0; i--) {
+		const handler = handlers[i];
+		if (handler == null) {
+			continue;
+		}
+		chain = { handler, next: chain };
 	}
 
+	return createHandlerFromChain(chain);
+}
+
+function createHandlerFromChain(chain: HandlerChainLink | null): ComposedHandler {
 	const composedHandler: ComposedHandler = (node, action, next) => {
 		const runLink = (
-			link: HandlerLink | null,
+			link: HandlerChainLink | null,
 			id?: NodeId,
 			newAction?: NavigationAction,
 		): NodeId | null => {
@@ -62,54 +67,38 @@ export function composeHandlers(
 			return link.handler(node, newAction ?? action, runLink.bind(null, link.next));
 		};
 
-		return runLink(link);
+		return runLink(chain);
 	};
 
-	composedHandler.link = link;
+	composedHandler.chain = chain;
 
 	composedHandler.compose = (handler) => {
-		if ("link" in handler) {
-			if (handler.link === null) {
-				return composedHandler;
-			}
-
-			const cloned = cloneChain(handler.link);
-			appendChain(cloned, link);
-			return composeHandlers(cloned);
+		// handler is a regular not composed handler
+		if (!("chain" in handler)) {
+			return createHandlerFromChain({ handler, next: chain });
 		}
 
-		return composeHandlers({ handler, next: link });
+		// when current chain there is nothing to compose so just return the incoming handler
+		if (chain === null) {
+			return handler;
+		}
+
+		// when the incoming handler is not composed, just return the current composed handler
+		if (handler.chain === null) {
+			return composedHandler;
+		}
+
+		const appended = appendLink(handler.chain, chain);
+		return createHandlerFromChain(appended);
 	};
 
 	return composedHandler;
 }
 
-function createChain(handlers: (NavigationHandler | ComposedHandler)[]): HandlerLink | null {
-	if (handlers.length === 0) {
-		return null;
-	}
+function appendLink(chain: HandlerChainLink, link: HandlerChainLink): HandlerChainLink {
+	const cloned: HandlerChainLink = { handler: chain.handler, next: null };
 
-	let chain = null;
-	for (let i = handlers.length - 1; i >= 0; i--) {
-		chain = { handler: handlers[i]!, next: chain };
-	}
-
-	return chain;
-}
-
-function appendChain(chain: HandlerLink, next: HandlerLink | null) {
 	let current = chain;
-	while (current.next !== null) {
-		current = current.next;
-	}
-
-	current.next = next;
-}
-
-function cloneChain(original: HandlerLink) {
-	const cloned: HandlerLink = { handler: original.handler, next: null };
-
-	let current = original;
 	let currentCloned = cloned;
 
 	while (current.next !== null) {
@@ -119,6 +108,7 @@ function cloneChain(original: HandlerLink) {
 		currentCloned = currentCloned.next;
 	}
 
+	currentCloned.next = link;
 	return cloned;
 }
 

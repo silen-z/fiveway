@@ -12,9 +12,8 @@ export function VirtualListExample() {
 	const [listPosition, setListPosition] = useState(0);
 	const windowRange = offsetWindow(items.length, listPosition, 3);
 
-	const nav = useNavnode(
-		"virtual-list",
-		verticalHandler.compose((node, action, next) => {
+	const nav = useNavnode("virtual-list", [
+		(node, action, next) => {
 			if (action.kind === "focus") {
 				const item = items[listPosition];
 				if (item == null) {
@@ -29,8 +28,9 @@ export function VirtualListExample() {
 			}
 
 			return next();
-		}),
-	);
+		},
+		verticalHandler,
+	]);
 
 	useOnFocusChange(nav.id, (id) => {
 		if (id === null) {
