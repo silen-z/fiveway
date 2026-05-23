@@ -6,9 +6,9 @@ import {
 	type ComposedHandler,
 } from "@fiveway/core";
 import { elementHandler } from "@fiveway/core/dom";
-import { createEffect, createSignal, onCleanup } from "solid-js";
+import { createSignal, onSettled, useContext } from "solid-js";
 
-import { useNavigationContext } from "./context.tsx";
+import { NavigationContext } from "./context.tsx";
 
 /**
  * Data handler used for associating navigation nodes with DOM elements.
@@ -59,9 +59,9 @@ export function createElementHandler(): ElementHandler {
  * Primitive that synchronizes native browser focus with focused node based on {@link elementHandler}.
  */
 export function useFocusSync(): void {
-	const { tree } = useNavigationContext();
+	const { tree } = useContext(NavigationContext);
 
-	createEffect(() => {
+	onSettled(() => {
 		let lastFocus: NodeId | null = null;
 
 		const el = elementHandler.query(tree, tree.focus);
@@ -89,6 +89,6 @@ export function useFocusSync(): void {
 			}
 		});
 
-		onCleanup(cleanup);
+		return cleanup;
 	});
 }

@@ -94,8 +94,8 @@ test("useIsFocused reflects focus inside node", async () => {
 		</NavigationRoot>
 	));
 
-	const item1 = getByText("item1");
-	const item2 = getByText("item2");
+	const item1 = getByText("#/app/item1");
+	const item2 = getByText("#/app/item2");
 
 	expect(tree.focus).toBe("#/app/item1");
 	await expect.element(item1).toHaveClass("focused");
@@ -225,7 +225,7 @@ test("useFocus focuses nodes relative to parent", async () => {
 
 	expect(tree.focus).toBe("#/app/item1");
 
-	await getByText("focus item2").click();
+	getByText("focus item2").click();
 	expect(tree.focus).toBe("#/app/item2");
 });
 
@@ -253,7 +253,7 @@ test("useActivate activates nodes relative to parent", async () => {
 
 	expect(tree.focus).toBe("#/app/item1");
 
-	await getByText("activate item2").click();
+	getByText("activate item2").click();
 
 	expect(onActivate).toHaveBeenCalledTimes(1);
 	expect(onActivate).toHaveBeenCalledWith("item2");

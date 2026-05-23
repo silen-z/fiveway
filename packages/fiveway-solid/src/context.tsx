@@ -1,13 +1,7 @@
 import { type NavigationTree, type NodeId } from "@fiveway/core";
 import { defaultKeybinds, type Keybinds, registerKeyboardListener } from "@fiveway/core/dom";
-import {
-	createContext,
-	useContext,
-	createEffect,
-	onCleanup,
-	type Context,
-	type JSX,
-} from "solid-js";
+import { type JSX } from "@solidjs/web";
+import { type Context, createContext, createEffect, useContext } from "solid-js";
 
 /**
  * Context type containing navigation tree and current parent node.
@@ -26,8 +20,7 @@ export type NavigationContext = {
  * @see {@link useNavigationContext}
  * @see {@link NavigationRoot}
  */
-export const NavigationContext: Context<NavigationContext | undefined> =
-	createContext<NavigationContext>();
+export const NavigationContext: Context<NavigationContext> = createContext<NavigationContext>();
 
 /**
  * Primitive that reads {@link NavigationContext}.
@@ -82,25 +75,18 @@ export function NavigationRoot(props: NavigationRootProps): JSX.Element {
 	// eslint-disable-next-line solid/reactivity
 	const tree = props.tree;
 
-	createEffect(() => {
-		if (props.listener === null) {
-			return;
-		}
+	createEffect(
+		() => [props.listener, props.keybinds ?? defaultKeybinds] as const,
+		([listener, keybinds]) => {
+			if (listener === null) {
+				return;
+			}
 
-		const cleanupListener = registerKeyboardListener(
-			tree,
-			props.listener ?? window,
-			props.keybinds ?? defaultKeybinds,
-		);
-
-		onCleanup(() => {
-			cleanupListener();
-		});
-	});
+			return registerKeyboardListener(tree, listener ?? window, keybinds);
+		},
+	);
 
 	return (
-		<NavigationContext.Provider value={{ tree, parentNode: () => "#" }}>
-			{props.children}
-		</NavigationContext.Provider>
+		<NavigationContext value={{ tree, parentNode: () => "#" }}>{props.children}</NavigationContext>
 	);
 }

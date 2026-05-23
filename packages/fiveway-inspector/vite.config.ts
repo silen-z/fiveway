@@ -33,8 +33,11 @@ export default defineConfig({
 		exports: { packageJson: false, inlinedDependencies: false },
 		plugins: [solid({ hot: false })],
 		deps: {
-			alwaysBundle: ["solid-js", "@solidjs/web", "@solidjs/signals"],
-			onlyBundle: ["solid-js", "@solidjs/web", "@solidjs/signals"],
+			alwaysBundle: [/^solid-js(\/|$)/, /^@solidjs\/(web|signals)(\/|$)/],
+			onlyBundle: [/^solid-js(\/|$)/, /^@solidjs\/(web|signals)(\/|$)/],
+			// the public types don't reference Solid, so keep it external for
+			// declaration output (solid-js@2.0.0-rc.9 ships broken .d.ts re-exports)
+			dts: { alwaysBundle: [] },
 		},
 	},
 });

@@ -28,7 +28,7 @@ export function NavItem(props: NavItemProps) {
 	const baseHandlers = [goBackHandler, elementHandler, itemHandler()];
 
 	const nav = createNavnode(
-		props.navId,
+		() => props.navId,
 		props.handlers ? [...props.handlers, ...baseHandlers] : baseHandlers,
 		{
 			get order() {
@@ -38,7 +38,7 @@ export function NavItem(props: NavItemProps) {
 	);
 
 	return (
-		<div tabIndex={0} onFocus={() => nav.focus()} ref={elementHandler.register} class={css.item}>
+		<div tabindex={0} onFocus={() => nav.focus()} ref={elementHandler.register} class={css.item}>
 			{props.label}
 		</div>
 	);

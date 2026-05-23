@@ -38,6 +38,14 @@ export type InspectorContext = {
 
 export const DevtoolsContext = createContext<InspectorContext>();
 
+/**
+ * Tree labels and node IDs come from untrusted clients and are used as object keys.
+ * Reject keys that could mess with object prototypes.
+ */
+function isSafeKey(key: string): boolean {
+	return key !== "__proto__" && key !== "constructor" && key !== "prototype";
+}
+
 export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 	const [state, setState] = createStore<InspectorState>({
 		selected: null,
@@ -57,6 +65,10 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 			}
 
 			const treeLabel = message.tree;
+			if (!isSafeKey(treeLabel)) {
+				return;
+			}
+
 			const existed = state.trees[treeLabel] != null;
 
 			setState((state) => {
@@ -97,13 +109,17 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 
 				if (message.nodes != null) {
 					for (const node of message.nodes) {
-						tree.nodes[node.id] = node;
+						if (isSafeKey(node.id)) {
+							tree.nodes[node.id] = node;
+						}
 					}
 				}
 
 				if (message.removedNodes != null) {
 					for (const node of message.removedNodes) {
-						delete tree.nodes[node];
+						if (isSafeKey(node)) {
+							delete tree.nodes[node];
+						}
 					}
 				}
 			});

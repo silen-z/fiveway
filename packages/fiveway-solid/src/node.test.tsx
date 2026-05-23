@@ -26,7 +26,7 @@ test("Navnode.focus()", async () => {
 
 	expect(tree.focus).toBe("#/app/item1");
 
-	await getByText("item2").click();
+	getByText("#/app/item2").click();
 
 	expect(tree.focus).toBe("#/app/item2");
 });
@@ -56,7 +56,7 @@ test("Navnode.activate()", async () => {
 
 	expect(tree.focus).toBe("#/app/item1");
 
-	await getByText("item2").click();
+	getByText("#/app/item2").click();
 
 	expect(onActivate).toHaveBeenCalledTimes(1);
 	expect(onActivate).toHaveBeenCalledWith("item2");
@@ -81,8 +81,8 @@ test("Navnode.isFocused()", async () => {
 		</NavigationRoot>
 	));
 
-	const item1 = getByText("item1");
-	const item2 = getByText("item2");
+	const item1 = getByText("#/app/item1");
+	const item2 = getByText("#/app/item2");
 
 	expect(tree.focus).toBe("#/app/item1");
 	await expect.element(item1).toHaveClass("focused");
