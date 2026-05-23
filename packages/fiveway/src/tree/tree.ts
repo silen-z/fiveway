@@ -11,7 +11,7 @@ import { notifyListeners, type FocusListener } from "./events.ts";
 import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
 import { type CreatedNavigationNode, type NavigationNode } from "./node.ts";
 
-export type NavigationTree = {
+export interface NavigationTree {
 	/** ID of the currently focused node */
 	focus: NodeId;
 
@@ -32,7 +32,7 @@ export type NavigationTree = {
 
 	/** @internal */
 	focusLock: "free" | "locked" | "updatePending";
-};
+}
 
 /**
  * Creates a navigation tree with a single root node.
@@ -261,9 +261,9 @@ export function holdFocus(tree: NavigationTree): (() => void) | null {
 	};
 }
 
-export type FocusNodeOptions = {
+export interface FocusNodeOptions {
 	direction?: NavigationDirection | "initial";
-};
+}
 
 /**
  * Attempts to focus `targetId`.

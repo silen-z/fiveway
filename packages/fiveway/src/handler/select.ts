@@ -22,9 +22,9 @@ function createSelectHandler(onSelect: SelectCallback): NavigationHandler {
 	return selectHandler;
 }
 
-export type SelectNodeOptions = {
+export interface SelectNodeOptions {
 	focus?: boolean;
-};
+}
 
 /**
  * By default focuses `nodeId` first (`focus` defaults to `true`), then runs the `select`

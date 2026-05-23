@@ -7,10 +7,10 @@ import { type NavigationHandler } from "./handler.ts";
 import { parentHandler } from "./handler.ts";
 import { type DataHandler, createDataHandler } from "./metadata.ts";
 
-export type SpatialItem = {
+export interface SpatialItem {
 	x: number;
 	y: number;
-};
+}
 
 /**
  * Stores layout bounds per node (query key `spatialItem`).

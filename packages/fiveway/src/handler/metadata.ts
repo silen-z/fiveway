@@ -4,11 +4,11 @@ import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavigationTree } from "../tree/tree.ts";
 
-export type DataHandler<T> = {
+export interface DataHandler<T> {
 	key: string;
 	(v: T | (() => T | null) | null): NavigationHandler;
 	query: (tree: NavigationTree, id: NodeId) => T | null;
-};
+}
 
 /**
  * Factory for data handlers.

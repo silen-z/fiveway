@@ -13,7 +13,7 @@ export type FocusDirection = "forwards" | "backwards";
 /**
  * Options for {@link createFocusHandler}
  */
-export type FocusHandlerOptions = {
+export interface FocusHandlerOptions {
 	/**
 	 * Whether the node is focusable when it has no children.
 	 * By default it is focusable.
@@ -24,7 +24,7 @@ export type FocusHandlerOptions = {
 	 * A function that returns the focus direction based on the `move` action direction.
 	 */
 	direction?: (dir: NavigationDirection | "initial" | null) => FocusDirection | null;
-};
+}
 
 /**
  * Handler factory that creates a primitive focusHandler that resolves `focus` actions by walking children.

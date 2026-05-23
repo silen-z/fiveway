@@ -7,7 +7,7 @@ import { type NavigationTree } from "./tree.ts";
 /**
  * A node stored inside a `NavigationTree`.
  */
-export type NavigationNode = {
+export interface NavigationNode {
 	tree: NavigationTree;
 	id: NodeId;
 	connected: boolean;
@@ -15,19 +15,23 @@ export type NavigationNode = {
 	order: number | null;
 	handler: NavigationHandler;
 	children: NodeChild[];
-};
+}
 
 /**
  * Child reference stored on a node.
  */
-export type NodeChild = { id: NodeId; order: number | null; active: boolean };
+export interface NodeChild {
+	id: NodeId;
+	order: number | null;
+	active: boolean;
+}
 
-export type NodeOptions = {
+export interface NodeOptions {
 	id: string;
 	parent: NodeId;
 	order?: number;
 	handler?: NavigationHandler;
-};
+}
 
 /**
  * Special case of {@link NavigationNode} that might not be inserted into a tree yet

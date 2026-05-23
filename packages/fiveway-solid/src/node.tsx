@@ -26,19 +26,19 @@ import {
 import { useNavigationContext, NavigationContext } from "./context.tsx";
 import { useIsFocused, useOnFocus } from "./hooks.ts";
 
-export type NavnodeOptions = {
+export interface NavnodeOptions {
 	order?: number;
 	parent?: NodeId;
-};
+}
 
-export type Navnode = {
+export interface Navnode {
 	(): NodeId;
 	isFocused: Accessor<boolean>;
 	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
 	select: (nodeId?: NodeId, options?: SelectNodeOptions) => void;
 	onFocus: (fn: () => void) => void;
 	Context: Component<ParentProps>;
-};
+}
 
 export function createNavnode(
 	id: NodeId | Accessor<NodeId>,
@@ -112,11 +112,11 @@ export function createNavnode(
 
 type NavnodeChildren = JSX.Element | ((props: Omit<Navnode, "Context">) => JSX.Element);
 
-export type NavnodeProps = NavnodeOptions & {
+export interface NavnodeProps extends NavnodeOptions {
 	id: NodeId;
 	handler?: NavigationHandler | (NavigationHandler | undefined)[];
 	children?: NavnodeChildren;
-};
+}
 
 export function Navnode(props: NavnodeProps): JSX.Element {
 	const node = createNavnode(props.id, props.handler, props);
