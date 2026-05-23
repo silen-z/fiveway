@@ -3,7 +3,6 @@ import {
 	childLocalId,
 	gridHandler,
 	gridItemHandler,
-	itemHandler,
 	useOnFocusChange,
 } from "@fiveway/solid";
 import { createMemo, createSignal, For, type JSX } from "solid-js";
@@ -31,9 +30,8 @@ export function VirtualGridExample() {
 		(windowRange()[1] + 1) * cols - 1,
 	];
 
-	const nav = createNavnode(
-		"virtual-grid",
-		gridHandler.compose((node, action, next) => {
+	const nav = createNavnode("virtual-grid", [
+		(node, action, next) => {
 			if (action.kind === "focus") {
 				const lp = listPosition();
 				const item = items[lp - (lp % cols)];
@@ -49,8 +47,9 @@ export function VirtualGridExample() {
 			}
 
 			return next();
-		}),
-	);
+		},
+		gridHandler,
+	]);
 
 	useOnFocusChange(nav, (id) => {
 		if (id === null) {
@@ -85,7 +84,7 @@ export function VirtualGridExample() {
 								navId={item.id}
 								label={item.label}
 								order={item.order}
-								handler={itemHandler().compose(gridItemHandler(gridPosition))}
+								handlers={[gridItemHandler(gridPosition)]}
 							/>
 						);
 					}}

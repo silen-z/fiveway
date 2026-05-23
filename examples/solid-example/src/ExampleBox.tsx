@@ -18,10 +18,7 @@ type ExampleBoxProps = {
 };
 
 export function ExampleBox(props: ExampleBoxProps) {
-	const nav = createNavnode(
-		() => props.navId,
-		containerHandler.compose(gridItemHandler(props.gridPos)),
-	);
+	const nav = createNavnode(() => props.navId, [gridItemHandler(props.gridPos), containerHandler]);
 
 	return (
 		<nav.Context>

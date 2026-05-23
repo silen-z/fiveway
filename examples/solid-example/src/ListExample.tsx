@@ -2,7 +2,6 @@ import {
 	createNavnode,
 	horizontalHandler,
 	verticalHandler,
-	type ComposedHandler,
 	type NavigationHandler,
 } from "@fiveway/solid";
 import { For } from "solid-js";
@@ -12,11 +11,14 @@ import { range } from "./utils.ts";
 
 export function ListExample(props: {
 	direction: "vertical" | "horizontal";
-	handler?: (h: ComposedHandler) => NavigationHandler;
+	handlers?: NavigationHandler[];
 }) {
 	const baseHandler = props.direction === "vertical" ? verticalHandler : horizontalHandler;
 
-	const nav = createNavnode("list", props.handler ? props.handler(baseHandler) : baseHandler);
+	const nav = createNavnode(
+		"list",
+		props.handlers ? [...props.handlers, baseHandler] : baseHandler,
+	);
 
 	return (
 		<div

@@ -24,12 +24,12 @@ test("composedHandler", () => {
 			return next();
 		};
 
-	const subComposition = composeHandlers()
+	const subComposition = composeHandlers([])
 		.compose(logHandler("4"))
 		.compose(logHandler("3"))
 		.compose(logHandler("2"));
 
-	const handler = composeHandlers()
+	const handler = composeHandlers([])
 		.compose(logHandler("5"))
 		.compose(subComposition)
 		.compose(logHandler("1"));

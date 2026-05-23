@@ -1,7 +1,6 @@
 import {
 	type FocusNodeOptions,
 	type SelectNodeOptions,
-	type NavigationHandler,
 	type NodeId,
 	insertNode,
 	createNode,
@@ -10,6 +9,8 @@ import {
 	selectNode,
 	updateNode,
 	holdFocus,
+	composeHandlers,
+	type NavigationHandler,
 } from "@fiveway/core";
 import {
 	type Accessor,
@@ -41,7 +42,7 @@ export type Navnode = {
 
 export function createNavnode(
 	id: NodeId | Accessor<NodeId>,
-	handler?: NavigationHandler,
+	handler?: NavigationHandler | (NavigationHandler | undefined)[],
 	options: NavnodeOptions = {},
 ): Navnode {
 	const { tree, parentNode } = useNavigationContext();
@@ -56,7 +57,7 @@ export function createNavnode(
 		return createNode({
 			parent: parent(),
 			id: localId(),
-			handler,
+			handler: Array.isArray(handler) ? composeHandlers(handler) : handler,
 			order: untrack(() => options.order),
 		});
 	});
@@ -113,7 +114,7 @@ type NavnodeChildren = JSX.Element | ((props: Omit<Navnode, "Context">) => JSX.E
 
 export type NavnodeProps = NavnodeOptions & {
 	id: NodeId;
-	handler?: NavigationHandler;
+	handler?: NavigationHandler | (NavigationHandler | undefined)[];
 	children?: NavnodeChildren;
 };
 

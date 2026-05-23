@@ -22,7 +22,7 @@ import css from "./Showcase.module.css";
 
 export function Showcase() {
 	const { tree } = useNavigationContext();
-	const nav = createNavnode("showcase", gridHandler.compose(initialHandler("start")));
+	const nav = createNavnode("showcase", [initialHandler("start"), gridHandler]);
 
 	useFocusSync();
 
@@ -74,9 +74,12 @@ export function Showcase() {
 					<NavItem
 						navId="start"
 						label="Start"
-						handler={itemHandler(() => {
-							nav.focus("vertical-list");
-						}).compose(gridItemHandler({ row: 0, col: 0 }))}
+						handlers={[
+							gridItemHandler({ row: 0, col: 0 }),
+							itemHandler(() => {
+								nav.focus("vertical-list");
+							}),
+						]}
 					/>
 				</div>
 
@@ -105,10 +108,7 @@ export function Showcase() {
 						description="Containers can be configured to focus specific child by default."
 						gridPos={{ row: 2, col: 1 }}
 					>
-						<ListExample
-							direction="horizontal"
-							handler={(h) => h.compose(initialHandler("item3"))}
-						/>
+						<ListExample direction="horizontal" handlers={[initialHandler("item3")]} />
 					</ExampleBox>
 
 					<ExampleBox
@@ -119,15 +119,16 @@ export function Showcase() {
 					>
 						<ListExample
 							direction="horizontal"
-							handler={(h) =>
-								h.compose(captureHandler).compose((n, a, next) => {
+							handlers={[
+								(n, a, next) => {
 									if (a.kind === "move" && a.direction === "back") {
 										nav.focus();
 										return null;
 									}
 									return next();
-								})
-							}
+								},
+								captureHandler,
+							]}
 						/>
 					</ExampleBox>
 

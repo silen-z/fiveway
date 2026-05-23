@@ -1,19 +1,20 @@
 import {
 	type NodeId,
-	type NavigationHandler,
+	type NavigationTree,
+	type CreatedNavigationNode,
 	type FocusNodeOptions,
 	type SelectNodeOptions,
-	type CreatedNavigationNode,
 	updateNode,
 	insertNode,
 	removeNode,
 	createNode,
 	isFocused,
 	registerListener,
-	type NavigationTree,
 	focusNode,
 	selectNode,
 	joinId,
+	composeHandlers,
+	type NavigationHandler,
 } from "@fiveway/core";
 import {
 	type ReactNode,
@@ -43,11 +44,13 @@ const NULL_NODE = {} as CreatedNavigationNode;
 
 export function useNavnode(
 	id: NodeId,
-	handler?: NavigationHandler,
+	handler?: NavigationHandler | (NavigationHandler | undefined)[],
 	options: NavnodeOptions = {},
 ): Navnode {
 	const { tree, parentNode } = useNavigationContext();
 	const parent = options.parent ?? parentNode;
+
+	handler = Array.isArray(handler) ? composeHandlers(handler) : handler;
 
 	const nodeRef = useRef(NULL_NODE);
 	if (nodeRef.current === NULL_NODE || nodeRef.current.parent !== parent) {
@@ -58,7 +61,7 @@ export function useNavnode(
 			order: options.order,
 		});
 	} else {
-		updateNode(nodeRef.current, { order: options.order, handler });
+		updateNode(nodeRef.current, { handler, order: options.order });
 	}
 	const nodeId = nodeRef.current.id;
 
@@ -103,7 +106,7 @@ export function useNavnode(
 
 export type NavnodeProps = NavnodeOptions & {
 	id: NodeId;
-	handler?: NavigationHandler;
+	handler?: NavigationHandler | (NavigationHandler | undefined)[];
 	children?: ReactNode | ((props: Omit<Navnode, "Context">) => ReactNode);
 };
 

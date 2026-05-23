@@ -1,7 +1,6 @@
 import {
 	horizontalHandler,
 	verticalHandler,
-	type ComposedHandler,
 	type NavigationHandler,
 	useNavnode,
 } from "@fiveway/react";
@@ -11,11 +10,11 @@ import { range } from "./utils";
 
 export function ListExample(props: {
 	direction: "vertical" | "horizontal";
-	handler?: (h: ComposedHandler) => NavigationHandler;
+	handlers?: NavigationHandler[];
 }) {
-	const handler = props.direction === "vertical" ? verticalHandler : horizontalHandler;
+	const baseHandler = props.direction === "vertical" ? verticalHandler : horizontalHandler;
 
-	const nav = useNavnode("list", props.handler ? props.handler(handler) : handler);
+	const nav = useNavnode("list", props.handlers ? [...props.handlers, baseHandler] : baseHandler);
 
 	return (
 		<div

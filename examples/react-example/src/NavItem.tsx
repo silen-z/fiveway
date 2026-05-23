@@ -1,6 +1,5 @@
 import {
 	itemHandler,
-	type ComposedHandler,
 	type NavigationHandler,
 	type NodeId,
 	useElementHandler,
@@ -14,7 +13,7 @@ type NavItemProps = {
 	order?: number;
 	onSelect?: () => void;
 	label: string;
-	handler?: ComposedHandler;
+	handlers?: NavigationHandler[];
 };
 
 const goBackHandler: NavigationHandler = (_, action, next) => {
@@ -27,9 +26,11 @@ const goBackHandler: NavigationHandler = (_, action, next) => {
 export function NavItem(props: NavItemProps) {
 	const elementHandler = useElementHandler();
 
+	const baseHandlers = [goBackHandler, elementHandler, itemHandler()];
+
 	const nav = useNavnode(
 		props.navId,
-		(props.handler ?? itemHandler()).compose(goBackHandler).compose(elementHandler),
+		props.handlers ? [...props.handlers, ...baseHandlers] : baseHandlers,
 		{ order: props.order },
 	);
 

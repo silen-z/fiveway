@@ -2,7 +2,6 @@ import {
 	childLocalId,
 	gridHandler,
 	gridItemHandler,
-	itemHandler,
 	useNavnode,
 	useOnFocusChange,
 } from "@fiveway/react";
@@ -28,9 +27,8 @@ export function VirtualGridExample() {
 	const windowRange = offsetWindow(rows, itemRowIndex, 1, 2);
 	const gridRange: [number, number] = [windowRange[0] * cols, (windowRange[1] + 1) * cols - 1];
 
-	const nav = useNavnode(
-		"virtual-grid",
-		gridHandler.compose((node, action, next) => {
+	const nav = useNavnode("virtual-grid", [
+		(node, action, next) => {
 			if (action.kind === "focus") {
 				const item = items[listPosition - (listPosition % cols)];
 				if (item == null) {
@@ -45,8 +43,9 @@ export function VirtualGridExample() {
 			}
 
 			return next();
-		}),
-	);
+		},
+		gridHandler,
+	]);
 
 	useOnFocusChange(nav.id, (id) => {
 		if (id === null) {
@@ -79,7 +78,7 @@ export function VirtualGridExample() {
 							navId={item.id}
 							label={item.label}
 							order={item.order}
-							handler={itemHandler().compose(gridItemHandler(gridPosition))}
+							handlers={[gridItemHandler(gridPosition)]}
 						/>
 					);
 				})}
