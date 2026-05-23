@@ -18,7 +18,7 @@
 		"lib": ["es2022", "dom", "dom.iterable"],
 
 		"jsx": "preserve",
-		"jsxImportSource": "solid-js",
+		"jsxImportSource": "@solidjs/web",
 
 		"types": ["vite-plus/client"]
 	},

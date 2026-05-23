@@ -5,7 +5,8 @@ import {
 	gridItemHandler,
 	useOnFocusChange,
 } from "@fiveway/solid";
-import { createMemo, createSignal, For, type JSX } from "solid-js";
+import { type JSX } from "@solidjs/web";
+import { createMemo, createSignal, For } from "solid-js";
 
 import { NavItem } from "../NavItem.tsx";
 import { offsetWindow, mapRange } from "./virtual.ts";

@@ -73,7 +73,7 @@ function createInspectorConnection(id: string) {
 
 	return {
 		subscribe: (callback: (message: InspectorMessage) => void) => {
-			ws = new WebSocket(`/ws/inspect?client=${id}`);
+			ws = new WebSocket(`/ws/inspect?client=${encodeURIComponent(id)}`);
 
 			ws.addEventListener("open", () => {
 				setStatus("connected");

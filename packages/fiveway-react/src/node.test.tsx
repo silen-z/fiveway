@@ -81,8 +81,8 @@ test("Navnode.isFocused()", async () => {
 		</NavigationRoot>,
 	);
 
-	const item1 = getByText("item1");
-	const item2 = getByText("item2");
+	const item1 = getByText("#/app/item1");
+	const item2 = getByText("#/app/item2");
 
 	expect(tree.focus).toBe("#/app/item1");
 	await expect.element(item1).toHaveClass("focused");
