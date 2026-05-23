@@ -27,18 +27,18 @@ import {
 
 import { NavigationContext, useNavigationContext } from "./context.tsx";
 
-export type NavnodeOptions = {
+export interface NavnodeOptions {
 	parent?: NodeId;
 	order?: number;
-};
+}
 
-export type Navnode = {
+export interface Navnode {
 	id: NodeId;
 	isFocused: () => boolean;
 	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
 	select: (nodeId?: NodeId, options?: SelectNodeOptions) => void;
 	Context: React.FunctionComponent<{ children: ReactNode }>;
-};
+}
 
 const NULL_NODE = {} as CreatedNavigationNode;
 
@@ -104,11 +104,11 @@ export function useNavnode(
 	return { id: nodeId, isFocused, focus, select, Context };
 }
 
-export type NavnodeProps = NavnodeOptions & {
+export interface NavnodeProps extends NavnodeOptions {
 	id: NodeId;
 	handler?: NavigationHandler | (NavigationHandler | undefined)[];
 	children?: ReactNode | ((props: Omit<Navnode, "Context">) => ReactNode);
-};
+}
 
 export function Navnode({ children, ...props }: NavnodeProps): ReactNode {
 	const { Context, ...node } = useNavnode(props.id, props.handler, props);

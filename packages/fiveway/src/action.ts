@@ -17,10 +17,10 @@ export type NavigationDirection = "forwards" | "backwards" | "up" | "down" | "le
  *
  * Focus action can contain direction of movement.
  */
-export type FocusAction = {
+export interface FocusAction {
 	kind: "focus";
 	direction: NavigationDirection | "initial" | null;
-};
+}
 
 /**
  * Action dispatched to move focus in a specific direction.
@@ -30,21 +30,21 @@ export type FocusAction = {
  * - `false` — short press committed on keyup
  * - `true` — long press committed when the hold threshold elapses
  */
-export type MoveAction = {
+export interface MoveAction {
 	kind: "move";
 	direction: NavigationDirection | "back";
 	longpress?: boolean;
-};
+}
 
 /**
  * Action dispatched to select a node.
  *
  * @see {@link MoveAction} for `longpress` semantics.
  */
-export type SelectAction = {
+export interface SelectAction {
 	kind: "select";
 	longpress?: boolean;
-};
+}
 
 /**
  * Action dispatched to query node metadata based on key.
@@ -52,11 +52,11 @@ export type SelectAction = {
  * This action is meant to be used via the `.query()` method on handlers from {@link createDataHandler}.
  * QueryAction is resolved directly on given node and is not passed to parent nodes.
  */
-export type QueryAction = {
+export interface QueryAction {
 	kind: "query";
 	key: string;
 	value: unknown;
-};
+}
 
 /**
  * Extension point for registering custom actions.

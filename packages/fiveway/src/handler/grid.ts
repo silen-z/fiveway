@@ -8,10 +8,10 @@ import { focusHandler } from "./focus.ts";
 import { type HandlerNext, parentHandler } from "./handler.ts";
 import { type DataHandler, createDataHandler } from "./metadata.ts";
 
-export type GridItem = {
+export interface GridItem {
 	row: number;
 	col: number;
-};
+}
 
 /**
  * Associates each item with grid coordinates (query key `gridItem`).

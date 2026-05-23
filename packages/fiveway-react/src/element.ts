@@ -9,9 +9,9 @@ import { useRef, useMemo, useEffect } from "react";
 
 import { useNavigationContext } from "./context.tsx";
 
-export type ElementHandler = ComposedHandler & {
+export interface ElementHandler extends ComposedHandler {
 	register: (e: HTMLElement | null) => void;
-};
+}
 
 export function useElementHandler(): ElementHandler {
 	const elementRef = useRef<HTMLElement | null>(null);
