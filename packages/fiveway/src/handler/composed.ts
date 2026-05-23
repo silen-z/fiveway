@@ -16,7 +16,7 @@ export interface ComposedHandler extends NavigationHandler {
 	 * @param handler - The handler to add to the front of the chain.
 	 * @returns A new composed handler.
 	 */
-	compose(handler: NavigationHandler | ComposedHandler): ComposedHandler;
+	compose(handler: NavigationHandler): ComposedHandler;
 
 	/** @internal */
 	chain: HandlerChainLink | null;
@@ -70,46 +70,10 @@ function createHandlerFromChain(chain: HandlerChainLink | null): ComposedHandler
 		return runLink(chain);
 	};
 
+	composedHandler.compose = (handler) => createHandlerFromChain({ handler, next: chain });
 	composedHandler.chain = chain;
 
-	composedHandler.compose = (handler) => {
-		// handler is a regular not composed handler
-		if (!("chain" in handler)) {
-			return createHandlerFromChain({ handler, next: chain });
-		}
-
-		// when current chain there is nothing to compose so just return the incoming handler
-		if (chain === null) {
-			return handler;
-		}
-
-		// when the incoming handler is not composed, just return the current composed handler
-		if (handler.chain === null) {
-			return composedHandler;
-		}
-
-		const appended = appendLink(handler.chain, chain);
-		return createHandlerFromChain(appended);
-	};
-
 	return composedHandler;
-}
-
-function appendLink(chain: HandlerChainLink, link: HandlerChainLink): HandlerChainLink {
-	const cloned: HandlerChainLink = { handler: chain.handler, next: null };
-
-	let current = chain;
-	let currentCloned = cloned;
-
-	while (current.next !== null) {
-		currentCloned.next = { handler: current.next.handler, next: null };
-
-		current = current.next;
-		currentCloned = currentCloned.next;
-	}
-
-	currentCloned.next = link;
-	return cloned;
 }
 
 function describeLinkHandler(
