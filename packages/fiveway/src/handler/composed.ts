@@ -30,7 +30,16 @@ type HandlerChainLink = {
 /**
  * Composes multiple navigation handlers so they run in a sequence.
  *
- * Also adds `.compose()` method to allow further composition.
+ * ```ts
+ * const handler = composeHandlers([
+ *   focusHandler(),
+ *   movementHandler(),
+ *   parentHandler(),
+ * ]);
+ * ```
+ *
+ * @see {@link https://fiveway.dev/guide/handlers#composing-handlers} for more information about composing handlers.
+ * @see {@link ComposedHandler}
  */
 export function composeHandlers(handlers: (NavigationHandler | undefined)[]): ComposedHandler {
 	let chain = null;

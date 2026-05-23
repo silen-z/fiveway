@@ -12,6 +12,15 @@ import { type Accessor, createEffect, createMemo, createSignal, onCleanup } from
 
 import { useNavigationContext } from "./context.tsx";
 
+/**
+ * Solid primitive that returns the focused node ID for a given scope.
+ *
+ * @example
+ * ```ts
+ * const nav = createNavnode("container", containerHandler);
+ * const focusedId = useFocusedId(nav);
+ * ```
+ */
 export function useFocusedId(scope: NodeId): Accessor<NodeId | null> {
 	const { tree, parentNode } = useNavigationContext();
 	const globalId = joinId(parentNode(), scope);
@@ -29,6 +38,15 @@ export function useFocusedId(scope: NodeId): Accessor<NodeId | null> {
 	return focusedId;
 }
 
+/**
+ * Solid primitive that returns whether a given node ID is focused.
+ *
+ * @example
+ * ```ts
+ * const nav = createNavnode("layout", containerHandler);
+ * const isContentFocused = useIsFocused(`${nav()}/content`);
+ * ```
+ */
 export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
 	const { tree, parentNode } = useNavigationContext();
 
@@ -42,10 +60,10 @@ export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
 			return;
 		}
 
-		const id = watchedId();
+		const nodeId = watchedId();
 
-		const cleanup = registerListener(tree, id, () => {
-			setFocused(isFocused(tree, id));
+		const cleanup = registerListener(tree, nodeId, () => {
+			setFocused(isFocused(tree, nodeId));
 		});
 
 		onCleanup(cleanup);
@@ -60,6 +78,19 @@ export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
 	return accessor;
 }
 
+/**
+ * Solid primitive that calls a function when the focus inside a given node ID changes.
+ *
+ * When the focus moves outside the given node ID, the function is called with `null`.
+ *
+ * @example
+ * ```ts
+ * const nav = createNavnode("layout", containerHandler);
+ * useOnFocusChange(nav, (id) => {
+ * 	console.log(id);
+ * });
+ * ```
+ */
 export function useOnFocusChange(
 	nodeId: NodeId | Accessor<NodeId>,
 	handler: (id: NodeId | null) => void,
@@ -81,6 +112,17 @@ export function useOnFocusChange(
 	});
 }
 
+/**
+ * Solid primitive that calls a function when given node ID is focused.
+ *
+ * @example
+ * ```ts
+ * const nav = createNavnode("layout", containerHandler);
+ * useOnFocus(nav, () => {
+ * 	console.log("focus gained");
+ * });
+ * ```
+ */
 export function useOnFocus(nodeId: NodeId | Accessor<NodeId>, handler: () => void): void {
 	let lastFocused = false;
 	useOnFocusChange(nodeId, (id) => {
@@ -93,6 +135,17 @@ export function useOnFocus(nodeId: NodeId | Accessor<NodeId>, handler: () => voi
 	});
 }
 
+/**
+ * Solid primitive that calls a function when given node ID loses focus.
+ *
+ * @example
+ * ```ts
+ * const nav = createNavnode("layout", containerHandler);
+ * useOnBlur(nav, () => {
+ * 	console.log("focus lost");
+ * });
+ * ```
+ */
 export function useOnBlur(nodeId: NodeId | Accessor<NodeId>, handler: () => void): void {
 	let lastFocused = false;
 	useOnFocusChange(nodeId, (id) => {
@@ -107,6 +160,17 @@ export function useOnBlur(nodeId: NodeId | Accessor<NodeId>, handler: () => void
 
 type FocusFn = (nodeId: NodeId, options?: FocusNodeOptions) => void;
 
+/**
+ * Solid primitive that returns a function for focusing nodes.
+ * By default the function will focus nodes relative to the current parent node.
+ *
+ * @example
+ * ```tsx
+ * const focus = useFocus();
+ *
+ * <button onClick={() => focus("content")}>Focus content</button>
+ * ```
+ */
 export function useFocus(scope?: NodeId): FocusFn {
 	const { tree, parentNode } = useNavigationContext();
 	scope ??= parentNode();
@@ -118,6 +182,17 @@ export function useFocus(scope?: NodeId): FocusFn {
 
 type SelectFn = (nodeId: NodeId, options?: SelectNodeOptions) => void;
 
+/**
+ * Solid primitive that returns a function for selecting nodes.
+ * By default the function will select nodes relative to the current parent node.
+ *
+ * @example
+ * ```tsx
+ * const select = useSelect();
+ *
+ * <button onClick={() => select("content")}>Select content</button>
+ * ```
+ */
 export function useSelect(scope?: NodeId): SelectFn {
 	const { tree, parentNode } = useNavigationContext();
 	scope ??= parentNode();

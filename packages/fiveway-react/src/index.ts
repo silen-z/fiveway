@@ -1,7 +1,7 @@
 export * from "@fiveway/core";
 export * from "@fiveway/core/dom";
 
-export { NavigationContext, NavigationProvider, useNavigationContext } from "./context.tsx";
+export { NavigationContext, NavigationRoot, useNavigationContext } from "./context.tsx";
 
 export { type NavnodeOptions, type NavnodeProps, useNavnode, Navnode } from "./node.tsx";
 

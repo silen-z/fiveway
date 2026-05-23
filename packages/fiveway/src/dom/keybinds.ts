@@ -1,18 +1,19 @@
-import { type NavigationAction } from "../action.ts";
+import { type NavigationAction, type MoveAction, type SelectAction } from "../action.ts";
 
+/**
+ * Keybinds function that maps keyboard events to navigation actions.
+ *
+ * @see {@link defaultKeybinds} for default keybinds
+ */
 export type Keybinds = (e: Event, options: { longpress?: boolean }) => NavigationAction | null;
 
 /**
- * Default keybinds for `keydown`-like events:
+ * {@link Keybinds} function that handles set of default keybinds for `keydown` events:
  *
- * - Arrow keys → `move`
- * - Enter / Space → `select`
- * - Backspace → `move` with direction `"back"`
- *
- * When `longpress` is passed, it is set on `move` and `select` actions.
- * Omit it for immediate dispatch (no `longpress` field).
- *
- * Returns `null` when unmapped.
+ * Default keybinds:
+ * - Arrow keys → {@link MoveAction}
+ * - Enter / Space → {@link SelectAction}
+ * - Backspace → {@link MoveAction} with direction `"back"`
  */
 export function defaultKeybinds(
 	e: Event,
@@ -25,27 +26,27 @@ export function defaultKeybinds(
 	}
 
 	if (key === "Enter" || key === " ") {
-		return { kind: "select", longpress };
+		return { kind: "select", longpress } satisfies SelectAction;
 	}
 
 	if (key === "ArrowUp") {
-		return { kind: "move", direction: "up", longpress };
+		return { kind: "move", direction: "up", longpress } satisfies MoveAction;
 	}
 
 	if (key === "ArrowDown") {
-		return { kind: "move", direction: "down", longpress };
+		return { kind: "move", direction: "down", longpress } satisfies MoveAction;
 	}
 
 	if (key === "ArrowLeft") {
-		return { kind: "move", direction: "left", longpress };
+		return { kind: "move", direction: "left", longpress } satisfies MoveAction;
 	}
 
 	if (key === "ArrowRight") {
-		return { kind: "move", direction: "right", longpress };
+		return { kind: "move", direction: "right", longpress } satisfies MoveAction;
 	}
 
 	if (key === "Backspace") {
-		return { kind: "move", direction: "back", longpress };
+		return { kind: "move", direction: "back", longpress } satisfies MoveAction;
 	}
 
 	return null;

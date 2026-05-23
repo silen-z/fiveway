@@ -5,31 +5,104 @@ import { joinId, type NodeId } from "./id.ts";
 import { type NavigationTree } from "./tree.ts";
 
 /**
- * A node stored inside a `NavigationTree`.
+ * A node stored inside a `NavigationTree`. Nodes are created using {@link createNode}
+ *
+ * Do not modify node properties directly. Use {@link updateNode} to update node options.
  */
 export interface NavigationNode {
-	tree: NavigationTree;
+	/**
+	 * ID of the node
+	 */
 	id: NodeId;
-	connected: boolean;
+
+	/**
+	 * Navigation tree that contains this node
+	 */
+	tree: NavigationTree;
+
+	/**
+	 * ID of the parent node. Only root node has parent with value `null`
+	 */
 	parent: NodeId | null;
+
+	/**
+	 * The order of the node in the parent's children list.
+	 */
 	order: number | null;
+
+	/**
+	 * Handler responsible for handling navigation actions dispatched to this node.
+	 *
+	 * @see {@link NavigationHandler}
+	 */
 	handler: NavigationHandler;
+
+	/**
+	 * Array of references to children of this node. Not to be manipulated directly.
+	 *
+	 * @see {@link NodeChild}
+	 */
 	children: NodeChild[];
+
+	/**
+	 * @internal
+	 *
+	 * Whether the node is connected.
+	 * Node is considered connected when all parent nodes up to the root are inserted in the tree.
+	 */
+	connected: boolean;
 }
 
 /**
- * Child reference stored on a node.
+ * Child reference stored inside {@link NavigationNode} `children` array.
  */
 export interface NodeChild {
+	/**
+	 * ID of the child node
+	 */
 	id: NodeId;
+
+	/**
+	 * Order of the child.
+	 */
 	order: number | null;
+
+	/**
+	 * @internal
+	 *
+	 * Without explicit order child references are kept around as tombstones.
+	 * This is done to preserve order when reinserting a node without explicit order.
+	 */
 	active: boolean;
 }
 
+/**
+ * Options for {@link createNode}
+ */
 export interface NodeOptions {
+	/**
+	 * local node id such as `"item1"`. Must not contain slashes.
+	 *
+	 * @see {@link NodeId}
+	 */
 	id: string;
+
+	/**
+	 * The id of the parent node. Must not be `null`.
+	 */
 	parent: NodeId;
+
+	/**
+	 * Desired order of the node in relation to other children.
+	 */
 	order?: number;
+
+	/**
+	 * Handler responsible for handling navigation actions dispatched to this node.
+	 *
+	 * @default {@link defaultHandler}
+	 * @see {@link NavigationHandler}
+	 */
 	handler?: NavigationHandler;
 }
 
@@ -41,10 +114,9 @@ export type CreatedNavigationNode = Omit<NavigationNode, "tree"> & {
 };
 
 /**
- * Builds an unattached node description.
+ * Creates a new navigation node.
  *
- * The `id` is combined with `parent` via `joinId`. If `handler` is omitted,
- * `defaultHandler` is used.
+ * @see {@link NodeOptions}
  */
 export function createNode(options: NodeOptions): CreatedNavigationNode {
 	if (options.id.includes("/")) {
@@ -63,9 +135,9 @@ export function createNode(options: NodeOptions): CreatedNavigationNode {
 }
 
 /**
- * Updates `handler` and/or `order` on an existing node.
+ * Updates node properties. Only `handler` and `order` can be updated.
  *
- * Changing `order` repositions the node among its parent’s children.
+ * @see {@link NodeOptions}
  */
 export function updateNode(
 	node: CreatedNavigationNode,

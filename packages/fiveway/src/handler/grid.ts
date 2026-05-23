@@ -8,20 +8,44 @@ import { focusHandler } from "./focus.ts";
 import { type HandlerNext, parentHandler } from "./handler.ts";
 import { type DataHandler, createDataHandler } from "./metadata.ts";
 
+/**
+ * Grid item position for {@link gridItemHandler}
+ *
+ * @see {@link gridHandler}
+ */
 export interface GridItem {
 	row: number;
 	col: number;
 }
 
 /**
- * Associates each item with grid coordinates (query key `gridItem`).
+ * Data handler that provides navigation node with grid position
+ *
+ * {@see gridHandler} that uses this data handler to get grid position.
+ *
+ * @example
+ *
+ * ```ts
+ * useNavnode("item:0:0", [
+ *	 gridItemHandler({ row: 0, col: 0 }),
+ *	 itemHandler,
+ * ]);
+ * ```
  */
 export const gridItemHandler: DataHandler<GridItem> = createDataHandler("gridItem");
 
 /**
- * Grid movement handler used by `gridHandler`.
+ * Building block for {@link gridHandler}. Handles `move` actions to move focus in grid layout.
+ * Uses {@link gridItemHandler} to get grid positions of children nodes.
  *
- * Picks the nearest cell using {@link defaultDistance} and `gridItemHandler` positions.
+ * @example
+ * ```ts
+ * export const gridHandler = composeHandlers([
+ *	 focusHandler({ focusWhenEmpty: false }),
+ *	 gridMovementHandler,
+ *	 parentHandler,
+ * ]);
+ * ```
  */
 export function gridMovementHandler(
 	node: NavigationNode,
@@ -81,7 +105,24 @@ export function gridMovementHandler(
 }
 
 /**
- * Combines grid movement with defaults for arrow-key and reading-order navigation.
+ * Navigation handler that handles movement in a grid layout.
+ * Grid items are configured using {@link gridItemHandler}.
+ *
+ * @example
+ *
+ * ```ts
+ * const parent = useNavnode("grid", [
+ *	 gridHandler,
+ *	 containerHandler,
+ * ]);
+ *
+ * const child = useNavnode("item:0:0", [
+ *	 gridItemHandler({ row: 0, col: 0 }),
+ *	 itemHandler,
+ * ]);
+ * ```
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#grid-handler}
  */
 export const gridHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false }),

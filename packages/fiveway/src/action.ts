@@ -1,9 +1,3 @@
-// https://github.com/oxc-project/oxc/issues/11639
-// oxlint-disable no-unused-vars
-import { type NavigationHandler } from "./handler/handler.ts";
-import { createDataHandler } from "./handler/metadata.ts";
-// oxlint-enable no-unused-vars
-
 /**
  * Basic movement directions.
  */
@@ -49,7 +43,7 @@ export interface SelectAction {
 /**
  * Action dispatched to query node metadata based on key.
  *
- * This action is meant to be used via the `.query()` method on handlers from {@link createDataHandler}.
+ * This action is meant to be used via the `.query()` method on handlers from `createDataHandler`.
  * QueryAction is resolved directly on given node and is not passed to parent nodes.
  */
 export interface QueryAction {
@@ -83,7 +77,6 @@ export interface DefinedNavigationActions {
 /**
  * Type of actions dispatched to nodes in navigation tree and handled by node handlers.
  *
- * @see {@link NavigationHandler}.
  * @see {@link DefinedNavigationActions} to extend this type with custom actions.
  */
 export type NavigationAction = DefinedNavigationActions[keyof DefinedNavigationActions];

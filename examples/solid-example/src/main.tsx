@@ -1,6 +1,6 @@
 /* @refresh reload */
 
-import { createNavigationTree, NavigationProvider } from "@fiveway/solid";
+import { createNavigationTree, NavigationRoot } from "@fiveway/solid";
 import { render } from "solid-js/web";
 
 import { Showcase } from "./Showcase.tsx";
@@ -11,9 +11,9 @@ function App() {
 	const navigationTree = createNavigationTree();
 
 	return (
-		<NavigationProvider tree={navigationTree}>
+		<NavigationRoot tree={navigationTree}>
 			<Showcase />
-		</NavigationProvider>
+		</NavigationRoot>
 	);
 }
 

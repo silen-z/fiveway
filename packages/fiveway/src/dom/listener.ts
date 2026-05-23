@@ -9,6 +9,19 @@ type PendingPress = {
 	timer: number;
 };
 
+/**
+ * Registers a keyboard listener for a given target and keybinds.
+ *
+ * This handler handles long presses for nodes with {@link longPressHandler}.
+ *
+ * @param tree - The navigation tree.
+ * @param target - The target to register the listener on.
+ * @param keybinds - The keybinds to use.
+ *
+ * @returns A function to unregister the listener.
+ *
+ * @see {@link Keybinds}
+ */
 export function registerKeyboardListener(
 	tree: NavigationTree,
 	target: EventTarget,
