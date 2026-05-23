@@ -3,7 +3,17 @@ import { type NodeId } from "../tree/id.ts";
 import { type NavigationTree, focusNode } from "../tree/tree.ts";
 import { type NavigationHandler, runHandler } from "./handler.ts";
 
+/**
+ * Callback function that is called when a select action is triggered on node with {@link selectHandler}.
+ *
+ * @param options - The options for the select action.
+ */
 export type SelectCallback = (options: { longpress: boolean }) => void;
+
+/**
+ * Navigation handler factory that creates a handler that invokes `onSelect` when a select action is triggered.
+ */
+export const selectHandler: (onSelect: SelectCallback) => NavigationHandler = createSelectHandler;
 
 function createSelectHandler(onSelect: SelectCallback): NavigationHandler {
 	const selectHandler: NavigationHandler = (_, action, next) => {
@@ -22,13 +32,21 @@ function createSelectHandler(onSelect: SelectCallback): NavigationHandler {
 	return selectHandler;
 }
 
+/**
+ * Options for {@link selectNode}.
+ */
 export interface SelectNodeOptions {
+	/**
+	 * Whether to focus the node before selecting it.
+	 * @default `true`
+	 */
 	focus?: boolean;
 }
 
 /**
- * By default focuses `nodeId` first (`focus` defaults to `true`), then runs the `select`
- * action through that node’s handler.
+ * Selects a node by invoking the `select` action on it.
+ *
+ * {@see {@link SelectNodeOptions}}
  */
 export function selectNode(
 	tree: NavigationTree,
@@ -41,10 +59,3 @@ export function selectNode(
 
 	runHandler(tree, nodeId, { kind: "select" });
 }
-
-/**
- * Invokes `onSelect` when the action is `select`.
- *
- * Used inside `itemHandler`.
- */
-export { createSelectHandler as selectHandler };

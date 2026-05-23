@@ -16,7 +16,7 @@ export type FocusDirection = "forwards" | "backwards";
 export interface FocusHandlerOptions {
 	/**
 	 * Whether the node is focusable when it has no children.
-	 * By default it is focusable.
+	 * @default `true`
 	 */
 	focusWhenEmpty?: boolean;
 
@@ -27,10 +27,11 @@ export interface FocusHandlerOptions {
 }
 
 /**
- * Handler factory that creates a primitive focusHandler that resolves `focus` actions by walking children.
- * It can be configured by passing options.
+ * Handler factory that creates a primitive handler that is used to resolve {@link FocusAction}.
+ * Focus is resolved by walking children in the order determined by the `direction` option.
  *
- * This handler is the most important handler that makes focus work and is used by all core composed handlers.
+ * @see {@link FocusHandlerOptions} for options
+ * @see {@link https://fiveway.dev/guide/handlers#composing-handlers} for more information about composing handlers.
  */
 function createFocusHandler(options: FocusHandlerOptions = {}): NavigationHandler {
 	const focusWhenEmpty = options.focusWhenEmpty ?? true;

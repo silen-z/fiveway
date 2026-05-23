@@ -7,12 +7,10 @@ import { focusHandler } from "./focus.ts";
 import { type HandlerNext, parentHandler } from "./handler.ts";
 
 /**
- * Primitive handler that only handles `move` actions in up and down directions
- * by focusing the previous or next child respectively.
+ * Building block for {@link verticalHandler}.
+ * Handles `move` actions in up and down directions by focusing the previous or next child respectively.
  *
  * This is a primitive handler and as such is meant to be used as part of a composed handler.
- *
- * @see {@link verticalHandler} for a composed handler that uses `verticalMovementHandler`.
  */
 export function verticalMovementHandler(
 	node: NavigationNode,
@@ -57,9 +55,16 @@ function verticalFocusDirection(dir: NavigationDirection | "initial" | null) {
 }
 
 /**
- * Composed handler that handles `move` actions in up and down directions by focusing the previous or next child respectively.
+ * Navigation handler that handles movement in up and down directions
+ * by focusing the previous or next child respectively.
  *
- * It respects direction of incoming focus and can't be focused by itself when it it has no children.
+ * @example
+ *
+ * ```ts
+ * const nav = useNavnode("list", verticalHandler);
+ * ```
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#vertical-handler}
  */
 export const verticalHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false, direction: verticalFocusDirection }),
@@ -68,12 +73,10 @@ export const verticalHandler: ComposedHandler = composeHandlers([
 ]);
 
 /**
- * Primitive handler that only handles `move` actions in left and right directions
- * by focusing the previous or next child respectively.
+ * Building block for {@link horizontalHandler}.
+ * Handles `move` actions in left and right directions by focusing the previous or next child respectively.
  *
  * This is a primitive handler and as such is meant to be used as part of a composed handler.
- *
- * @see {@link horizontalHandler} for a composed handler that uses `horizontalMovementHandler`.
  */
 export function horizontalMovementHandler(
 	node: NavigationNode,
@@ -118,9 +121,16 @@ function horizontalFocusDirection(dir: NavigationDirection | "initial" | null) {
 }
 
 /**
- * Composed handler that handles `move` actions in left and right directions by focusing the previous or next child respectively.
+ * Navigation handler that handles movement in left and right directions
+ * by focusing the previous or next child respectively.
  *
- * It respects direction of incoming focus and can't be focused by itself when it it has no children.
+ * @example
+ *
+ * ```ts
+ * const nav = useNavnode("list", horizontalHandler);
+ * ```
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#horizontal-handler}
  */
 export const horizontalHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false, direction: horizontalFocusDirection }),

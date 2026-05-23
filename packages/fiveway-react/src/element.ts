@@ -9,10 +9,25 @@ import { useRef, useMemo, useEffect } from "react";
 
 import { useNavigationContext } from "./context.tsx";
 
+/**
+ * Data handler used for associating navigation nodes with DOM elements.
+ * It does not handle focus or movement actions and is meant to be composed with other handlers.
+ *
+ * @example
+ * ```ts
+ * const elementHandler = useElementHandler();
+ * const nav = useNavnode("my-node", [elementHandler, itemHandler()]);
+ * ```
+ *
+ * @see {@link useElementHandler}
+ */
 export interface ElementHandler extends ComposedHandler {
 	register: (e: HTMLElement | null) => void;
 }
 
+/**
+ * Factory for creating {@link ElementHandler}.
+ */
 export function useElementHandler(): ElementHandler {
 	const elementRef = useRef<HTMLElement | null>(null);
 
@@ -39,6 +54,9 @@ export function useElementHandler(): ElementHandler {
 	}, []);
 }
 
+/**
+ * Hook that synchronizes native browser focus with focused node based on {@link elementHandler}.
+ */
 export function useFocusSync(): void {
 	const { tree } = useNavigationContext();
 

@@ -17,15 +17,25 @@ export function joinId(scope: NodeId, nodeId: NodeId): NodeId {
 }
 
 /**
- * True when `childId` is a descendant path of `parentId` (path-prefix semantics).
+ * Determines whether `childId` is a descendant of `parentId` based on ID path
+ *
+ * @return `true` when `childId` is a descendant path of `parentId`.
  */
 export function isParent(parentId: NodeId, childId: NodeId): boolean {
 	return childId.startsWith(parentId + "/");
 }
 
 /**
- * Returns the id of the direct child of `parentId` on the path to `descendantId`,
- * or `null` if not a descendant.
+ * Given a parent and a descendant IDs determines ID of a direct child
+ *
+ * @return ID of a direct child of `parentId` or `null` if `descendantId` is not a descendant of `parentId`.
+ *
+ * @example
+ * ```ts
+ * childLocalId("#/container", "#/container/item/nested"); // "#/container/item"
+ * childLocalId("#/container", "#/container/item"); // "#/container/item"
+ * childLocalId("#/container", "#/another/item/nested"); // null
+ * ```
  */
 export function childLocalId(parentId: NodeId, descendantId: NodeId): NodeId | null {
 	if (!isParent(parentId, descendantId)) {
@@ -40,6 +50,9 @@ export function childLocalId(parentId: NodeId, descendantId: NodeId): NodeId | n
 	return descendantId.substring(0, slash);
 }
 
+/**
+ * Traverses the path from `nodeId` to the root and calls a callback for each node
+ */
 export function idsToRoot(nodeId: NodeId, cb: (id: NodeId) => boolean | void): void {
 	const cont = cb(nodeId);
 	if (cont === false) {
@@ -59,6 +72,11 @@ export function idsToRoot(nodeId: NodeId, cb: (id: NodeId) => boolean | void): v
 	}
 }
 
+/**
+ * Traverses node ID segments starting from two IDs until they converge.
+ * From that point on the callback is called only once for each segment in the common path
+ * Used when notifying focus listeners
+ */
 export function convergingPaths(node1: NodeId, node2: NodeId, cb: (id: NodeId) => void): void {
 	if (node1 !== node2) {
 		idsToRoot(node2, (id) => {

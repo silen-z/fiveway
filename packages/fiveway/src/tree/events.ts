@@ -2,15 +2,22 @@ import { swapRemove } from "../lib/array.ts";
 import { type NodeId } from "./id.ts";
 import { type NavigationTree } from "./tree.ts";
 
+/**
+ * Callback function that is called when a focus transition affects a node.
+ *
+ * @see {@link registerListener} to register a listener
+ */
 export type FocusListener = () => void;
 
 /**
- * Registers `listener` on `id`.
+ * Registers a focus listener for `id`. The listener runs when a focus of given ID or any of its descendants changes.
  *
- * The listener runs when a focus transition affects that node (along the converging path
- * between old and new focus).
+ * Listeners can be registered for node IDs of nodes that are not inserted in the tree.
+ * They are also not automatically removed when the node is removed from the tree.
  *
- * Returns an unsubscribe function.
+ * @return an unsubscribe function.
+ *
+ * @see {@link FocusListener}
  */
 export function registerListener(
 	tree: NavigationTree,

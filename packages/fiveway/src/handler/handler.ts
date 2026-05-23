@@ -7,6 +7,15 @@ import { composeHandlers, type ComposedHandler } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { selectHandler, type SelectCallback } from "./select.ts";
 
+/**
+ * Function passed to navigation handlers that can be used to pass action to the next handler in the chain.
+ * Can be also used to dispatch different action on arbitrary nodes.
+ *
+ * @param id - The ID of the next node to handle the action. When not provided, the action is passed to the current node.
+ * @param action - The action to handle. When not provided, current action is used.
+ *
+ * @see {@link NavigationHandler} for more information about handlers.
+ */
 export type HandlerNext = (id?: NodeId, action?: NavigationAction) => NodeId | null;
 
 /**
@@ -15,6 +24,7 @@ export type HandlerNext = (id?: NodeId, action?: NavigationAction) => NodeId | n
  * Composite behavior is built with `composeHandlers` and specialized handlers.
  *
  * @see {@link NavigationAction} for available actions.
+ * @see {@link HandlerNext} for passing actions to the next handler in the chain.
  */
 export type NavigationHandler = (
 	node: NavigationNode,

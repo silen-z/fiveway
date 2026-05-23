@@ -1,25 +1,52 @@
-import { type NavigationAction } from "../action.ts";
+import { type QueryAction } from "../action.ts";
 import { runHandler, type NavigationHandler } from "../handler/handler.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavigationTree } from "../tree/tree.ts";
 
+/**
+ * Data handler factory that given a value produces a navigation handler that responds to query actions with the given value.
+ * It alsostores its key and exposes a `.query(tree, id)` method that resolves the value for given node id.
+ *
+ * @see {@link createDataHandler} for usage example
+ */
 export interface DataHandler<T> {
+	/**
+	 * Key associated with this data handler factory
+	 */
 	key: string;
+
+	/** Data handler factory function */
 	(v: T | (() => T | null) | null): NavigationHandler;
+
+	/**
+	 * Function that resolves the data value for given node id.
+	 * @param tree - navigation tree
+	 * @param id - node ID
+	 * @returns Value for given node ID or null if no value is stored or node does not exist.
+	 */
 	query: (tree: NavigationTree, id: NodeId) => T | null;
 }
 
 /**
- * Factory for data handlers.
+ * Defines a {@link DataHandler}. Data handlers are used to store metadata on nodes.
  *
- * Calling `createDataHandler(key)` returns a factory: given a value (or a function that returns a value),
- * it produces a handler that answers `query` actions for that key. The `.query(tree, id)` helper runs
- * the query and returns the stored value.
+ * @param key - Unique key used for querying the data *
+ * @return Data handler factory that given a value produces a navigation handler that responds to query actions for given key
  *
- * **Unprefixed keys are reserved for `@fiveway/core`** (`element`, `initial`, `position`,
- * `grid`, and others added by the library). Third-party libraries and apps should use a
+ * **Unprefixed keys (like `initial`, `element`) are reserved for `@fiveway/core`** . Third-party libraries and apps should use a
  * namespace prefix in the key (e.g. `my-library:carousel-index`) to avoid collisions.
+ *
+ * @example
+ * ```ts
+ * const carouselItemHandler = createDataHandler<{index: number}>("app:carouselItem");
+ * useNavnode("item1", [carouselItemHandler({index: 1}), itemHandler]);
+ *
+ * carouselItemHandler.query(tree, "item1"); // {index: 1}
+ * ```
+ *
+ * @see {@link DataHandler}
+ * @see {@link QueryAction}
  */
 export function createDataHandler<T>(key: string): DataHandler<T> {
 	const handler = (value: unknown) => {
@@ -41,7 +68,7 @@ export function createDataHandler<T>(key: string): DataHandler<T> {
 
 	handler.key = key;
 	handler.query = (tree: NavigationTree, id: NodeId) => {
-		const query: NavigationAction = { kind: "query", key, value: null };
+		const query: QueryAction = { kind: "query", key, value: null };
 		runHandler(tree, id, query);
 		return query.value as T | null;
 	};

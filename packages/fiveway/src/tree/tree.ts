@@ -1,4 +1,4 @@
-import { type NavigationAction, type NavigationDirection } from "../action.ts";
+import { type FocusAction, type NavigationAction, type NavigationDirection } from "../action.ts";
 import { defaultHandler, runHandler } from "../handler/handler.ts";
 import {
 	type InspectorCommand,
@@ -11,36 +11,76 @@ import { notifyListeners, type FocusListener } from "./events.ts";
 import { type NodeId, convergingPaths, idsToRoot, isParent } from "./id.ts";
 import { type CreatedNavigationNode, type NavigationNode } from "./node.ts";
 
+/**
+ * Object that holds all the navigation state. Most importantly inserted nodes and the focused node ID.
+ * @see {@link createNavigationTree} used to create a new `NavigationTree`
+ */
 export interface NavigationTree {
-	/** ID of the currently focused node */
+	/**
+	 * ID of the currently focused node
+	 */
 	focus: NodeId;
 
-	/** Label of the tree, used for identification in the inspector */
+	/**
+	 * tree label used for identification in inspector
+	 */
 	label: string;
 
 	/**
-	 * Map of all nodes in the tree
 	 * @internal
+	 *
+	 * Map of all nodes inserted into the tree.
+	 * Node inside this map are not guaranteed to be connected.
+	 *
+	 * @see {@link insertNode} to insert a node into the tree.
+	 * @see {@link NavigationNode}
 	 */
 	nodes: Map<NodeId, NavigationNode>;
 
-	/** @internal */
+	/**
+	 * @internal
+	 *
+	 * Internal bookkeeping of nodes that are inserted but their parent is not.
+	 */
 	orphans: Map<NodeId, NodeId[]>;
 
-	/** @internal */
+	/**
+	 * @internal
+	 *
+	 * Focus listeners registered on the tree.
+	 * Check {@link FocusListener} to see how to use listeners.
+	 */
 	listeners: Map<NodeId, FocusListener[]>;
 
-	/** @internal */
+	/**
+	 * @internal
+	 *
+	 * Focus lock state.
+	 * @see {@link holdFocus} to aquire the lock
+	 */
 	focusLock: "free" | "locked" | "updatePending";
 }
 
 /**
- * Creates a navigation tree with a single root node.
+ * Options for {@link createNavigationTree}
+ */
+export interface NavigationTreeOptions {
+	/**
+	 * Label used for identification in the inspector
+	 */
+	label?: string;
+}
+
+/**
+ * Creates a new navigation tree. Newly created trees contain only a single root node with {@link defaultHandler}.
  *
  * You can give the tree an optional `label`, used for identification in the inspector
  * in case there are multiple trees.
+ *
+ * @see {@link NavigationTreeOptions}
+ * @see {@link NavigationTree}
  */
-export function createNavigationTree(options: { label?: string } = {}): NavigationTree {
+export function createNavigationTree(options: NavigationTreeOptions = {}): NavigationTree {
 	const tree: NavigationTree = {
 		focus: "#",
 		label: options.label ?? randomLabel(),
@@ -68,9 +108,11 @@ export function createNavigationTree(options: { label?: string } = {}): Navigati
 }
 
 /**
- * Registers a node created by `createNode` in the tree.
+ * Insert node created by `createNode` in the tree.
  *
- * Returns a cleanup function that removes the node.
+ * @param tree - navigation tree
+ * @param node - node to insert
+ * @return A cleanup function that removes the node
  *
  * Nodes can be inserted before their parents exist. In that case they are kept in a
  * disconnected state (not participating in navigation) until their parent is inserted.
@@ -79,7 +121,8 @@ export function createNavigationTree(options: { label?: string } = {}): Navigati
  *
  * When a tree already contains a node with the same id, it is replaced by the new node.
  *
- * This function is mainly meant to be used by framework integrations.
+ * @see {@link NavigationNode}
+ * @see {@link removeNode}
  */
 export function insertNode(tree: NavigationTree, node: CreatedNavigationNode): () => void {
 	if (node.parent === null) {
@@ -137,6 +180,10 @@ function connectNode(tree: NavigationTree, parentNode: NavigationNode, node: Nav
 /**
  * Removes a node by id or by reference.
  *
+ * @param tree - navigation tree
+ * @param node - accepts either the node id or the node itself
+ *
+ * Instead of using this function directly, prefer using removal function returned from {@link insertNode}
  * Removing a node does not remove its children — they are put into a disconnected state
  * until they are explicitly removed or their parent is connected again.
  *
@@ -234,9 +281,11 @@ function updateFocus(tree: NavigationTree) {
 
 /**
  * Temporarily locks focus from changing while the tree structure changes to allow
- * inserting multiple nodes at once.
+ * inserting multiple nodes at once to resolve initial focus correctly.
  *
- * Returns a function that releases the lock. If a lock is already held, returns `null`.
+ * @param tree - navigation tree to hold the focus on
+ * @return A function that releases the lock. If a lock is already held, returns `null`.
+ *
  * Calling the release function may apply a pending focus update.
  *
  * Used by framework integrations to make initial focus work in frameworks that run
@@ -261,18 +310,32 @@ export function holdFocus(tree: NavigationTree): (() => void) | null {
 	};
 }
 
+/**
+ * Options for {@link focusNode}
+ */
 export interface FocusNodeOptions {
+	/**
+	 * Direction of focus used in {@link FocusAction} dispatched by this function.
+	 * @default `null`
+	 *
+	 * @see {@link NavigationDirection}
+	 */
 	direction?: NavigationDirection | "initial";
 }
 
 /**
  * Attempts to focus `targetId`.
  *
- * Returns `true` if focusing succeeds.
+ * @param tree - navigation tree
+ * @param targetId - ID of the node to focus
+ * @param options - Options for the focus operation
+ * @return `true` if focus ends up on the target node.
  *
- * Calling `focusNode` dispatches a `focus` action, so focus is resolved via handlers.
+ * Calling `focusNode` dispatches a {@link FocusAction}, so focus is resolved via handlers.
  * For example if a container contains children, calling `focusNode(tree, "#/container")`
  * will typically focus a descendant like `#/container/item1`.
+ *
+ * @see {@link FocusNodeOptions}
  */
 export function focusNode(
 	tree: NavigationTree,
@@ -284,10 +347,12 @@ export function focusNode(
 		return false;
 	}
 
-	const resolvedId = runHandler(tree, targetId, {
+	const focusAction: FocusAction = {
 		kind: "focus",
 		direction: options.direction ?? null,
-	});
+	};
+
+	const resolvedId = runHandler(tree, targetId, focusAction);
 
 	if (resolvedId === null) {
 		return false;
@@ -312,12 +377,12 @@ export function focusNode(
 }
 
 /**
- * Calls the focused node's handler with the given navigation action.
+ * Dispatches {@link NavigationAction} to the specified node. If no node is specified, the action is dispatched to the focused node.
+ * Dispatching an action leads to navigation handlers being called. ID returned by a handler is used to update focus.
  *
- * You can also specify a node other than the focused one.
- *
- * Typical sources of actions: keyboard mapping (see `@fiveway/core/dom`) or framework
- * helpers.
+ * @param tree - navigation tree
+ * @param action - navigation action to dispatch
+ * @param node - ID to dispatch the action on. If not specified, the focused node is used.
  */
 export function dispatchAction(
 	tree: NavigationTree,
@@ -331,9 +396,14 @@ export function dispatchAction(
 }
 
 /**
- * Checks whether `nodeId` is focused.
+ * Checks whether `nodeId` is focused. A node is also considered focused when its descendant is focused.
  *
- * A node is also considered focused when its descendant is focused.
+ * @param focused - tree or id of a focused node
+ * @param nodeId - id being checked for focus
+ * @return `true` if the node or its descendant is focused
+ *
+ * To be efficient and flexible this function produces results just by checking the path of node IDs without traversing the tree itself.
+ * That means it won't error when given node ID doesn't exist in the tree.
  */
 export function isFocused(focused: NavigationTree | NodeId, nodeId: NodeId): boolean {
 	const focusedId = typeof focused === "string" ? focused : focused.focus;
@@ -342,9 +412,12 @@ export function isFocused(focused: NavigationTree | NodeId, nodeId: NodeId): boo
 }
 
 /**
- * Calls `callback` with descendants of `nodeId`.
+ * Traverses nodes under given node up to specified depth and calls a callback for each of them.
  *
- * You can specify depth up to which nodes are traversed; `null` means no limit.
+ * @param tree - navigation tree
+ * @param nodeId - ID of the node to traverse
+ * @param depth - The depth up to which nodes are traversed. `null` means no limit.
+ * @param callback - callback called for each node with nodes' ID as its only argument
  */
 export function traverseNodes(
 	tree: NavigationTree,

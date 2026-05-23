@@ -11,6 +11,7 @@ declare global {
 
 export {
 	type NavigationTree,
+	type NavigationTreeOptions,
 	type FocusNodeOptions,
 	createNavigationTree,
 	insertNode,

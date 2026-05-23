@@ -1,4 +1,4 @@
-import { createNavigationTree, NavigationProvider } from "@fiveway/react";
+import { createNavigationTree, NavigationRoot } from "@fiveway/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
@@ -11,9 +11,9 @@ const navigationTree = createNavigationTree();
 
 function App() {
 	return (
-		<NavigationProvider tree={navigationTree}>
+		<NavigationRoot tree={navigationTree}>
 			<Showcase />
-		</NavigationProvider>
+		</NavigationRoot>
 	);
 }
 

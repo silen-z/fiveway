@@ -12,8 +12,8 @@ It comes with a set of default behaviors and allows for extensive customization.
 
 ### Getting started
 
-Checkout the guide at: https://fiveway.dev/getting-started
+Check out the guide at: https://fiveway.dev/getting-started
 
 ## @fiveway/core
 
-This package contains the core functionality used by the framework specific integrations.
+This package contains the core functionality used by the framework-specific integrations.

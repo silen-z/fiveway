@@ -9,10 +9,25 @@ import { createEffect, createSignal, onCleanup } from "solid-js";
 
 import { useNavigationContext } from "./context.tsx";
 
+/**
+ * Data handler used for associating navigation nodes with DOM elements.
+ * It does not handle focus or movement actions and is meant to be composed with other handlers.
+ *
+ * @example
+ * ```ts
+ * const elementHandler = createElementHandler();
+ * const nav = createNavnode("my-node", [elementHandler, itemHandler()]);
+ * ```
+ *
+ * @see {@link createElementHandler}
+ */
 export interface ElementHandler extends ComposedHandler {
 	register: (e: HTMLElement | null) => void;
 }
 
+/**
+ * Factory for creating {@link ElementHandler}.
+ */
 export function createElementHandler(): ElementHandler {
 	const [element, setElement] = createSignal<HTMLElement | null>(null);
 	const position = () => {
@@ -26,7 +41,7 @@ export function createElementHandler(): ElementHandler {
 		};
 	};
 
-	// handlers doen't need to be reactive
+	// handlers don't need to be reactive
 	const handler = composeHandlers([
 		// eslint-disable-next-line solid/reactivity
 		elementHandler(element),
@@ -39,6 +54,9 @@ export function createElementHandler(): ElementHandler {
 	return handler;
 }
 
+/**
+ * Primitive that synchronizes native browser focus with focused node based on {@link elementHandler}.
+ */
 export function useFocusSync(): void {
 	const { tree } = useNavigationContext();
 

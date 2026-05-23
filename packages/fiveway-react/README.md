@@ -12,7 +12,7 @@ It comes with a set of default behaviors and allows for extensive customization.
 
 ## @fiveway/react
 
-This package contains the React version of the library
+This package contains the React version of the library.
 
 ### Getting started
 
@@ -25,12 +25,12 @@ npm install @fiveway/react
 Create a navigation tree and provide it to the application:
 
 ```tsx
-import { createNavigationTree, NavigationProvider } from "@fiveway/react";
+import { createNavigationTree, NavigationRoot } from "@fiveway/react";
 
 const navtree = createNavigationTree();
 
 function App() {
-	return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
+	return <NavigationRoot tree={navtree}>{/* rest of your app */}</NavigationRoot>;
 }
 
 ReactDOM.createRoot(rootElement).render(<App />);
@@ -68,4 +68,4 @@ function Item(props) {
 }
 ```
 
-Checkout the full guide at: https://fiveway.dev/getting-started
+Check out the full guide at: https://fiveway.dev/getting-started

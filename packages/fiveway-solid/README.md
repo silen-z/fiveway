@@ -25,13 +25,13 @@ npm install @fiveway/solid
 Create a navigation tree and provide it to the application:
 
 ```tsx
-import { createNavigationTree, NavigationProvider } from "@fiveway/solid";
+import { createNavigationTree, NavigationRoot } from "@fiveway/solid";
 import { render } from "solid-js/web";
 
 function App() {
 	const navtree = createNavigationTree();
 
-	return <NavigationProvider tree={navtree}>{/* rest of your app */}</NavigationProvider>;
+	return <NavigationRoot tree={navtree}>{/* rest of your app */}</NavigationRoot>;
 }
 
 render(App, rootElement);
@@ -72,4 +72,4 @@ function Item(props) {
 }
 ```
 
-Checkout the full guide at: https://fiveway.dev/getting-started
+Check out the full guide at: https://fiveway.dev/getting-started
