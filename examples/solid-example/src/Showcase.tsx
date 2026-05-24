@@ -61,7 +61,7 @@ export function Showcase() {
 
 					<p>
 						From now on let go of your mouse. This demo is controlled by keyboard. Arrow buttons
-						work as expected, press enter to select and backspace works as back button. Pressing
+						work as expected, press enter to activate and backspace works as back button. Pressing
 						back resets you to start.
 					</p>
 

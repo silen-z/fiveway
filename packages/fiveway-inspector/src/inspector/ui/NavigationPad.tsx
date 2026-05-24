@@ -22,7 +22,7 @@ export function NavigationPad(props: { tree: string }) {
 			<button
 				type="button"
 				class={clsx(styles.navButton, styles.navPadBack)}
-				title="Back (Backspace)"
+				title="Back"
 				aria-label="Back"
 				onClick={() => sendAction({ kind: "move", direction: "back" })}
 			>
@@ -39,10 +39,10 @@ export function NavigationPad(props: { tree: string }) {
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.navButton, styles.navPadSelect)}
-				title="Select (Enter)"
-				aria-label="Select"
-				onClick={() => sendAction({ kind: "select" })}
+				class={clsx(styles.navButton, styles.navPadActivate)}
+				title="Activate"
+				aria-label="Activate"
+				onClick={() => sendAction({ kind: "activate" })}
 			>
 				<Check size={16} />
 			</button>

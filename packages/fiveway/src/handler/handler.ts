@@ -3,9 +3,9 @@ import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavigationNode } from "../tree/node.ts";
 import { type NavigationTree } from "../tree/tree.ts";
+import { activationHandler, type ActivateCallback } from "./activate.ts";
 import { composeHandlers, type ComposedHandler } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
-import { selectHandler, type SelectCallback } from "./select.ts";
 
 /**
  * Function passed to navigation handlers that can be used to pass action to the next handler in the chain.
@@ -95,13 +95,13 @@ export const containerHandler: ComposedHandler = composeHandlers([
 ]);
 
 /**
- * If `onSelect` is provided, composes `selectHandler(onSelect)` onto `defaultHandler`;
+ * If `onActivate` is provided, composes `activationHandler(onActivate)` onto `defaultHandler`;
  * otherwise returns `defaultHandler`.
  */
-export const itemHandler = (onSelect?: SelectCallback): ComposedHandler => {
-	if (onSelect == null) {
+export const itemHandler = (onActivate?: ActivateCallback): ComposedHandler => {
+	if (onActivate == null) {
 		return defaultHandler;
 	}
 
-	return defaultHandler.compose(selectHandler(onSelect));
+	return defaultHandler.compose(activationHandler(onActivate));
 };

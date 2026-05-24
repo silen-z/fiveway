@@ -11,7 +11,7 @@ import css from "./NavItem.module.css";
 type NavItemProps = {
 	navId: NodeId;
 	order?: number;
-	onSelect?: () => void;
+	onActivate?: () => void;
 	label: string;
 	handlers?: NavigationHandler[];
 };

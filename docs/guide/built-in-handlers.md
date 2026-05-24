@@ -47,12 +47,12 @@ const node = createNode({
 	id: "node",
 	parent: "#",
 	handler: itemHandler(() => {
-		console.log("Item selected!");
+		console.log("Item activated!");
 	}),
 });
 ```
 
-The `itemHandler` is just like `defaultHandler` but it also allows you to optionally specify a callback function that will be called when the node receives a select action.
+The `itemHandler` is just like `defaultHandler` but it also allows you to optionally specify a callback function that will be called when the node receives an activate action.
 
 ## Movement handlers
 
@@ -132,19 +132,19 @@ The `focusHandler` can be configured to:
 - Use custom focus direction logic
 - Control which child gets focused when entering a node
 
-## Select handler
+## Activation handler
 
-The select handler provides selection functionality.
+The activation handler provides activation functionality.
 
 ```ts
-import { selectHandler } from "@fiveway/core";
+import { activationHandler } from "@fiveway/core";
 
-const handler = selectHandler(() => {
-	console.log("Node selected!");
+const handler = activationHandler(() => {
+	console.log("Node activated!");
 });
 ```
 
-The `selectHandler` calls the provided callback function when the node receives a select action.
+The `activationHandler` calls the provided callback function when the node receives an activate action.
 
 ## Parent handler
 

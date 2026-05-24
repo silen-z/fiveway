@@ -1,8 +1,8 @@
 import {
 	type NodeId,
 	type FocusNodeOptions,
-	type SelectNodeOptions,
-	selectNode,
+	type ActivateNodeOptions,
+	activateNode,
 	isFocused,
 	registerListener,
 	focusNode,
@@ -151,26 +151,26 @@ export function useFocus(scope?: NodeId): FocusFn {
 	);
 }
 
-type SelectFn = (nodeId: NodeId, options?: SelectNodeOptions) => void;
+type ActivateFn = (nodeId: NodeId, options?: ActivateNodeOptions) => void;
 
 /**
- * React hook that returns a function for selecting nodes.
- * By default the function will select nodes relative to the current parent node.
+ * React hook that returns a function for activating nodes.
+ * By default the function will activate nodes relative to the current parent node.
  *
  * @example
  * ```tsx
- * const select = useSelect();
+ * const activate = useActivate();
  *
- * <button onClick={() => select("content")}>Select content</button>
+ * <button onClick={() => activate("content")}>Activate content</button>
  * ```
  */
-export function useSelect(scope?: NodeId): SelectFn {
+export function useActivate(scope?: NodeId): ActivateFn {
 	const { tree, parentNode } = useNavigationContext();
 	scope ??= parentNode;
 
 	return useCallback(
-		(nodeId: NodeId, options?: SelectNodeOptions) => {
-			selectNode(tree, joinId(scope, nodeId), options);
+		(nodeId: NodeId, options?: ActivateNodeOptions) => {
+			activateNode(tree, joinId(scope, nodeId), options);
 		},
 		[tree, scope],
 	);

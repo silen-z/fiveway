@@ -40,7 +40,7 @@ export {
 	type NavigationDirection,
 	type DefinedNavigationActions,
 	type NavigationAction,
-	type SelectAction,
+	type ActivateAction,
 	type MoveAction,
 	type FocusAction,
 	type QueryAction,
@@ -80,11 +80,11 @@ export {
 } from "./handler/grid.ts";
 
 export {
-	type SelectNodeOptions,
-	type SelectCallback,
-	selectNode,
-	selectHandler,
-} from "./handler/select.ts";
+	type ActivateNodeOptions,
+	type ActivateCallback,
+	activateNode,
+	activationHandler,
+} from "./handler/activate.ts";
 
 export { type LongPressOptions, longPressHandler } from "./handler/longpress.ts";
 
