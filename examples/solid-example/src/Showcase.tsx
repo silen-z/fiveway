@@ -5,11 +5,11 @@ import {
 	gridHandler,
 	gridItemHandler,
 	initialHandler,
-	itemHandler,
 	useFocusSync,
 	useNavigationContext,
 	useOnFocusChange,
 } from "@fiveway/solid";
+import { activationHandler } from "@fiveway/solid";
 
 import { ExampleBox } from "./ExampleBox.tsx";
 import { ListExample } from "./ListExample.tsx";
@@ -75,8 +75,8 @@ export function Showcase() {
 						navId="start"
 						label="Start"
 						handlers={[
-							gridItemHandler({ row: 0, col: 0 }),
-							itemHandler(() => {
+							gridItemHandler({ row: 0, col: 1 }),
+							activationHandler(() => {
 								nav.focus("vertical-list");
 							}),
 						]}
