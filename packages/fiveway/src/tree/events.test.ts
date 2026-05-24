@@ -1,13 +1,8 @@
 import { expect, test, vi } from "vite-plus/test";
 
-import {
-	registerListener,
-	createNavigationTree,
-	focusNode,
-	insertNode,
-	isFocused,
-	createNode,
-} from "../index.ts";
+import { registerListener } from "./events.ts";
+import { createNode } from "./node.ts";
+import { createNavigationTree, focusNode, insertNode, isFocused } from "./tree.ts";
 
 test("listeners", async () => {
 	const tree = createNavigationTree();

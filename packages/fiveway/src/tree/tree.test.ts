@@ -1,20 +1,10 @@
 import { expect, test, vi } from "vite-plus/test";
 
-// import first to avoid circular dependency errors
-// prettier-ignore
 import { createTestTree } from "../_test/treeSpec.ts";
-
-import {
-	createNavigationTree,
-	focusNode,
-	insertNode,
-	removeNode,
-	traverseNodes,
-	createNode,
-	itemHandler,
-	activateNode,
-	type ActivateCallback,
-} from "../index.ts";
+import { activateNode, type ActivateCallback } from "../handler/activate.ts";
+import { itemHandler } from "../handler/handler.ts";
+import { createNode } from "./node.ts";
+import { createNavigationTree, focusNode, insertNode, removeNode, traverseNodes } from "./tree.ts";
 
 test("insertNode", () => {
 	const tree = createNavigationTree();
