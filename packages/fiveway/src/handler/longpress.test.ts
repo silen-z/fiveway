@@ -1,8 +1,6 @@
 import { test, expect } from "vite-plus/test";
 
 import { createTestTree } from "../_test/treeSpec.ts";
-import { createNode } from "../tree/node.ts";
-import { createNavigationTree, insertNode } from "../tree/tree.ts";
 import { defaultHandler } from "./handler.ts";
 import { longPressHandler } from "./longpress.ts";
 
@@ -16,9 +14,7 @@ test("longPressHandler.query returns metadata on configured node", async () => {
 });
 
 test("longPressHandler.query returns null without metadata", async () => {
-	const tree = createNavigationTree();
-	const node = createNode({ id: "item", parent: "#" });
-	insertNode(tree, node);
+	const { tree, nodes } = createTestTree({ id: "item" });
 
-	expect(longPressHandler.query(tree, node.id)).toBeNull();
+	expect(longPressHandler.query(tree, nodes.item.id)).toBeNull();
 });

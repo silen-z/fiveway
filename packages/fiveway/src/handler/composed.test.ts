@@ -1,13 +1,12 @@
 import { test, expect } from "vite-plus/test";
 
-import { createNode } from "../tree/node.ts";
-import { createNavigationTree, dispatchAction, insertNode } from "../tree/tree.ts";
+import { createTestTree } from "../_test/treeSpec.ts";
+import { dispatchAction } from "../tree/tree.ts";
 import { composeHandlers } from "./composed.ts";
 import { defaultHandler, type NavigationHandler } from "./handler.ts";
 import { createDataHandler } from "./metadata.ts";
 
 test("composedHandler", () => {
-	const tree = createNavigationTree();
 	const logs: string[] = [];
 
 	const logHandler =
@@ -29,8 +28,10 @@ test("composedHandler", () => {
 		.compose(subComposition)
 		.compose(logHandler("1"));
 
-	const node = createNode({ id: "node1", parent: "#", handler: defaultHandler.compose(handler) });
-	insertNode(tree, node);
+	const { tree } = createTestTree({
+		id: "node1",
+		handler: defaultHandler.compose(handler),
+	});
 
 	dispatchAction(tree, { kind: "query", key: "log", value: null });
 
@@ -43,24 +44,22 @@ test("composeHandlers with conditional handler", () => {
 });
 
 test("composedHandler: meta", () => {
-	const tree = createNavigationTree();
-
 	const testHandler = createDataHandler("test");
 
-	const node = createNode({
-		id: "node",
-		parent: "#",
-		handler: defaultHandler.compose(testHandler("test-value")),
+	const { tree, nodes } = createTestTree({
+		id: "root",
+		children: [
+			{
+				id: "node",
+				handler: defaultHandler.compose(testHandler("test-value")),
+			},
+			{
+				id: "node2",
+				handler: defaultHandler.compose(testHandler(() => "test-value")),
+			},
+		],
 	});
-	insertNode(tree, node);
 
-	const node2 = createNode({
-		id: "node2",
-		parent: "#",
-		handler: defaultHandler.compose(testHandler(() => "test-value")),
-	});
-	insertNode(tree, node2);
-
-	expect(testHandler.query(tree, node.id)).toBe("test-value");
-	expect(testHandler.query(tree, node2.id)).toBe("test-value");
+	expect(testHandler.query(tree, nodes.node.id)).toBe("test-value");
+	expect(testHandler.query(tree, nodes.node2.id)).toBe("test-value");
 });
