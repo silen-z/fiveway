@@ -76,9 +76,7 @@ export function registerKeyboardListener(
 			return;
 		}
 
-		if (pending != null) {
-			dispatchPending(false);
-		}
+		dispatchPending(false);
 
 		const timer = window.setTimeout(() => {
 			dispatchPending(true);

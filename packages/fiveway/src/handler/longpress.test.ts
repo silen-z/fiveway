@@ -17,7 +17,7 @@ test("longPressHandler.query returns metadata on configured node", async () => {
 
 test("longPressHandler.query returns null without metadata", async () => {
 	const tree = createNavigationTree();
-	const node = createNode({ id: "item", parent: "#", handler: defaultHandler });
+	const node = createNode({ id: "item", parent: "#" });
 	insertNode(tree, node);
 
 	expect(longPressHandler.query(tree, node.id)).toBeNull();

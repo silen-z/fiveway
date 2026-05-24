@@ -43,6 +43,12 @@ export interface ActivateNodeOptions {
 	 * @default `true`
 	 */
 	focus?: boolean;
+
+	/**
+	 * Whether the activate action was triggered by a long press.
+	 * @default `false`
+	 */
+	longpress?: boolean;
 }
 
 /**
@@ -59,5 +65,5 @@ export function activateNode(
 		focusNode(tree, nodeId);
 	}
 
-	runHandler(tree, nodeId, { kind: "activate" });
+	runHandler(tree, nodeId, { kind: "activate", longpress: options?.longpress });
 }

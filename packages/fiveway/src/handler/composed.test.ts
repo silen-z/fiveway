@@ -42,6 +42,11 @@ test("composedHandler", () => {
 	expect(logs).toEqual(["#/node1:1", "#/node1:2", "#/node1:3", "#/node1:4", "#/node1:5"]);
 });
 
+test("composeHandlers with conditional handler", () => {
+	const handler = composeHandlers([undefined, defaultHandler]);
+	expect(handler).not.toBeNull();
+});
+
 test("composedHandler: meta", () => {
 	const tree = createNavigationTree();
 

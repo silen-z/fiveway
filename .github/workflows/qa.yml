@@ -16,6 +16,9 @@ jobs:
       - uses: voidzero-dev/setup-vp@v1
         with:
           node-version: "24"
+
+      - run: vp exec playwright install --with-deps chromium
+
       - run: vp run ci
 
       - uses: davelosert/vitest-coverage-report-action@v2

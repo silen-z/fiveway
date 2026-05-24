@@ -2,7 +2,7 @@ import { test, expect } from "vite-plus/test";
 
 // import first to avoid circular dependency errors
 // prettier-ignore
-import { createTreeFromSpec } from "../test/treeSpec.ts";
+import { createTestTree } from "../test/treeSpec.ts";
 
 import {
 	focusNode,
@@ -12,7 +12,6 @@ import {
 	removeNode,
 	createNode,
 	containerHandler,
-	defaultHandler,
 	captureHandler,
 	initialHandler,
 	verticalHandler,
@@ -20,7 +19,7 @@ import {
 } from "../index.ts";
 
 test("focusHandler: items themselves are focusable", async () => {
-	const { tree, nodes } = createTreeFromSpec({
+	const { tree, nodes } = createTestTree({
 		id: "item",
 	});
 
@@ -28,7 +27,7 @@ test("focusHandler: items themselves are focusable", async () => {
 });
 
 test("focusHandler: skip empty containers", () => {
-	const { tree, nodes } = createTreeFromSpec({
+	const { tree, nodes } = createTestTree({
 		id: "container",
 		handler: containerHandler,
 	});
@@ -40,7 +39,7 @@ test("focusHandler: already inserted node keeps focus", async () => {
 	// already inserted node keeps focus even when another node
 	// that would be otherwise focused by initial focuses gets inserted later
 
-	const { tree, nodes } = createTreeFromSpec({
+	const { tree, nodes } = createTestTree({
 		id: "container",
 		handler: containerHandler,
 		children: [{ id: "item1", order: 2 }],
@@ -51,7 +50,6 @@ test("focusHandler: already inserted node keeps focus", async () => {
 		createNode({
 			id: "item2",
 			parent: nodes.container.id,
-			handler: defaultHandler,
 			order: 1,
 		}),
 	);
@@ -60,20 +58,11 @@ test("focusHandler: already inserted node keeps focus", async () => {
 });
 
 test("initialHandler", async () => {
-	const { tree, nodes } = createTreeFromSpec({
+	const { tree, nodes } = createTestTree({
 		id: "container",
 
-		handler: verticalHandler.compose(initialHandler("item2")),
-		children: [
-			{
-				id: "item1",
-				handler: defaultHandler,
-			},
-			{
-				id: "item2",
-				handler: defaultHandler,
-			},
-		],
+		handler: [initialHandler("item2"), verticalHandler],
+		children: [{ id: "item1" }, { id: "item2" }],
 	});
 
 	const releaseFocus = holdFocus(tree);
@@ -89,7 +78,6 @@ test("initialHandler", async () => {
 	const item3 = createNode({
 		id: "item3",
 		parent: nodes.container.id,
-		handler: defaultHandler,
 	});
 	insertNode(tree, item3);
 
@@ -110,13 +98,13 @@ test("initialHandler", async () => {
 });
 
 test("captureHandler", async () => {
-	const { tree, nodes } = createTreeFromSpec({
+	const { tree, nodes } = createTestTree({
 		id: "container",
 		handler: verticalHandler,
 		children: [
 			{
 				id: "list",
-				handler: verticalHandler.compose(captureHandler),
+				handler: [captureHandler, verticalHandler],
 				children: [{ id: "item1" }, { id: "item2" }],
 			},
 			{ id: "outside" },

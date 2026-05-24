@@ -28,9 +28,14 @@
 		"@fiveway/core": "workspace:*"
 	},
 	"devDependencies": {
+		"@vitest/browser": "^4.1.6",
+		"@vitest/browser-playwright": "^4.1.6",
+		"solid-js": "^1.9.13",
 		"typescript": "catalog:",
 		"vite-plugin-solid": "^2.11.12",
-		"vite-plus": "catalog:"
+		"vite-plus": "catalog:",
+		"vitest": "catalog:",
+		"vitest-browser-solid": "^1.0.1"
 	},
 	"peerDependencies": {
 		"solid-js": "^1.9.3"

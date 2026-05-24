@@ -2,7 +2,7 @@ import { expect, test } from "vite-plus/test";
 
 // import first to avoid circular dependency errors
 // prettier-ignore
-import { createTreeFromSpec } from "../test/treeSpec.ts";
+import { createTestTree } from "../test/treeSpec.ts";
 
 import {
 	spatialHandler,
@@ -15,7 +15,7 @@ import {
 } from "../index.ts";
 
 test("spatialHandler", async () => {
-	const { tree, nodes } = createTreeFromSpec({
+	const { tree, nodes } = createTestTree({
 		id: "spatial",
 		handler: spatialHandler,
 	});

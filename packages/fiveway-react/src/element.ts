@@ -61,6 +61,11 @@ export function useFocusSync(): void {
 	const { tree } = useNavigationContext();
 
 	useEffect(() => {
+		const el = elementHandler.query(tree, tree.focus);
+		if (el != null) {
+			el.focus();
+		}
+
 		const handler = () => {
 			const el = elementHandler.query(tree, tree.focus);
 			if (el != null) {
