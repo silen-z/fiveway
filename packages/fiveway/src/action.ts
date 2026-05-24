@@ -31,12 +31,12 @@ export interface MoveAction {
 }
 
 /**
- * Action dispatched to select a node.
+ * Action dispatched to activate a node.
  *
  * @see {@link MoveAction} for `longpress` semantics.
  */
-export interface SelectAction {
-	kind: "select";
+export interface ActivateAction {
+	kind: "activate";
 	longpress?: boolean;
 }
 
@@ -70,7 +70,7 @@ export interface QueryAction {
 export interface DefinedNavigationActions {
 	focus: FocusAction;
 	move: MoveAction;
-	select: SelectAction;
+	activate: ActivateAction;
 	query: QueryAction;
 }
 

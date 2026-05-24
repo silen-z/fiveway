@@ -1,12 +1,12 @@
 import {
 	type FocusNodeOptions,
-	type SelectNodeOptions,
+	type ActivateNodeOptions,
 	type NodeId,
 	insertNode,
 	createNode,
 	focusNode,
 	joinId,
-	selectNode,
+	activateNode,
 	updateNode,
 	holdFocus,
 	composeHandlers,
@@ -64,11 +64,11 @@ export interface Navnode {
 	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
 
 	/**
-	 * Function for selecting the node.
+	 * Function for activating the node.
 	 *
-	 * @see {@link SelectNodeOptions}
+	 * @see {@link ActivateNodeOptions}
 	 */
-	select: (nodeId?: NodeId, options?: SelectNodeOptions) => void;
+	activate: (nodeId?: NodeId, options?: ActivateNodeOptions) => void;
 
 	/**
 	 * Registers a callback that runs when the node is focused.
@@ -149,9 +149,9 @@ export function createNavnode(
 		focusNode(tree, id, options);
 	};
 
-	const select = (nodeId?: NodeId, options?: SelectNodeOptions) => {
+	const activate = (nodeId?: NodeId, options?: ActivateNodeOptions) => {
 		const id = nodeId != null ? joinId(node().id, nodeId) : node().id;
-		selectNode(tree, id, options);
+		activateNode(tree, id, options);
 	};
 
 	// workaround for: https://github.com/solidjs/solid/issues/2352
@@ -159,7 +159,7 @@ export function createNavnode(
 	const handle = () => nodeId();
 
 	handle.focus = focus;
-	handle.select = select;
+	handle.activate = activate;
 	handle.isFocused = useIsFocused(handle);
 	handle.onFocus = (fn: () => void) => useOnFocus(handle, fn);
 

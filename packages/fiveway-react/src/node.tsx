@@ -3,7 +3,7 @@ import {
 	type NavigationTree,
 	type CreatedNavigationNode,
 	type FocusNodeOptions,
-	type SelectNodeOptions,
+	type ActivateNodeOptions,
 	updateNode,
 	insertNode,
 	removeNode,
@@ -11,7 +11,7 @@ import {
 	isFocused,
 	registerListener,
 	focusNode,
-	selectNode,
+	activateNode,
 	joinId,
 	composeHandlers,
 	type NavigationHandler,
@@ -65,11 +65,11 @@ export interface Navnode {
 	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
 
 	/**
-	 * Function for selecting the node.
+	 * Function for activating the node.
 	 *
-	 * @see {@link SelectNodeOptions}
+	 * @see {@link ActivateNodeOptions}
 	 */
-	select: (nodeId?: NodeId, options?: SelectNodeOptions) => void;
+	activate: (nodeId?: NodeId, options?: ActivateNodeOptions) => void;
 
 	/**
 	 * React context provider that sets this node as parent for its children.
@@ -140,9 +140,9 @@ export function useNavnode(
 		focusNode(tree, id, options);
 	};
 
-	const select = (target?: NodeId, options?: SelectNodeOptions) => {
+	const activate = (target?: NodeId, options?: ActivateNodeOptions) => {
 		const id = target != null ? joinId(nodeId, target) : nodeId;
-		selectNode(tree, id, options);
+		activateNode(tree, id, options);
 	};
 
 	const Context: Navnode["Context"] = useCallback(
@@ -161,7 +161,7 @@ export function useNavnode(
 
 	Context.displayName = "NodeContext";
 
-	return { id: nodeId, isFocused, focus, select, Context };
+	return { id: nodeId, isFocused, focus, activate, Context };
 }
 
 /**

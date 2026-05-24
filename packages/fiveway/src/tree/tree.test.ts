@@ -12,8 +12,8 @@ import {
 	traverseNodes,
 	createNode,
 	itemHandler,
-	selectNode,
-	type SelectCallback,
+	activateNode,
+	type ActivateCallback,
 } from "../index.ts";
 
 test("insertNode", () => {
@@ -195,7 +195,7 @@ test("focusNode", async () => {
 	expect(tree.focus).toBe(node2.id);
 });
 
-test("selectNode", async () => {
+test("activateNode", async () => {
 	const tree = createNavigationTree();
 
 	const parkingNode = createNode({
@@ -203,12 +203,12 @@ test("selectNode", async () => {
 		parent: "#",
 	});
 
-	const onSelect = vi.fn<SelectCallback>();
+	const onActivate = vi.fn<ActivateCallback>();
 
 	const targetNode = createNode({
 		id: "node",
 		parent: "#",
-		handler: itemHandler(onSelect),
+		handler: itemHandler(onActivate),
 	});
 
 	insertNode(tree, parkingNode);
@@ -216,9 +216,9 @@ test("selectNode", async () => {
 
 	expect(tree.focus).toBe(parkingNode.id);
 
-	selectNode(tree, targetNode.id);
+	activateNode(tree, targetNode.id);
 
-	expect(onSelect).toHaveBeenCalledTimes(1);
+	expect(onActivate).toHaveBeenCalledTimes(1);
 	expect(tree.focus).toBe(targetNode.id);
 });
 

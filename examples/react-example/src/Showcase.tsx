@@ -9,7 +9,7 @@ import {
 	useNavigationContext,
 	useNavnode,
 	useOnFocusChange,
-	selectHandler,
+	activationHandler,
 } from "@fiveway/react";
 
 import { ExampleBox } from "./ExampleBox.tsx";
@@ -62,7 +62,7 @@ export function Showcase() {
 
 					<p>
 						From now on let go of your mouse. This demo is controlled by keyboard. Arrow buttons
-						work as expected, press enter to select and backspace works as back button. Pressing
+						work as expected, press enter to activate and backspace works as back button. Pressing
 						back resets you to start.
 					</p>
 
@@ -78,7 +78,7 @@ export function Showcase() {
 						handlers={[
 							gridItemHandler({ row: 0, col: 1 }),
 							longPressHandler({ threshold: 600 }),
-							selectHandler(({ longpress }) => {
+							activationHandler(({ longpress }) => {
 								if (longpress) {
 									nav.focus("horizontal-list");
 									return;

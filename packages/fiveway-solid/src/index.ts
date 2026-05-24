@@ -17,7 +17,7 @@ export {
 	useOnFocusChange,
 	useFocusedId,
 	useFocus,
-	useSelect,
+	useActivate,
 } from "./hooks.ts";
 
 export { type ElementHandler, createElementHandler, useFocusSync } from "./element.ts";

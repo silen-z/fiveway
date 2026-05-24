@@ -1,4 +1,4 @@
-import { type NavigationAction, type MoveAction, type SelectAction } from "../action.ts";
+import { type NavigationAction, type MoveAction, type ActivateAction } from "../action.ts";
 
 /**
  * Keybinds function that maps keyboard events to navigation actions.
@@ -12,7 +12,7 @@ export type Keybinds = (e: Event, options: { longpress?: boolean }) => Navigatio
  *
  * Default keybinds:
  * - Arrow keys → {@link MoveAction}
- * - Enter / Space → {@link SelectAction}
+ * - Enter / Space → {@link ActivateAction}
  * - Backspace → {@link MoveAction} with direction `"back"`
  */
 export function defaultKeybinds(
@@ -26,7 +26,7 @@ export function defaultKeybinds(
 	}
 
 	if (key === "Enter" || key === " ") {
-		return { kind: "select", longpress } satisfies SelectAction;
+		return { kind: "activate", longpress } satisfies ActivateAction;
 	}
 
 	if (key === "ArrowUp") {
