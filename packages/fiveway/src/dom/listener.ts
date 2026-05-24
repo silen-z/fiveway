@@ -1,4 +1,4 @@
-import { type LongPressOptions, longPressHandler } from "../handler/longpress.ts";
+import { longPressHandler } from "../handler/longpress.ts";
 import { dispatchAction, type NavigationTree } from "../tree/tree.ts";
 import { type Keybinds, getKey } from "./keybinds.ts";
 
@@ -27,32 +27,21 @@ export function registerKeyboardListener(
 	target: EventTarget,
 	keybinds: Keybinds,
 ): () => void {
-	const dispatch = (e: Event, longpress?: boolean) => {
-		const action = keybinds(e, { longpress });
+	const dispatchPending = (longpress?: boolean) => {
+		if (pending == null) {
+			return;
+		}
+
+		const action = keybinds(pending.event, { longpress });
 		if (action == null) {
 			return;
 		}
 
-		e.preventDefault();
 		dispatchAction(tree, action);
+		clearPending();
 	};
 
 	let pending: PendingPress | null = null;
-
-	const startPending = (options: LongPressOptions, event: KeyboardEvent) => {
-		clearPending();
-
-		const timer = window.setTimeout(() => {
-			if (pending == null) {
-				return;
-			}
-
-			dispatch(pending.event, true);
-			clearPending();
-		}, options.threshold ?? DEFAULT_LONG_PRESS_THRESHOLD);
-
-		pending = { timer, event };
-	};
 
 	const clearPending = () => {
 		if (pending == null) {
@@ -69,23 +58,33 @@ export function registerKeyboardListener(
 			return;
 		}
 
-		const longPress = longPressHandler.query(tree, tree.focus);
-		if (longPress == null || longPress.enabled === false) {
-			dispatch(e);
+		// check if any action for this event can be dispatched
+		const action = keybinds(e);
+		if (action == null) {
 			return;
 		}
 
 		e.preventDefault();
+
+		const longPress = longPressHandler.query(tree, tree.focus);
+		if (longPress == null || longPress.enabled === false) {
+			dispatchAction(tree, action);
+			return;
+		}
 
 		if ("repeat" in e && e.repeat === true) {
 			return;
 		}
 
 		if (pending != null) {
-			dispatch(pending.event, false);
+			dispatchPending(false);
 		}
 
-		startPending(longPress, e as KeyboardEvent);
+		const timer = window.setTimeout(() => {
+			dispatchPending(true);
+		}, longPress.threshold ?? DEFAULT_LONG_PRESS_THRESHOLD);
+
+		pending = { timer, event: e as KeyboardEvent };
 	};
 
 	const onKeyUp = (e: Event) => {
@@ -98,8 +97,8 @@ export function registerKeyboardListener(
 			return;
 		}
 
-		dispatch(pending.event, false);
-		clearPending();
+		e.preventDefault();
+		dispatchPending(false);
 	};
 
 	const onCancel = () => {

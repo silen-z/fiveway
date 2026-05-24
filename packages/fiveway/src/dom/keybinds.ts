@@ -3,9 +3,12 @@ import { type NavigationAction, type MoveAction, type ActivateAction } from "../
 /**
  * Keybinds function that maps keyboard events to navigation actions.
  *
+ * As optimization when keybinds do not return action for shortpress,
+ * default `registerKeyboardListener` does not listen for longpress.
+ *
  * @see {@link defaultKeybinds} for default keybinds
  */
-export type Keybinds = (e: Event, options: { longpress?: boolean }) => NavigationAction | null;
+export type Keybinds = (e: Event, options?: { longpress?: boolean }) => NavigationAction | null;
 
 /**
  * {@link Keybinds} function that handles set of default keybinds for `keydown` events:
