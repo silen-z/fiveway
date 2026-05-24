@@ -1,18 +1,10 @@
 import { expect, test } from "vite-plus/test";
 
-// import first to avoid circular dependency errors
-// prettier-ignore
 import { createTestTree } from "../_test/treeSpec.ts";
-
-import {
-	spatialHandler,
-	spatialItemHandler,
-	dispatchAction,
-	createNode,
-	insertNode,
-	removeNode,
-	defaultHandler,
-} from "../index.ts";
+import { createNode } from "../tree/node.ts";
+import { dispatchAction, insertNode, removeNode } from "../tree/tree.ts";
+import { defaultHandler } from "./handler.ts";
+import { spatialHandler, spatialItemHandler } from "./spatial.ts";
 
 test("spatialHandler", async () => {
 	const { tree, nodes } = createTestTree({

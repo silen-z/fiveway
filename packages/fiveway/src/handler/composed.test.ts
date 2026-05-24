@@ -1,15 +1,10 @@
 import { test, expect } from "vite-plus/test";
 
-import {
-	type NavigationHandler,
-	createNode,
-	createNavigationTree,
-	insertNode,
-	composeHandlers,
-	defaultHandler,
-	createDataHandler,
-	dispatchAction,
-} from "../index.ts";
+import { createNode } from "../tree/node.ts";
+import { createNavigationTree, dispatchAction, insertNode } from "../tree/tree.ts";
+import { composeHandlers } from "./composed.ts";
+import { defaultHandler, type NavigationHandler } from "./handler.ts";
+import { createDataHandler } from "./metadata.ts";
 
 test("composedHandler", () => {
 	const tree = createNavigationTree();

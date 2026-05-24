@@ -1,17 +1,9 @@
 import { expect, test } from "vite-plus/test";
 
-// import first to avoid circular dependency errors
-// prettier-ignore
 import { createTestTree } from "../_test/treeSpec.ts";
-
-import {
-	createNavigationTree,
-	insertNode,
-	createNode,
-	updateNode,
-	type NavigationHandler,
-	defaultHandler,
-} from "../index.ts";
+import { defaultHandler, type NavigationHandler } from "../handler/handler.ts";
+import { createNode, updateNode } from "./node.ts";
+import { createNavigationTree, insertNode } from "./tree.ts";
 
 test("createNode", () => {
 	const node = createNode({

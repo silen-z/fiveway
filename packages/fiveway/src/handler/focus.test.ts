@@ -1,22 +1,18 @@
 import { test, expect } from "vite-plus/test";
 
-// import first to avoid circular dependency errors
-// prettier-ignore
 import { createTestTree } from "../_test/treeSpec.ts";
-
+import { createNode } from "../tree/node.ts";
 import {
+	dispatchAction,
 	focusNode,
 	holdFocus,
 	insertNode,
 	isFocused,
 	removeNode,
-	createNode,
-	containerHandler,
-	captureHandler,
-	initialHandler,
-	verticalHandler,
-	dispatchAction,
-} from "../index.ts";
+} from "../tree/tree.ts";
+import { verticalHandler } from "./directional.ts";
+import { captureHandler, initialHandler } from "./focus.ts";
+import { containerHandler } from "./handler.ts";
 
 test("focusHandler: items themselves are focusable", async () => {
 	const { tree, nodes } = createTestTree({

@@ -1,18 +1,10 @@
 import { test, expect, vi } from "vite-plus/test";
 
 import { createTestTree } from "../_test/treeSpec.ts";
-import {
-	type ActivateCallback,
-	createNavigationTree,
-	insertNode,
-	createNode,
-	defaultHandler,
-	activationHandler,
-	dispatchAction,
-	activateNode,
-	itemHandler,
-	focusNode,
-} from "../index.ts";
+import { createNode } from "../tree/node.ts";
+import { createNavigationTree, dispatchAction, focusNode, insertNode } from "../tree/tree.ts";
+import { activateNode, activationHandler, type ActivateCallback } from "./activate.ts";
+import { defaultHandler, itemHandler } from "./handler.ts";
 
 test("activationHandler", async () => {
 	const tree = createNavigationTree();
