@@ -29,6 +29,30 @@ export interface DataHandler<T> {
 }
 
 /**
+ * Data handler factory that given a value produces a navigation handler that responds to query actions with the given value.
+ * It alsostores its key and exposes a `.query(tree, id)` method that resolves the value for given node id.
+ *
+ * @see {@link createDataHandler} for usage example
+ */
+export interface DataHandlerWithDefault<T> {
+	/**
+	 * Key associated with this data handler factory
+	 */
+	key: string;
+
+	/** Data handler factory function */
+	(v?: T | (() => T | null) | null): NavigationHandler;
+
+	/**
+	 * Function that resolves the data value for given node id.
+	 * @param tree - navigation tree
+	 * @param id - node ID
+	 * @returns Value for given node ID or null if no value is stored or node does not exist.
+	 */
+	query: (tree: NavigationTree, id: NodeId) => T | null;
+}
+
+/**
  * Defines a {@link DataHandler}. Data handlers are used to store metadata on nodes.
  *
  * @param key - Unique key used for querying the data *
@@ -48,8 +72,11 @@ export interface DataHandler<T> {
  * @see {@link DataHandler}
  * @see {@link QueryAction}
  */
-export function createDataHandler<T>(key: string): DataHandler<T> {
-	const handler = (value: unknown) => {
+
+export function createDataHandler<T>(key: string): DataHandler<T>;
+export function createDataHandler<T>(key: string, defaultValue: T): DataHandlerWithDefault<T>;
+export function createDataHandler<T>(key: string, defaultValue?: T) {
+	const dataHandlerFactory = (value: unknown = defaultValue) => {
 		const dataHandler: NavigationHandler = (_, action, next) => {
 			if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 				describeHandler(action, { name: "data", key });
@@ -66,12 +93,12 @@ export function createDataHandler<T>(key: string): DataHandler<T> {
 		return dataHandler;
 	};
 
-	handler.key = key;
-	handler.query = (tree: NavigationTree, id: NodeId) => {
+	dataHandlerFactory.key = key;
+	dataHandlerFactory.query = (tree: NavigationTree, id: NodeId) => {
 		const query: QueryAction = { kind: "query", key, value: null };
 		runHandler(tree, id, query);
 		return query.value as T | null;
 	};
 
-	return handler;
+	return dataHandlerFactory;
 }
