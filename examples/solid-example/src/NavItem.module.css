@@ -5,6 +5,7 @@
 	border: 1px solid #ccc;
 }
 
+.item:focus,
 .item:focus-within {
 	outline: none;
 	color: white;
