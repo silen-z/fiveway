@@ -1,16 +1,16 @@
 import { expect, test, vi } from "vite-plus/test";
 
+import { createTestTree } from "../_test/treeSpec.ts";
 import { registerListener } from "./events.ts";
-import { createNode } from "./node.ts";
-import { createNavigationTree, focusNode, insertNode, isFocused } from "./tree.ts";
+import { createNavigationTree, focusNode, isFocused } from "./tree.ts";
 
 test("listeners", async () => {
-	const tree = createNavigationTree();
+	const { tree, nodes } = createTestTree({
+		id: "container",
+		children: [{ id: "one" }, { id: "two" }],
+	});
 
-	insertNode(tree, createNode({ id: "one", parent: "#" }));
-	insertNode(tree, createNode({ id: "two", parent: "#" }));
-
-	expect(tree.focus).toBe("#/one");
+	expect(tree.focus).toBe(nodes.one.id);
 
 	const listener1 = vi.fn<() => void>();
 	const cleanupListener1 = registerListener(tree, "#", listener1);
@@ -18,23 +18,23 @@ test("listeners", async () => {
 	const listener2 = vi.fn<() => void>();
 	const cleanupListener2 = registerListener(tree, "#", listener2);
 
-	focusNode(tree, "#/two");
+	focusNode(tree, nodes.two.id);
 
-	expect(isFocused(tree, "#/two")).toBe(true);
+	expect(isFocused(tree, nodes.two.id)).toBe(true);
 	expect(listener1).toHaveBeenCalledTimes(1);
 	expect(listener2).toHaveBeenCalledTimes(1);
 
 	cleanupListener1();
 
-	focusNode(tree, "#/one");
-	expect(isFocused(tree, "#/one")).toBe(true);
+	focusNode(tree, nodes.one.id);
+	expect(isFocused(tree, nodes.one.id)).toBe(true);
 	expect(listener1).toHaveBeenCalledTimes(1);
 	expect(listener2).toHaveBeenCalledTimes(2);
 
 	cleanupListener2();
 
-	focusNode(tree, "#/two");
-	expect(isFocused(tree, "#/two")).toBe(true);
+	focusNode(tree, nodes.two.id);
+	expect(isFocused(tree, nodes.two.id)).toBe(true);
 	expect(listener1).toHaveBeenCalledTimes(1);
 	expect(listener2).toHaveBeenCalledTimes(2);
 });

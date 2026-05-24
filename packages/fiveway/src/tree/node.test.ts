@@ -18,22 +18,17 @@ test("createNode", () => {
 });
 
 test("updateNode: handler", () => {
-	const tree = createNavigationTree();
 	const handler1: NavigationHandler = (n, a, next) => next();
 	const handler2: NavigationHandler = (n, a, next) => next();
 
-	const node = createNode({
+	const { nodes } = createTestTree({
 		id: "test",
-		parent: "#",
 		handler: handler1,
 	});
-	insertNode(tree, node);
+	expect(nodes.test.handler).toBe(handler1);
 
-	expect(node.handler).toBe(handler1);
-
-	updateNode(node, { handler: handler2 });
-
-	expect(node.handler).toBe(handler2);
+	updateNode(nodes.test, { handler: handler2 });
+	expect(nodes.test.handler).toBe(handler2);
 });
 
 test("updateNode: order", () => {

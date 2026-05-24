@@ -1,15 +1,12 @@
 import { expect, test, vi } from "vite-plus/test";
 
+import { createTestTree } from "../_test/treeSpec.ts";
 import { inspectHandler } from "../inspector.ts";
-import { createNode } from "../tree/node.ts";
-import { createNavigationTree, insertNode } from "../tree/tree.ts";
 import { containerHandler, type NavigationHandler } from "./handler.ts";
 
 test("runHandler", async () => {
-	const tree = createNavigationTree();
-
 	const handler = vi.fn<NavigationHandler>(() => null);
-	insertNode(tree, createNode({ id: "one", parent: "#", handler }));
+	createTestTree({ id: "one", handler });
 
 	expect(handler).toHaveBeenCalledWith(
 		expect.objectContaining({ id: "#/one" }),
@@ -19,39 +16,28 @@ test("runHandler", async () => {
 });
 
 test("runHandler: pass action to non-existent node", () => {
-	const tree = createNavigationTree();
-
 	const handler: NavigationHandler = (n, a, next) => {
 		const nextId = next("#/non-existent");
 		expect(nextId).toBeNull();
 		return nextId;
 	};
-	insertNode(tree, createNode({ id: "one", parent: "#", handler }));
+	createTestTree({ id: "one", handler });
 });
 
 // TODO test behavior instead of internal properties
 test("defaultHandler", () => {
-	const tree = createNavigationTree();
-
-	const container = createNode({
-		id: "test",
-		parent: "#",
+	const { tree, nodes } = createTestTree({
+		id: "container",
 		handler: containerHandler,
+		children: [{ id: "item" }],
 	});
-	insertNode(tree, container);
 
-	const item = createNode({
-		id: "test",
-		parent: container.id,
-	});
-	insertNode(tree, item);
-
-	expect(inspectHandler(tree, container.id)).toEqual([
+	expect(inspectHandler(tree, nodes.container.id)).toEqual([
 		{ name: "focus", focusWhenEmpty: false, direction: "default" },
 		{ name: "parent" },
 	]);
 
-	expect(inspectHandler(tree, item.id)).toEqual([
+	expect(inspectHandler(tree, nodes.item.id)).toEqual([
 		{ name: "focus", focusWhenEmpty: true, direction: "default" },
 		{ name: "parent" },
 	]);

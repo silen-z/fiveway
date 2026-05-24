@@ -1,8 +1,6 @@
-import { expect, test, vi } from "vite-plus/test";
+import { expect, test } from "vite-plus/test";
 
 import { createTestTree } from "../_test/treeSpec.ts";
-import { activateNode, type ActivateCallback } from "../handler/activate.ts";
-import { itemHandler } from "../handler/handler.ts";
 import { createNode } from "./node.ts";
 import { createNavigationTree, focusNode, insertNode, removeNode, traverseNodes } from "./tree.ts";
 
@@ -159,57 +157,20 @@ test("removeNode: remembered children", () => {
 });
 
 test("focusNode", async () => {
-	const tree = createNavigationTree();
-
-	const node1 = createNode({
-		id: "node1",
-		parent: "#",
+	const { tree, nodes } = createTestTree({
+		id: "root",
+		children: [{ id: "node1" }, { id: "node2" }],
 	});
 
-	const node2 = createNode({
-		id: "node2",
-		parent: "#",
-	});
+	expect(tree.focus).toBe(nodes.node1.id);
 
-	insertNode(tree, node1);
-	insertNode(tree, node2);
+	focusNode(tree, nodes.node2.id);
 
-	expect(tree.focus).toBe(node1.id);
-
-	focusNode(tree, node2.id);
-
-	expect(tree.focus).toBe(node2.id);
+	expect(tree.focus).toBe(nodes.node2.id);
 
 	const success = focusNode(tree, "#/non-existent");
 	expect(success).toBe(false);
-	expect(tree.focus).toBe(node2.id);
-});
-
-test("activateNode", async () => {
-	const tree = createNavigationTree();
-
-	const parkingNode = createNode({
-		id: "parkingNode",
-		parent: "#",
-	});
-
-	const onActivate = vi.fn<ActivateCallback>();
-
-	const targetNode = createNode({
-		id: "node",
-		parent: "#",
-		handler: itemHandler(onActivate),
-	});
-
-	insertNode(tree, parkingNode);
-	insertNode(tree, targetNode);
-
-	expect(tree.focus).toBe(parkingNode.id);
-
-	activateNode(tree, targetNode.id);
-
-	expect(onActivate).toHaveBeenCalledTimes(1);
-	expect(tree.focus).toBe(targetNode.id);
+	expect(tree.focus).toBe(nodes.node2.id);
 });
 
 test("traverseNodes", () => {
