@@ -1,7 +1,7 @@
 import { test, expect } from "vite-plus/test";
 
+import { createTestTree } from "../_test/treeSpec.ts";
 import { createDataHandler, defaultHandler } from "../index.ts";
-import { createTestTree } from "../test/treeSpec.ts";
 
 test("DataHandler.query returns DataHandler", () => {
 	const testDataHandler = createDataHandler("test");

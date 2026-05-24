@@ -2,7 +2,7 @@ import { expect, test } from "vite-plus/test";
 
 // import first to avoid circular dependency errors
 // prettier-ignore
-import { createTestTree } from "../test/treeSpec.ts";
+import { createTestTree } from "../_test/treeSpec.ts";
 
 import {
 	createNavigationTree,

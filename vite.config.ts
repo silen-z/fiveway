@@ -35,6 +35,7 @@ export default defineConfig({
 	test: {
 		projects: ["packages/*"],
 		coverage: {
+			exclude: ["**/_test/**"],
 			reporter: ["text", "json", "json-summary"],
 			reportOnFailure: true,
 		},

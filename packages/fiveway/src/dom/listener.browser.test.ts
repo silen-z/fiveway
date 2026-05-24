@@ -1,10 +1,10 @@
 import { describe, test, expect, onTestFinished, vi } from "vite-plus/test";
 
+import { createTestTree } from "../_test/treeSpec.ts";
 import { activationHandler } from "../handler/activate.ts";
 import { verticalHandler } from "../handler/directional.ts";
 import { defaultHandler } from "../handler/handler.ts";
 import { longPressHandler } from "../handler/longpress.ts";
-import { createTestTree } from "../test/treeSpec.ts";
 import { type NavigationTree } from "../tree/tree.ts";
 import { defaultKeybinds } from "./keybinds.ts";
 import { registerKeyboardListener } from "./listener.ts";

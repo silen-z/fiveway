@@ -1,5 +1,3 @@
-/* v8 ignore file */
-
 import { composeHandlers } from "../handler/composed.ts";
 import { type NavigationHandler } from "../handler/handler.ts";
 import { type NodeId } from "../tree/id.ts";
