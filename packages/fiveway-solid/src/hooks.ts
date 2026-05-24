@@ -101,7 +101,9 @@ export function useOnFocusChange(
 	createEffect(() => {
 		const subscribedId = id();
 
-		handler(isFocused(tree, subscribedId) ? tree.focus : null);
+		if (tree.focusLock === "free") {
+			handler(isFocused(tree, subscribedId) ? tree.focus : null);
+		}
 
 		const cleanup = registerListener(tree, subscribedId, () => {
 			const focusedId = isFocused(tree, subscribedId) ? tree.focus : null;

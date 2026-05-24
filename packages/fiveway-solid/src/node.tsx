@@ -174,7 +174,7 @@ export function createNavnode(
 	return handle;
 }
 
-type NavnodeChildren = JSX.Element | ((props: Omit<Navnode, "Context">) => JSX.Element);
+type NavnodeChildren = JSX.Element | ((nav: Navnode) => JSX.Element);
 
 /**
  * Props for {@link Navnode}.

@@ -2,6 +2,7 @@ node_modules
 dist
 *.tsbuildinfo
 coverage
+**/.vitest-attachments/
 
 # direnv
 .envrc

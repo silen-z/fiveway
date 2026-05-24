@@ -1,7 +1,7 @@
 import { test, expect } from "vite-plus/test";
 
+import { createTestTree } from "../_test/treeSpec.ts";
 import { createNavigationTree, createNode, defaultHandler, insertNode } from "../index.ts";
-import { createTestTree } from "../test/treeSpec.ts";
 import { longPressHandler } from "./longpress.ts";
 
 test("longPressHandler.query returns metadata on configured node", async () => {

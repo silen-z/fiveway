@@ -1,8 +1,8 @@
 import { describe, test, expect } from "vite-plus/test";
 
+import { createTestTree } from "../_test/treeSpec.ts";
 import { defaultKeybinds } from "../dom.ts";
 import { verticalHandler } from "../handler/directional.ts";
-import { createTestTree } from "../test/treeSpec.ts";
 import { dispatchAction } from "../tree/tree.ts";
 
 describe("defaultKeybinds", () => {
