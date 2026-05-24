@@ -67,7 +67,7 @@ describe("registerKeyboardListener", () => {
 						pressedShortPress = true;
 					}
 				}),
-				longPressHandler({}),
+				longPressHandler(),
 				defaultHandler,
 			],
 		});
@@ -104,7 +104,7 @@ describe("registerKeyboardListener", () => {
 						pressedShortPress = true;
 					}
 				}),
-				longPressHandler({}),
+				longPressHandler(),
 				defaultHandler,
 			],
 		});
@@ -132,7 +132,7 @@ describe("registerKeyboardListener", () => {
 						pressedLongPress = true;
 					}
 				}),
-				longPressHandler({}),
+				longPressHandler(),
 				defaultHandler,
 			],
 		});
@@ -167,7 +167,7 @@ describe("registerKeyboardListener", () => {
 						pressedLongPress = true;
 					}
 				}),
-				longPressHandler({}),
+				longPressHandler(),
 				defaultHandler,
 			],
 		});
