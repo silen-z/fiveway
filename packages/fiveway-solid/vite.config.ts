@@ -1,7 +1,9 @@
 import solid from "vite-plugin-solid";
 import { defineProject, type Plugin } from "vite-plus";
+import { playwright } from "vite-plus/test/browser-playwright";
 
 export default defineProject({
+	plugins: [solid() as Plugin],
 	pack: [
 		// build with JSX preserved
 		{
@@ -25,4 +27,13 @@ export default defineProject({
 			plugins: [solid() as Plugin],
 		},
 	],
+	test: {
+		environment: "node", // not actually node, used to prevent JSDOM prompt when running tests
+		browser: {
+			enabled: true,
+			provider: playwright(),
+			headless: true,
+			instances: [{ browser: "chromium" }],
+		},
+	},
 });

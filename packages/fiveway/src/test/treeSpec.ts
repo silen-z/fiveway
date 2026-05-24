@@ -1,3 +1,6 @@
+/* v8 ignore file */
+
+import { composeHandlers } from "../handler/composed.ts";
 import { type NavigationHandler } from "../handler/handler.ts";
 import { type NodeId } from "../tree/id.ts";
 import { createNode, type NavigationNode } from "../tree/node.ts";
@@ -6,7 +9,7 @@ import { type NavigationTree, createNavigationTree, holdFocus, insertNode } from
 export type TreeSpec = {
 	id: string;
 	order?: number;
-	handler?: NavigationHandler;
+	handler?: NavigationHandler | (NavigationHandler | undefined)[];
 	children?: TreeSpec[];
 };
 
@@ -19,7 +22,7 @@ export type TreeSpecResult<S extends TreeSpec> = {
 	nodes: { [P in SpecIds<S>]: NavigationNode };
 };
 
-export function createTreeFromSpec<const S extends TreeSpec>(spec: S): TreeSpecResult<S> {
+export function createTestTree<const S extends TreeSpec>(spec: S): TreeSpecResult<S> {
 	const tree = createNavigationTree();
 	const nodes: { [key: NodeId]: NavigationNode } = {};
 
@@ -48,7 +51,7 @@ function proccessSpec(
 	const node = createNode({
 		id: spec.id,
 		order: spec.order,
-		handler: spec.handler,
+		handler: Array.isArray(spec.handler) ? composeHandlers(spec.handler) : spec.handler,
 		parent: parent.id,
 	});
 

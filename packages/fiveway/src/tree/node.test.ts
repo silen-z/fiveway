@@ -2,7 +2,7 @@ import { expect, test } from "vite-plus/test";
 
 // import first to avoid circular dependency errors
 // prettier-ignore
-import { createTreeFromSpec } from "../test/treeSpec.ts";
+import { createTestTree } from "../test/treeSpec.ts";
 
 import {
 	createNavigationTree,
@@ -45,7 +45,7 @@ test("updateNode: handler", () => {
 });
 
 test("updateNode: order", () => {
-	const { nodes } = createTreeFromSpec({
+	const { nodes } = createTestTree({
 		id: "container",
 		children: [{ id: "node1" }, { id: "node2" }, { id: "node3" }],
 	});

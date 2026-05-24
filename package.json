@@ -2,8 +2,9 @@
 	"private": true,
 	"type": "module",
 	"devDependencies": {
+		"@vitest/browser": "4.1.6",
 		"@vitest/coverage-v8": "4.1.6",
-		"happy-dom": "^20.9.0",
+		"playwright": "1.60.0",
 		"vite-plus": "catalog:"
 	},
 	"packageManager": "pnpm@11.2.2"
