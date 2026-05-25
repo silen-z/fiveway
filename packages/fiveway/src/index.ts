@@ -34,7 +34,7 @@ export {
 
 export { type NodeId, joinId, isParent, childLocalId } from "./tree/id.ts";
 
-export { type FocusListener, registerListener } from "./tree/events.ts";
+export { type FocusListener, registerFocusListener } from "./tree/events.ts";
 
 export {
 	type NavigationDirection,

@@ -21,41 +21,27 @@ export interface DataHandler<T> {
 
 	/**
 	 * Function that resolves the data value for given node id.
-	 * @param tree - navigation tree
-	 * @param id - node ID
-	 * @returns Value for given node ID or null if no value is stored or node does not exist.
+	 * Returns value for given node ID or null if no value is stored or node does not exist.
 	 */
 	query: (tree: NavigationTree, id: NodeId) => T | null;
 }
 
 /**
- * Data handler factory that given a value produces a navigation handler that responds to query actions with the given value.
- * It alsostores its key and exposes a `.query(tree, id)` method that resolves the value for given node id.
+ * Variant of {@link DataHandler} that has a default value specified.
  *
  * @see {@link createDataHandler} for usage example
  */
 export interface DataHandlerWithDefault<T> {
-	/**
-	 * Key associated with this data handler factory
-	 */
 	key: string;
-
-	/** Data handler factory function */
 	(v?: T | (() => T | null) | null): NavigationHandler;
-
-	/**
-	 * Function that resolves the data value for given node id.
-	 * @param tree - navigation tree
-	 * @param id - node ID
-	 * @returns Value for given node ID or null if no value is stored or node does not exist.
-	 */
 	query: (tree: NavigationTree, id: NodeId) => T | null;
 }
 
 /**
  * Defines a {@link DataHandler}. Data handlers are used to store metadata on nodes.
  *
- * @param key - Unique key used for querying the data *
+ * @param key - Unique key used for querying the data
+ * @param defaultValue - Default value that is used when creating defined data handler with no value
  * @return Data handler factory that given a value produces a navigation handler that responds to query actions for given key
  *
  * **Unprefixed keys (like `initial`, `element`) are reserved for `@fiveway/core`** . Third-party libraries and apps should use a
@@ -70,9 +56,9 @@ export interface DataHandlerWithDefault<T> {
  * ```
  *
  * @see {@link DataHandler}
+ * @see {@link DataHandlerWithDefault}
  * @see {@link QueryAction}
  */
-
 export function createDataHandler<T>(key: string): DataHandler<T>;
 export function createDataHandler<T>(key: string, defaultValue: T): DataHandlerWithDefault<T>;
 export function createDataHandler<T>(key: string, defaultValue?: T) {

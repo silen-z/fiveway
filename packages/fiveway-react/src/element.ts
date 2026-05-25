@@ -1,7 +1,7 @@
 import {
 	type ComposedHandler,
 	composeHandlers,
-	registerListener,
+	registerFocusListener,
 	spatialItemHandler,
 } from "@fiveway/core";
 import { elementHandler } from "@fiveway/core/dom";
@@ -75,6 +75,6 @@ export function useFocusSync(): void {
 			}
 		};
 
-		return registerListener(tree, "#", handler);
+		return registerFocusListener(tree, "#", handler);
 	}, [tree]);
 }

@@ -8,7 +8,13 @@ export {
 	useNavigationContext,
 } from "./context.tsx";
 
-export { type NavnodeOptions, type NavnodeProps, createNavnode, Navnode } from "./node.tsx";
+export {
+	type NavnodeHandle,
+	type NavnodeOptions,
+	type NavnodeProps,
+	createNavnode,
+	Navnode,
+} from "./node.tsx";
 
 export {
 	useIsFocused,

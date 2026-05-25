@@ -5,7 +5,7 @@ import { type NavigationTree } from "./tree.ts";
 /**
  * Callback function that is called when a focus transition affects a node.
  *
- * @see {@link registerListener} to register a listener
+ * @see {@link registerFocusListener} to register a listener
  */
 export type FocusListener = () => void;
 
@@ -19,7 +19,7 @@ export type FocusListener = () => void;
  *
  * @see {@link FocusListener}
  */
-export function registerListener(
+export function registerFocusListener(
 	tree: NavigationTree,
 	id: NodeId,
 	listener: FocusListener,

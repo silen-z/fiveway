@@ -8,6 +8,10 @@ import { type NavigationTree } from "./tree.ts";
  * A node stored inside a `NavigationTree`. Nodes are created using {@link createNode}
  *
  * Do not modify node properties directly. Use {@link updateNode} to update node options.
+ *
+ * @see {@link NodeId}
+ * @see {@link NavigationHandler}
+ * @see {@link NodeChild}
  */
 export interface NavigationNode {
 	/**
@@ -32,21 +36,15 @@ export interface NavigationNode {
 
 	/**
 	 * Handler responsible for handling navigation actions dispatched to this node.
-	 *
-	 * @see {@link NavigationHandler}
 	 */
 	handler: NavigationHandler;
 
 	/**
 	 * Array of references to children of this node. Not to be manipulated directly.
-	 *
-	 * @see {@link NodeChild}
 	 */
 	children: NodeChild[];
 
 	/**
-	 * @internal
-	 *
 	 * Whether the node is connected.
 	 * Node is considered connected when all parent nodes up to the root are inserted in the tree.
 	 */
@@ -68,8 +66,6 @@ export interface NodeChild {
 	order: number | null;
 
 	/**
-	 * @internal
-	 *
 	 * Without explicit order child references are kept around as tombstones.
 	 * This is done to preserve order when reinserting a node without explicit order.
 	 */
@@ -78,12 +74,14 @@ export interface NodeChild {
 
 /**
  * Options for {@link createNode}
+ *
+ * @see {@link NodeId}
+ * @see {@link defaultHandler} default handler used when no handler is specified
+ * @see {@link NavigationHandler}
  */
 export interface NodeOptions {
 	/**
 	 * local node id such as `"item1"`. Must not contain slashes.
-	 *
-	 * @see {@link NodeId}
 	 */
 	id: string;
 
@@ -98,16 +96,15 @@ export interface NodeOptions {
 	order?: number;
 
 	/**
-	 * Handler responsible for handling navigation actions dispatched to this node.
-	 *
-	 * @default {@link defaultHandler}
-	 * @see {@link NavigationHandler}
+	 * Handler responsible for handling navigation actions dispatched to this node. Default: `defaultHandler`.
 	 */
 	handler?: NavigationHandler;
 }
 
 /**
- * Special case of {@link NavigationNode} that might not be inserted into a tree yet
+ * Special case of `NavigationNode` with nullable `tree` field since it might not be inserted yet.
+ *
+ * @see {@link NavigationNode}
  */
 export type CreatedNavigationNode = Omit<NavigationNode, "tree"> & {
 	tree: NavigationTree | null;
@@ -117,6 +114,7 @@ export type CreatedNavigationNode = Omit<NavigationNode, "tree"> & {
  * Creates a new navigation node.
  *
  * @see {@link NodeOptions}
+ * @see {@link CreatedNavigationNode}
  */
 export function createNode(options: NodeOptions): CreatedNavigationNode {
 	if (options.id.includes("/")) {

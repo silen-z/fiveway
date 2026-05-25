@@ -60,9 +60,11 @@ export function runHandler(
 }
 
 /**
- * Delegates most actions to the parent node.
+ * Primitive navigation handler that passes all actions to its parent node.
+ * Query action is an exception and is not passed to parent nodes.
  *
- * Ignores `query` actions (returns `null`).
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#parent-handler}
+ * @see {@link NavigationHandler}
  */
 export const parentHandler: NavigationHandler = (node, action, next) => {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
@@ -81,13 +83,18 @@ export const parentHandler: NavigationHandler = (node, action, next) => {
 };
 
 /**
- * Composes `focusHandler()` with `parentHandler` — typical leaf and general-purpose default.
+ * Basic composed navigation handler for nodes that can be focused. When not extended tt doesn't respond to any actions and passes them to parent.
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#default-handler}
+ * @see {@link ComposedHandler}
  */
 export const defaultHandler: ComposedHandler = composeHandlers([focusHandler(), parentHandler]);
 
 /**
- * Like `defaultHandler`, but empty containers do not keep focus
- * (`focusHandler({ focusWhenEmpty: false })`).
+ * Basic composed navigation handler similar to {@link defaultHandler}. It differs in that only allows node children to be focused but not the node itself.
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#container-handler}
+ * @see {@link ComposedHandler}
  */
 export const containerHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false }),
@@ -97,6 +104,11 @@ export const containerHandler: ComposedHandler = composeHandlers([
 /**
  * If `onActivate` is provided, composes `activationHandler(onActivate)` onto `defaultHandler`;
  * otherwise returns `defaultHandler`.
+ *
+ * @see {@link ActivateCallback} for callback function that is called when node receives activate action.
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#item-handler}
+ * @see {@link ComposedHandler}
  */
 export const itemHandler = (onActivate?: ActivateCallback): ComposedHandler => {
 	if (onActivate == null) {

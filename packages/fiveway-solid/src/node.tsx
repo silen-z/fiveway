@@ -45,7 +45,7 @@ export interface NavnodeOptions {
 /**
  * Navigation node handle returned by {@link createNavnode}.
  */
-export interface Navnode {
+export interface NavnodeHandle {
 	/**
 	 * Returns the ID of the node.
 	 */
@@ -58,15 +58,11 @@ export interface Navnode {
 
 	/**
 	 * Function for focusing the node.
-	 *
-	 * @see {@link FocusNodeOptions}
 	 */
 	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
 
 	/**
 	 * Function for activating the node.
-	 *
-	 * @see {@link ActivateNodeOptions}
 	 */
 	activate: (nodeId?: NodeId, options?: ActivateNodeOptions) => void;
 
@@ -90,7 +86,7 @@ export interface Navnode {
  * @param options - The options for the node.
  *
  * @see {@link NavnodeOptions}
- * @see {@link Navnode}
+ * @see {@link NavnodeHandle}
  *
  * @example
  * ```tsx
@@ -108,7 +104,7 @@ export function createNavnode(
 	id: NodeId | Accessor<NodeId>,
 	handler?: NavigationHandler | (NavigationHandler | undefined)[],
 	options: NavnodeOptions = {},
-): Navnode {
+): NavnodeHandle {
 	const { tree, parentNode } = useNavigationContext();
 
 	const parent = () => options.parent ?? parentNode();
@@ -174,7 +170,7 @@ export function createNavnode(
 	return handle;
 }
 
-type NavnodeChildren = JSX.Element | ((nav: Navnode) => JSX.Element);
+type NavnodeChildren = JSX.Element | ((nav: NavnodeHandle) => JSX.Element);
 
 /**
  * Props for {@link Navnode}.
@@ -192,16 +188,17 @@ export interface NavnodeProps extends NavnodeOptions {
 	handler?: NavigationHandler | (NavigationHandler | undefined)[];
 
 	/**
-	 * Children can be regular JSX children or a function that receives {@link Navnode} as argument and returns children.
+	 * Children can be regular JSX children or a function that receives `NavnodeHandle` as argument and returns children.
 	 */
 	children?: NavnodeChildren;
 }
 
 /**
- * Solid component that creates a navigation node and provides parent context to children.
+ * Solid component version of {@link createNavnode}. It takes same options {@link NavnodeOptions} and creates a navigation node.
+ * It provides correct navigation context to children so you don't have to use `nav.Context` manually.
+ * It can be given function that accepts {@link NavnodeHandle} as children.
  *
  * @see {@link NavnodeProps}
- * @see {@link Navnode}
  *
  * @example
  * ```tsx
@@ -218,7 +215,7 @@ export function Navnode(props: NavnodeProps): JSX.Element {
 	return <node.Context>{resolveNodeChildren(props.children, node)}</node.Context>;
 }
 
-function resolveNodeChildren(children: NavnodeChildren, node: Navnode): JSX.Element {
+function resolveNodeChildren(children: NavnodeChildren, node: NavnodeHandle): JSX.Element {
 	return createMemo(() =>
 		typeof children === "function" ? children(node) : children,
 	) as unknown as JSX.Element;

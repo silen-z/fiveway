@@ -1,6 +1,6 @@
 import {
 	composeHandlers,
-	registerListener,
+	registerFocusListener,
 	spatialItemHandler,
 	type ComposedHandler,
 } from "@fiveway/core";
@@ -66,7 +66,7 @@ export function useFocusSync(): void {
 			el.focus();
 		}
 
-		const cleanup = registerListener(tree, "#", () => {
+		const cleanup = registerFocusListener(tree, "#", () => {
 			const el = elementHandler.query(tree, tree.focus);
 			if (el !== null) {
 				el.focus();

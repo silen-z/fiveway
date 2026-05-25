@@ -11,7 +11,7 @@ import { type NavigationAction, type MoveAction, type ActivateAction } from "../
 export type Keybinds = (e: Event, options?: { longpress?: boolean }) => NavigationAction | null;
 
 /**
- * {@link Keybinds} function that handles set of default keybinds for `keydown` events:
+ * {@link Keybinds} function that maps set of default `keydown` keybinds to {@link NavigationAction}:
  *
  * Default keybinds:
  * - Arrow keys → {@link MoveAction}
