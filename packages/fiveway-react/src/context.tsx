@@ -42,8 +42,7 @@ export interface NavigationRootProps {
 
 	/**
 	 * Event target to attach listeners on.
-	 * When set to `null` no listeners are attached.
-	 * @default `window`
+	 * When set to `null` no listeners are attached. Default: `window`.
 	 */
 	listener?: EventTarget | null;
 

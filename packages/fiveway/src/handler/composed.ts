@@ -8,17 +8,15 @@ import { type NavigationHandler } from "./handler.ts";
  * A navigation handler composed from multiple other handlers.
  *
  * It can be further extended further via its `compose` method.
+ *
+ * @see {@link NavigationHandler}
  */
 export interface ComposedHandler extends NavigationHandler {
 	/**
 	 * Creates a new composed handler with the given handler added to the front of the chain.
-	 *
-	 * @param handler - The handler to add to the front of the chain.
-	 * @returns A new composed handler.
 	 */
 	compose(handler: NavigationHandler): ComposedHandler;
 
-	/** @internal */
 	chain: HandlerChainLink | null;
 }
 
@@ -28,7 +26,8 @@ type HandlerChainLink = {
 };
 
 /**
- * Composes multiple navigation handlers so they run in a sequence.
+ * Composes multiple navigation handlers into a single {@link ComposedHandler}.
+ * Composed handlers pass actions from one handler to the next.
  *
  * ```ts
  * const handler = composeHandlers([
@@ -39,7 +38,6 @@ type HandlerChainLink = {
  * ```
  *
  * @see {@link https://fiveway.dev/guide/handlers#composing-handlers} for more information about composing handlers.
- * @see {@link ComposedHandler}
  */
 export function composeHandlers(handlers: (NavigationHandler | undefined)[]): ComposedHandler {
 	let chain = null;

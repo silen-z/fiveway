@@ -4,7 +4,7 @@ import {
 	type ActivateNodeOptions,
 	activateNode,
 	isFocused,
-	registerListener,
+	registerFocusListener,
 	focusNode,
 	joinId,
 } from "@fiveway/core";
@@ -21,13 +21,15 @@ import { useNavigationContext } from "./context.tsx";
  * const nav = useNavnode("container", containerHandler);
  * const focusedId = useFocusedId(nav.id);
  * ```
+ *
+ * @see {@link NodeId}
  */
 export function useFocusedId(scope: NodeId): NodeId | null {
 	const { tree, parentNode } = useNavigationContext();
 	const globalId = joinId(parentNode, scope);
 
 	const subscribe = useCallback(
-		(handler: () => void) => registerListener(tree, globalId, handler),
+		(handler: () => void) => registerFocusListener(tree, globalId, handler),
 		[tree, globalId],
 	);
 
@@ -71,7 +73,7 @@ export function useOnFocusChange(nodeId: NodeId, handler: (id: NodeId | null) =>
 	useEffect(() => {
 		handlerRef.current(isFocused(tree, globalId) ? tree.focus : null);
 
-		return registerListener(tree, globalId, () => {
+		return registerFocusListener(tree, globalId, () => {
 			const id = isFocused(tree, globalId) ? tree.focus : null;
 			handlerRef.current(id);
 		});

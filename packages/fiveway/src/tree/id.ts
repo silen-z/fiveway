@@ -7,6 +7,8 @@ export type NodeId = string;
  * Joins a parent scope with a local segment.
  *
  * If `nodeId` starts with `#/`, it is treated as absolute and returned as-is.
+ *
+ * @see {@link NodeId}
  */
 export function joinId(scope: NodeId, nodeId: NodeId): NodeId {
 	if (nodeId.startsWith("#/")) {
@@ -36,6 +38,8 @@ export function isParent(parentId: NodeId, childId: NodeId): boolean {
  * childLocalId("#/container", "#/container/item"); // "#/container/item"
  * childLocalId("#/container", "#/another/item/nested"); // null
  * ```
+ *
+ * @see {@link NodeId}
  */
 export function childLocalId(parentId: NodeId, descendantId: NodeId): NodeId | null {
 	if (!isParent(parentId, descendantId)) {

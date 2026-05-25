@@ -6,7 +6,7 @@ import {
 	joinId,
 	focusNode,
 	isFocused,
-	registerListener,
+	registerFocusListener,
 } from "@fiveway/core";
 import { type Accessor, createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 
@@ -20,6 +20,8 @@ import { useNavigationContext } from "./context.tsx";
  * const nav = createNavnode("container", containerHandler);
  * const focusedId = useFocusedId(nav);
  * ```
+ *
+ * @see {@link NodeId}
  */
 export function useFocusedId(scope: NodeId): Accessor<NodeId | null> {
 	const { tree, parentNode } = useNavigationContext();
@@ -27,7 +29,7 @@ export function useFocusedId(scope: NodeId): Accessor<NodeId | null> {
 	const [focusedId, setFocusedId] = createSignal(isFocused(tree, globalId) ? tree.focus : null);
 
 	createEffect(() => {
-		const cleanup = registerListener(tree, globalId, () => {
+		const cleanup = registerFocusListener(tree, globalId, () => {
 			const id = isFocused(tree, globalId) ? tree.focus : null;
 			setFocusedId(id);
 		});
@@ -62,7 +64,7 @@ export function useIsFocused(id: NodeId | Accessor<NodeId>): Accessor<boolean> {
 
 		const nodeId = watchedId();
 
-		const cleanup = registerListener(tree, nodeId, () => {
+		const cleanup = registerFocusListener(tree, nodeId, () => {
 			setFocused(isFocused(tree, nodeId));
 		});
 
@@ -105,7 +107,7 @@ export function useOnFocusChange(
 			handler(isFocused(tree, subscribedId) ? tree.focus : null);
 		}
 
-		const cleanup = registerListener(tree, subscribedId, () => {
+		const cleanup = registerFocusListener(tree, subscribedId, () => {
 			const focusedId = isFocused(tree, subscribedId) ? tree.focus : null;
 			handler(focusedId);
 		});

@@ -5,12 +5,18 @@ import { type NavigationNode } from "../tree/node.ts";
 import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { type HandlerNext, parentHandler } from "./handler.ts";
+// oxlint reports types used in JSDoc as unused
+// oxlint-disable-next-line
+import { type NavigationHandler } from "./handler.ts";
 
 /**
  * Building block for {@link verticalHandler}.
  * Handles `move` actions in up and down directions by focusing the previous or next child respectively.
  *
  * This is a primitive handler and as such is meant to be used as part of a composed handler.
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#directional-movement-handlers}
+ * @see {@link NavigationHandler}
  */
 export function verticalMovementHandler(
 	node: NavigationNode,
@@ -65,6 +71,7 @@ function verticalFocusDirection(dir: NavigationDirection | "initial" | null) {
  * ```
  *
  * @see {@link https://fiveway.dev/guide/built-in-handlers#vertical-handler}
+ * @see {@link ComposedHandler}
  */
 export const verticalHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false, direction: verticalFocusDirection }),
@@ -77,6 +84,9 @@ export const verticalHandler: ComposedHandler = composeHandlers([
  * Handles `move` actions in left and right directions by focusing the previous or next child respectively.
  *
  * This is a primitive handler and as such is meant to be used as part of a composed handler.
+ *
+ * @see {@link NavigationHandler}
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#directional-movement-handlers}
  */
 export function horizontalMovementHandler(
 	node: NavigationNode,
@@ -131,6 +141,7 @@ function horizontalFocusDirection(dir: NavigationDirection | "initial" | null) {
  * ```
  *
  * @see {@link https://fiveway.dev/guide/built-in-handlers#horizontal-handler}
+ * @see {@link ComposedHandler}
  */
 export const horizontalHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false, direction: horizontalFocusDirection }),

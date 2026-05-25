@@ -13,7 +13,10 @@ import { type CreatedNavigationNode, type NavigationNode } from "./node.ts";
 
 /**
  * Object that holds all the navigation state. Most importantly inserted nodes and the focused node ID.
+ *
  * @see {@link createNavigationTree} used to create a new `NavigationTree`
+ * @see {@link insertNode}
+ * @see {@link removeNode}
  */
 export interface NavigationTree {
 	/**
@@ -27,36 +30,20 @@ export interface NavigationTree {
 	label: string;
 
 	/**
-	 * @internal
-	 *
-	 * Map of all nodes inserted into the tree.
-	 * Node inside this map are not guaranteed to be connected.
-	 *
-	 * @see {@link insertNode} to insert a node into the tree.
-	 * @see {@link NavigationNode}
+	 * Map of all nodes inserted into the tree. Use `insertNode` and `removeNode` to manage nodes.
+	 * Nodes inside this map are not guaranteed to be connected.
 	 */
 	nodes: Map<NodeId, NavigationNode>;
-
-	/**
-	 * @internal
-	 *
-	 * Internal bookkeeping of nodes that are inserted but their parent is not.
-	 */
 	orphans: Map<NodeId, NodeId[]>;
 
 	/**
-	 * @internal
-	 *
 	 * Focus listeners registered on the tree.
-	 * Check {@link FocusListener} to see how to use listeners.
+	 * See `registerFocusListener` for how to use focus listeners.
 	 */
 	listeners: Map<NodeId, FocusListener[]>;
 
 	/**
-	 * @internal
-	 *
-	 * Focus lock state.
-	 * @see {@link holdFocus} to aquire the lock
+	 * Focus lock state. Use `holdFocus` to acquire the lock.
 	 */
 	focusLock: "free" | "locked" | "updatePending";
 }
@@ -280,6 +267,11 @@ function updateFocus(tree: NavigationTree) {
 }
 
 /**
+ * Function that releases the focus lock aquired by {@link holdFocus}.
+ */
+export type ReleaseFocusLock = () => void;
+
+/**
  * Temporarily locks focus from changing while the tree structure changes to allow
  * inserting multiple nodes at once to resolve initial focus correctly.
  *
@@ -291,7 +283,7 @@ function updateFocus(tree: NavigationTree) {
  * Used by framework integrations to make initial focus work in frameworks that run
  * effects top-down.
  */
-export function holdFocus(tree: NavigationTree): (() => void) | null {
+export function holdFocus(tree: NavigationTree): ReleaseFocusLock | null {
 	if (tree.focusLock !== "free") {
 		return null;
 	}
@@ -312,13 +304,13 @@ export function holdFocus(tree: NavigationTree): (() => void) | null {
 
 /**
  * Options for {@link focusNode}
+ *
+ * @see {@link FocusAction} dispatched by this function
+ * @see {@link NavigationDirection}
  */
 export interface FocusNodeOptions {
 	/**
-	 * Direction of focus used in {@link FocusAction} dispatched by this function.
-	 * @default `null`
-	 *
-	 * @see {@link NavigationDirection}
+	 * Direction of focus used in `FocusAction` dispatched by this function. Default: `null`.
 	 */
 	direction?: NavigationDirection | "initial";
 }
@@ -377,8 +369,8 @@ export function focusNode(
 }
 
 /**
- * Dispatches {@link NavigationAction} to the specified node. If no node is specified, the action is dispatched to the focused node.
- * Dispatching an action leads to navigation handlers being called. ID returned by a handler is used to update focus.
+ * Dispatches {@link NavigationAction} to focused or specified node handler.
+ * If handler returns an ID, focus is updated to that ID.
  *
  * @param tree - navigation tree
  * @param action - navigation action to dispatch

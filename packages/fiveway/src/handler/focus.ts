@@ -11,12 +11,11 @@ import { type DataHandler, createDataHandler } from "./metadata.ts";
 export type FocusDirection = "forwards" | "backwards";
 
 /**
- * Options for {@link createFocusHandler}
+ * Options for {@link focusHandler}
  */
 export interface FocusHandlerOptions {
 	/**
-	 * Whether the node is focusable when it has no children.
-	 * @default `true`
+	 * Whether the node is focusable when it has no children. Default: `true`.
 	 */
 	focusWhenEmpty?: boolean;
 
@@ -26,13 +25,6 @@ export interface FocusHandlerOptions {
 	direction?: (dir: NavigationDirection | "initial" | null) => FocusDirection | null;
 }
 
-/**
- * Handler factory that creates a primitive handler that is used to resolve {@link FocusAction}.
- * Focus is resolved by walking children in the order determined by the `direction` option.
- *
- * @see {@link FocusHandlerOptions} for options
- * @see {@link https://fiveway.dev/guide/handlers#composing-handlers} for more information about composing handlers.
- */
 function createFocusHandler(options: FocusHandlerOptions = {}): NavigationHandler {
 	const focusWhenEmpty = options.focusWhenEmpty ?? true;
 
@@ -102,7 +94,18 @@ function createFocusHandler(options: FocusHandlerOptions = {}): NavigationHandle
 	return focusHandler;
 }
 
-export { createFocusHandler as focusHandler };
+/**
+ * Handler factory that creates a primitive {@link NavigationHandler} that is used to resolve {@link FocusAction}.
+ * Focus is resolved by walking children in the order determined by the `direction` option.
+ *
+ * @see {@link FocusHandlerOptions} for options
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#focus-handler}
+ * @see {@link https://fiveway.dev/guide/handlers#composing-handlers} for more information about composing handlers.
+ * @see {@link NavigationHandler}
+ */
+export const focusHandler: (options?: FocusHandlerOptions) => NavigationHandler =
+	createFocusHandler;
 
 /**
  * Data handler that provides id for the preferred first child for initial focus.

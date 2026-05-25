@@ -1,3 +1,4 @@
+import { type ActivateAction } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavigationTree, focusNode } from "../tree/tree.ts";
@@ -12,7 +13,13 @@ import { type NavigationHandler, runHandler } from "./handler.ts";
 export type ActivateCallback = (options: { longpress?: boolean }) => void;
 
 /**
- * Navigation handler factory that creates a handler that invokes `onActivate` when an activate action is triggered.
+ * Navigation handler factory that creates a {@link NavigationHandler} that invokes callback when an activate action is received.
+ *
+ * @param onActivate - function that is called when node receives `activate` action
+ *
+ * @see {@link ActivateCallback}
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#activation-handler}
+ * @see {@link NavigationHandler}
  */
 export const activationHandler: (onActivate: ActivateCallback) => NavigationHandler =
 	createActivationHandler;
@@ -39,14 +46,12 @@ function createActivationHandler(onActivate: ActivateCallback): NavigationHandle
  */
 export interface ActivateNodeOptions {
 	/**
-	 * Whether to focus the node before activating it.
-	 * @default `true`
+	 * Whether to focus the node before activating it. Default: `true`.
 	 */
 	focus?: boolean;
 
 	/**
-	 * Whether the activate action was triggered by a long press.
-	 * @default `false`
+	 * Whether the activate action was triggered by a long press. Default: `false`.
 	 */
 	longpress?: boolean;
 }
@@ -54,7 +59,8 @@ export interface ActivateNodeOptions {
 /**
  * Activates a node by invoking the `activate` action on it.
  *
- * @see {@link ActivateNodeOptions}
+ * @see {@link ActivateNodeOptions} for options
+ * @see {@link ActivateAction}
  */
 export function activateNode(
 	tree: NavigationTree,
@@ -65,5 +71,8 @@ export function activateNode(
 		focusNode(tree, nodeId);
 	}
 
-	runHandler(tree, nodeId, { kind: "activate", longpress: options?.longpress });
+	runHandler(tree, nodeId, {
+		kind: "activate",
+		longpress: options?.longpress,
+	} satisfies ActivateAction);
 }

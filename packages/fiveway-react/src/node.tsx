@@ -9,7 +9,7 @@ import {
 	removeNode,
 	createNode,
 	isFocused,
-	registerListener,
+	registerFocusListener,
 	focusNode,
 	activateNode,
 	joinId,
@@ -46,7 +46,7 @@ export interface NavnodeOptions {
 /**
  * Navigation node handle returned by {@link useNavnode}.
  */
-export interface Navnode {
+export interface NavnodeHandle {
 	/**
 	 * The ID of the node.
 	 */
@@ -59,15 +59,11 @@ export interface Navnode {
 
 	/**
 	 * Function for focusing the node.
-	 *
-	 * @see {@link FocusNodeOptions}
 	 */
 	focus: (nodeId?: NodeId, options?: FocusNodeOptions) => void;
 
 	/**
 	 * Function for activating the node.
-	 *
-	 * @see {@link ActivateNodeOptions}
 	 */
 	activate: (nodeId?: NodeId, options?: ActivateNodeOptions) => void;
 
@@ -88,7 +84,7 @@ const NULL_NODE = {} as CreatedNavigationNode;
  * @param options - The options for the node.
  *
  * @see {@link NavnodeOptions}
- * @see {@link Navnode}
+ * @see {@link NavnodeHandle}
  *
  * @example
  * ```tsx
@@ -106,7 +102,7 @@ export function useNavnode(
 	id: NodeId,
 	handler?: NavigationHandler | (NavigationHandler | undefined)[],
 	options: NavnodeOptions = {},
-): Navnode {
+): NavnodeHandle {
 	const { tree, parentNode } = useNavigationContext();
 	const parent = options.parent ?? parentNode;
 
@@ -145,7 +141,7 @@ export function useNavnode(
 		activateNode(tree, id, options);
 	};
 
-	const Context: Navnode["Context"] = useCallback(
+	const Context: NavnodeHandle["Context"] = useCallback(
 		(props: { children: ReactNode }) => {
 			const context = {
 				tree: tree,
@@ -164,8 +160,10 @@ export function useNavnode(
 	return { id: nodeId, isFocused, focus, activate, Context };
 }
 
+type NavnodeChildren = ReactNode | ((nav: NavnodeHandle) => ReactNode);
+
 /**
- * Props for {@link Navnode}.component.
+ * Props for {@link Navnode} component.
  */
 export interface NavnodeProps extends NavnodeOptions {
 	/**
@@ -180,16 +178,17 @@ export interface NavnodeProps extends NavnodeOptions {
 	handler?: NavigationHandler | (NavigationHandler | undefined)[];
 
 	/**
-	 * Children can be regular react children or function that receives {@link Navnode} as argument and returns children.
+	 * Children can be regular react children or function that receives `NavnodeHandle` as argument and returns children.
 	 */
-	children?: ReactNode | ((props: Omit<Navnode, "Context">) => ReactNode);
+	children?: NavnodeChildren;
 }
 
 /**
- * React component that creates a navigation node and provides parent context to children.
+ * React component version of {@link useNavnode}. It takes same options {@link NavnodeOptions} and creates a navigation node.
+ * It provides correct navigation context to children so you don't have to use `nav.Context` manually.
+ * It can be given function that accepts {@link NavnodeHandle} as children.
  *
  * @see {@link NavnodeProps}
- * @see {@link Navnode}
  *
  * @example
  * ```tsx
@@ -201,15 +200,15 @@ export interface NavnodeProps extends NavnodeOptions {
  * ```
  */
 export function Navnode({ children, ...props }: NavnodeProps): ReactNode {
-	const { Context, ...node } = useNavnode(props.id, props.handler, props);
-	return <Context>{typeof children === "function" ? children(node) : children}</Context>;
+	const nav = useNavnode(props.id, props.handler, props);
+	return <nav.Context>{typeof children === "function" ? children(nav) : children}</nav.Context>;
 }
 
 function useLazyIsFocused(tree: NavigationTree, nodeId: NodeId): () => boolean {
 	const [subscribed, setSubscribed] = useState(false);
 
 	const subscribe = useCallback(
-		(handler: () => void) => registerListener(tree, nodeId, handler),
+		(handler: () => void) => registerFocusListener(tree, nodeId, handler),
 		[tree, nodeId],
 	);
 

@@ -1,7 +1,7 @@
 import { expect, test, vi } from "vite-plus/test";
 
 import { createTestTree } from "../_test/treeSpec.ts";
-import { registerListener } from "./events.ts";
+import { registerFocusListener } from "./events.ts";
 import { createNavigationTree, focusNode, isFocused } from "./tree.ts";
 
 test("listeners", async () => {
@@ -13,10 +13,10 @@ test("listeners", async () => {
 	expect(tree.focus).toBe(nodes.one.id);
 
 	const listener1 = vi.fn<() => void>();
-	const cleanupListener1 = registerListener(tree, "#", listener1);
+	const cleanupListener1 = registerFocusListener(tree, "#", listener1);
 
 	const listener2 = vi.fn<() => void>();
-	const cleanupListener2 = registerListener(tree, "#", listener2);
+	const cleanupListener2 = registerFocusListener(tree, "#", listener2);
 
 	focusNode(tree, nodes.two.id);
 
@@ -41,7 +41,7 @@ test("listeners", async () => {
 
 test("listeners: cleaning listener twice", () => {
 	const tree = createNavigationTree();
-	const cleanup = registerListener(tree, "#", () => {});
+	const cleanup = registerFocusListener(tree, "#", () => {});
 
 	cleanup();
 	expect(() => {

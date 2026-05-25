@@ -6,12 +6,14 @@ import { traverseNodes } from "../tree/tree.ts";
 import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 import { type HandlerNext, parentHandler } from "./handler.ts";
+// oxlint reports types used in JSDoc as unused
+// oxlint-disable-next-line
+import { type NavigationHandler } from "./handler.ts";
 import { type DataHandler, createDataHandler } from "./metadata.ts";
-
 /**
  * Grid item position for {@link gridItemHandler}
  *
- * @see {@link gridHandler}
+ * @see {@link gridHandler} that uses this data
  */
 export interface GridItem {
 	row: number;
@@ -31,6 +33,9 @@ export interface GridItem {
  *	 itemHandler,
  * ]);
  * ```
+ *
+ * @see {@link GridItem}
+ * @see {@link DataHandler}
  */
 export const gridItemHandler: DataHandler<GridItem> = createDataHandler("gridItem");
 
@@ -46,6 +51,8 @@ export const gridItemHandler: DataHandler<GridItem> = createDataHandler("gridIte
  *	 parentHandler,
  * ]);
  * ```
+ *
+ * @see {@link NavigationHandler}
  */
 export function gridMovementHandler(
 	node: NavigationNode,
@@ -123,6 +130,7 @@ export function gridMovementHandler(
  * ```
  *
  * @see {@link https://fiveway.dev/guide/built-in-handlers#grid-handler}
+ * @see {@link ComposedHandler}
  */
 export const gridHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false }),
@@ -130,10 +138,6 @@ export const gridHandler: ComposedHandler = composeHandlers([
 	parentHandler,
 ]);
 
-/**
- * Vectors from candidate toward current in (col, row) space — same convention as
- * {@link spatial.ts} spatial navigation (x = col, y = row).
- */
 const directionVector: Record<NavigationDirection, readonly [number, number] | []> = {
 	forwards: [],
 	backwards: [],

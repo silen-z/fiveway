@@ -14,6 +14,9 @@ export interface SpatialItem {
 
 /**
  * Stores layout bounds per node (query key `spatialItem`).
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#spatial-handler}
+ * @see {@link DataHandler}
  */
 export const spatialItemHandler: DataHandler<SpatialItem> = createDataHandler("spatialItem");
 
@@ -21,6 +24,9 @@ export const spatialItemHandler: DataHandler<SpatialItem> = createDataHandler("s
  * Spatial movement handler used by `spatialHandler`.
  *
  * Combines spatial movement with defaults for arrow-key style navigation using rects.
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#spatial-handler}
+ * @see {@link NavigationHandler}
  */
 export const spatialMovementHandler: NavigationHandler = (node, action, next) => {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
@@ -67,6 +73,9 @@ export const spatialMovementHandler: NavigationHandler = (node, action, next) =>
 
 /**
  * Combines spatial movement with defaults for arrow-key style navigation using rects.
+ *
+ * @see {@link https://fiveway.dev/guide/built-in-handlers#spatial-handler}
+ * @see {@link ComposedHandler}
  */
 export const spatialHandler: ComposedHandler = composeHandlers([
 	focusHandler({ focusWhenEmpty: false }),
