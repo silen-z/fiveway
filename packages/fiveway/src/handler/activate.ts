@@ -9,7 +9,7 @@ import { type NavigationHandler, runHandler } from "./handler.ts";
  * @param options - The options for the activate action.
  * @param options.longpress - Whether the activate action was triggered by a long press.
  */
-export type ActivateCallback = (options: { longpress: boolean }) => void;
+export type ActivateCallback = (options: { longpress?: boolean }) => void;
 
 /**
  * Navigation handler factory that creates a handler that invokes `onActivate` when an activate action is triggered.
@@ -24,7 +24,7 @@ function createActivationHandler(onActivate: ActivateCallback): NavigationHandle
 		}
 
 		if (action.kind === "activate") {
-			onActivate({ longpress: action.longpress === true });
+			onActivate({ longpress: action.longpress });
 			return null;
 		}
 

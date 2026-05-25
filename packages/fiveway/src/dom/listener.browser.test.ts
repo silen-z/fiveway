@@ -1,9 +1,10 @@
 import { describe, test, expect, onTestFinished, vi } from "vite-plus/test";
 
 import { createTestTree } from "../_test/treeSpec.ts";
-import { activationHandler } from "../handler/activate.ts";
+import { type NavigationAction } from "../action.ts";
+import { activationHandler, type ActivateCallback } from "../handler/activate.ts";
 import { verticalHandler } from "../handler/directional.ts";
-import { defaultHandler } from "../handler/handler.ts";
+import { defaultHandler, type NavigationHandler } from "../handler/handler.ts";
 import { longPressHandler } from "../handler/longpress.ts";
 import { type NavigationTree } from "../tree/tree.ts";
 import { defaultKeybinds } from "./keybinds.ts";
@@ -27,10 +28,16 @@ describe("registerKeyboardListener", () => {
 	});
 
 	test("should call event.preventDefault() when event is mapped to action", () => {
+		const onAction = vi.fn<(action: NavigationAction) => void>();
+		const trackingHandler: NavigationHandler = (_, action, next) => {
+			onAction(action);
+			return next();
+		};
+
 		const { tree, nodes } = createTestTree({
 			id: "container",
 			handler: verticalHandler,
-			children: [{ id: "item1" }, { id: "item2" }],
+			children: [{ id: "item1", handler: [trackingHandler, defaultHandler] }, { id: "item2" }],
 		});
 
 		expect(tree.focus).toBe(nodes.item1.id);
@@ -48,75 +55,53 @@ describe("registerKeyboardListener", () => {
 		});
 		window.dispatchEvent(pressArrowDownEvent);
 		expect(pressArrowDownEvent.defaultPrevented).toBe(true);
+		expect(onAction).toHaveBeenLastCalledWith({ kind: "move", direction: "down" });
 		expect(tree.focus).toBe(nodes.item2.id);
 	});
 
 	test("should handle longpress", () => {
 		vi.useFakeTimers();
 
-		let pressedShortPress = false;
-		let pressedLongPress = false;
+		const onActivate = vi.fn<ActivateCallback>();
 
 		const { tree, nodes } = createTestTree({
 			id: "container",
-			handler: [
-				activationHandler(({ longpress }) => {
-					if (longpress) {
-						pressedLongPress = true;
-					} else {
-						pressedShortPress = true;
-					}
-				}),
-				longPressHandler(),
-				defaultHandler,
-			],
+			handler: [activationHandler(onActivate), longPressHandler(), defaultHandler],
 		});
 		expect(tree.focus).toBe(nodes.container.id);
 
 		using _ = defaultKeyboardListener(tree);
 
-		expect(pressedShortPress).toBe(false);
-		expect(pressedLongPress).toBe(false);
+		expect(onActivate).not.toHaveBeenCalledWith();
 
 		window.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
 		vi.advanceTimersByTime(100);
 		window.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
 
-		expect(pressedShortPress).toBe(true);
-		expect(pressedLongPress).toBe(false);
+		expect(onActivate).toHaveBeenLastCalledWith({ longpress: false });
 
 		window.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
 		vi.advanceTimersByTime(1000);
-		window.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
 
-		expect(pressedShortPress).toBe(true);
-		expect(pressedLongPress).toBe(true);
+		expect(onActivate).toHaveBeenLastCalledWith({ longpress: true });
 	});
 
 	test("should dispatch shortpress when longpress is interrupted by another keydown event", () => {
-		let pressedShortPress = false;
+		const onActivate = vi.fn<ActivateCallback>();
 
 		const { tree, nodes } = createTestTree({
 			id: "container",
-			handler: [
-				activationHandler(({ longpress }) => {
-					if (!longpress) {
-						pressedShortPress = true;
-					}
-				}),
-				longPressHandler(),
-				defaultHandler,
-			],
+			handler: [activationHandler(onActivate), longPressHandler(), defaultHandler],
 		});
 		expect(tree.focus).toBe(nodes.container.id);
 
 		using _ = defaultKeyboardListener(tree);
 
 		window.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
-		expect(pressedShortPress).toBe(false);
+		expect(onActivate).not.toHaveBeenCalled();
 
 		window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
-		expect(pressedShortPress).toBe(true);
+		expect(onActivate).toHaveBeenCalledWith({ longpress: false });
 	});
 
 	test("should ignore repeat events when longpress is in progress", () => {
@@ -183,14 +168,80 @@ describe("registerKeyboardListener", () => {
 		window.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
 		expect(pressedLongPress).toBe(true);
 	});
+
+	test("should respect disabled long press", async () => {
+		vi.useFakeTimers();
+
+		const onActivate = vi.fn<ActivateCallback>();
+
+		const longPressOptions = { enabled: true };
+
+		const { tree } = createTestTree({
+			id: "disabled",
+			handler: [activationHandler(onActivate), longPressHandler(longPressOptions), defaultHandler],
+		});
+
+		using _ = defaultKeyboardListener(tree);
+
+		window.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+		vi.advanceTimersByTime(1000);
+		window.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
+
+		expect(onActivate).toHaveBeenLastCalledWith({ longpress: true });
+
+		longPressOptions.enabled = false;
+
+		window.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+		vi.advanceTimersByTime(1000);
+		window.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
+
+		expect(onActivate).not.toHaveBeenLastCalledWith({ longpress: true });
+	});
+
+	test("should respect conditional long press", async () => {
+		vi.useFakeTimers();
+
+		const onAction = vi.fn<(action: NavigationAction) => void>();
+
+		const { tree } = createTestTree({
+			id: "disabled",
+			handler: [
+				(_, action, next) => {
+					onAction(action);
+					return next();
+				},
+				longPressHandler({
+					enabled: (action) => action.kind === "move" && action.direction === "down",
+				}),
+				defaultHandler,
+			],
+		});
+
+		using _ = defaultKeyboardListener(tree);
+
+		window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
+		expect(onAction).toHaveBeenCalled();
+		vi.advanceTimersByTime(1000);
+		window.dispatchEvent(new KeyboardEvent("keyup", { key: "ArrowDown" }));
+
+		expect(onAction).toHaveBeenLastCalledWith({
+			kind: "move",
+			direction: "down",
+			longpress: true,
+		});
+
+		window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+
+		expect(onAction).toHaveBeenLastCalledWith({
+			kind: "move",
+			direction: "up",
+			longpress: undefined,
+		});
+	});
 });
 
 function defaultKeyboardListener(tree: NavigationTree) {
 	const cleanupListener = registerKeyboardListener(tree, window, defaultKeybinds);
 
-	return {
-		[Symbol.dispose]: () => {
-			cleanupListener();
-		},
-	};
+	return { [Symbol.dispose]: cleanupListener };
 }

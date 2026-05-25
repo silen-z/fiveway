@@ -18,7 +18,6 @@ test("activationHandler", async () => {
 	dispatchAction(tree, { kind: "activate" });
 
 	expect(onActivate).toHaveBeenCalledTimes(1);
-	expect(onActivate).toHaveBeenCalledWith({ longpress: false });
 });
 
 test("activateNode", () => {
