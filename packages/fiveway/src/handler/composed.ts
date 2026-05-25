@@ -39,13 +39,26 @@ type HandlerChainLink = {
  *
  * @see {@link https://fiveway.dev/guide/handlers#composing-handlers} for more information about composing handlers.
  */
-export function composeHandlers(handlers: (NavigationHandler | undefined)[]): ComposedHandler {
+export function composeHandlers(
+	handlers: (NavigationHandler | ComposedHandler | undefined)[],
+): ComposedHandler {
 	let chain = null;
-	for (let i = handlers.length - 1; i >= 0; i--) {
+
+	let end = handlers.length - 1;
+
+	// reuse chain from last handler if it's a composed handler
+	const last = handlers[end];
+	if (last != null && "chain" in last) {
+		chain = last.chain;
+		end -= 1;
+	}
+
+	for (let i = end; i >= 0; i--) {
 		const handler = handlers[i];
 		if (handler == null) {
 			continue;
 		}
+
 		chain = { handler, next: chain };
 	}
 
