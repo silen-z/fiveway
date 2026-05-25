@@ -38,7 +38,7 @@ export type NavigationHandler = (
  * Call `next()` to stop at the current node, `next(parentId)` to delegate to another node
  * (optionally with a different action).
  */
-export function runHandler(
+export function executeHandler(
 	tree: NavigationTree,
 	nodeId: NodeId,
 	action: NavigationAction,
@@ -53,7 +53,7 @@ export function runHandler(
 			return null;
 		}
 
-		return runHandler(tree, id, newAction ?? action);
+		return executeHandler(tree, id, newAction ?? action);
 	};
 
 	return node.handler(node, action, next);
