@@ -4,7 +4,7 @@ import { createTestTree } from "../_test/treeSpec.ts";
 import { inspectHandler } from "../inspector.ts";
 import { containerHandler, type NavigationHandler } from "./handler.ts";
 
-test("runHandler", async () => {
+test("executeHandler", async () => {
 	const handler = vi.fn<NavigationHandler>(() => null);
 	createTestTree({ id: "one", handler });
 
@@ -15,7 +15,7 @@ test("runHandler", async () => {
 	);
 });
 
-test("runHandler: pass action to non-existent node", () => {
+test("executeHandler: pass action to non-existent node", () => {
 	const handler: NavigationHandler = (n, a, next) => {
 		const nextId = next("#/non-existent");
 		expect(nextId).toBeNull();

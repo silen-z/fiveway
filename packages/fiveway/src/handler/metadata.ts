@@ -1,5 +1,5 @@
 import { type QueryAction } from "../action.ts";
-import { runHandler, type NavigationHandler } from "../handler/handler.ts";
+import { executeHandler, type NavigationHandler } from "../handler/handler.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavigationTree } from "../tree/tree.ts";
@@ -82,7 +82,7 @@ export function createDataHandler<T>(key: string, defaultValue?: T) {
 	dataHandlerFactory.key = key;
 	dataHandlerFactory.query = (tree: NavigationTree, id: NodeId) => {
 		const query: QueryAction = { kind: "query", key, value: null };
-		runHandler(tree, id, query);
+		executeHandler(tree, id, query);
 		return query.value as T | null;
 	};
 

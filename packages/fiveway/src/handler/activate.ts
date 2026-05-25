@@ -2,7 +2,7 @@ import { type ActivateAction } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavigationTree, focusNode } from "../tree/tree.ts";
-import { type NavigationHandler, runHandler } from "./handler.ts";
+import { type NavigationHandler, executeHandler } from "./handler.ts";
 
 /**
  * Callback function that is called when an activate action is triggered on a node with {@link activationHandler}.
@@ -71,7 +71,7 @@ export function activateNode(
 		focusNode(tree, nodeId);
 	}
 
-	runHandler(tree, nodeId, {
+	executeHandler(tree, nodeId, {
 		kind: "activate",
 		longpress: options?.longpress,
 	} satisfies ActivateAction);

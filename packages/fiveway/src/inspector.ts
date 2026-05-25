@@ -1,5 +1,5 @@
 import { type NavigationAction } from "./action.ts";
-import { runHandler } from "./handler/handler.ts";
+import { executeHandler } from "./handler/handler.ts";
 import { type NodeId } from "./tree/id.ts";
 import { type NavigationNode } from "./tree/node.ts";
 import { type NavigationTree } from "./tree/tree.ts";
@@ -105,7 +105,7 @@ export function describeHandler(action: NavigationAction, info: HandlerDescripti
 
 export function inspectHandler(tree: NavigationTree, id: NodeId): HandlerDescription[] {
 	const value = [] as HandlerDescription[];
-	runHandler(tree, id, {
+	executeHandler(tree, id, {
 		kind: "query",
 		key: INSPECT_QUERY_KEY,
 		value,

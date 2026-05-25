@@ -1,5 +1,5 @@
 import { type FocusAction, type NavigationAction, type NavigationDirection } from "../action.ts";
-import { defaultHandler, runHandler } from "../handler/handler.ts";
+import { defaultHandler, executeHandler } from "../handler/handler.ts";
 import {
 	type InspectorCommand,
 	emitInspectorMessage,
@@ -344,7 +344,7 @@ export function focusNode(
 		direction: options.direction ?? null,
 	};
 
-	const resolvedId = runHandler(tree, targetId, focusAction);
+	const resolvedId = executeHandler(tree, targetId, focusAction);
 
 	if (resolvedId === null) {
 		return false;
@@ -381,7 +381,7 @@ export function dispatchAction(
 	action: NavigationAction,
 	node?: NodeId,
 ): void {
-	const targetId = runHandler(tree, node ?? tree.focus, action);
+	const targetId = executeHandler(tree, node ?? tree.focus, action);
 	if (targetId !== null) {
 		focusNode(tree, targetId);
 	}

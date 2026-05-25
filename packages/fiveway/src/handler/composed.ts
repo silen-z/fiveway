@@ -54,13 +54,13 @@ export function composeHandlers(handlers: (NavigationHandler | undefined)[]): Co
 
 function createHandlerFromChain(chain: HandlerChainLink | null): ComposedHandler {
 	const composedHandler: ComposedHandler = (node, action, next) => {
-		const runLink = (
+		const executeLink = (
 			link: HandlerChainLink | null,
-			id?: NodeId,
-			newAction?: NavigationAction,
+			nextNode?: NodeId,
+			nextAction?: NavigationAction,
 		): NodeId | null => {
-			if (id != null && id !== node.id) {
-				return next(id, newAction ?? action);
+			if (nextNode != null && nextNode !== node.id) {
+				return next(nextNode, nextAction ?? action);
 			}
 
 			if (link == null) {
@@ -71,10 +71,10 @@ function createHandlerFromChain(chain: HandlerChainLink | null): ComposedHandler
 				describeLinkHandler(link.handler, node, action);
 			}
 
-			return link.handler(node, newAction ?? action, runLink.bind(null, link.next));
+			return link.handler(node, nextAction ?? action, executeLink.bind(null, link.next));
 		};
 
-		return runLink(chain);
+		return executeLink(chain);
 	};
 
 	composedHandler.compose = (handler) => createHandlerFromChain({ handler, next: chain });
