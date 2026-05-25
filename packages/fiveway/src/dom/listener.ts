@@ -1,4 +1,5 @@
-import { longPressHandler } from "../handler/longpress.ts";
+import { type NavigationAction } from "../action.ts";
+import { longPressHandler, type LongPressOptions } from "../handler/longpress.ts";
 import { dispatchAction, type NavigationTree } from "../tree/tree.ts";
 import { type Keybinds, getKey } from "./keybinds.ts";
 
@@ -67,7 +68,7 @@ export function registerKeyboardListener(
 		e.preventDefault();
 
 		const longPress = longPressHandler.query(tree, tree.focus);
-		if (longPress == null || longPress.enabled === false) {
+		if (longPress == null || !shouldEnableLongPress(longPress, action)) {
 			dispatchAction(tree, action);
 			return;
 		}
@@ -115,4 +116,12 @@ export function registerKeyboardListener(
 		window.removeEventListener("blur", onCancel);
 		window.removeEventListener("visibilitychange", onCancel);
 	};
+}
+
+function shouldEnableLongPress(longPress: LongPressOptions, action: NavigationAction): boolean {
+	if (typeof longPress.enabled === "function") {
+		return longPress.enabled(action);
+	}
+
+	return longPress.enabled ?? true;
 }
