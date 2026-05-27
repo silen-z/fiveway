@@ -1,0 +1,64 @@
+.connect {
+	max-width: 42rem;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.connectLead {
+	margin: 0 0 12px;
+	color: var(--color-text-muted);
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	text-wrap: balance;
+}
+
+.connectBox {
+	box-sizing: border-box;
+	width: fit-content;
+	max-width: 100%;
+	margin-inline: auto;
+	padding: 16px;
+	border: 1px solid var(--color-border);
+	border-radius: 8px;
+	background: var(--color-surface);
+}
+
+.connectPre {
+	width: fit-content;
+	max-width: 100%;
+	margin: 0;
+	overflow-x: auto;
+	font-size: 0.875rem;
+	line-height: 1.5;
+	text-align: left;
+	white-space: pre;
+	tab-size: 2;
+}
+
+.snippet {
+	font-family: var(--font-mono);
+	font-size: inherit;
+	color: var(--color-text);
+	white-space: pre;
+}
+
+.snippet span {
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+}
+
+.tag {
+	color: #e11d48;
+}
+
+.attrName {
+	color: #7c3aed;
+}
+
+.attrValue {
+	color: #0369a1;
+}
+
+.punct {
+	color: #71717a;
+}

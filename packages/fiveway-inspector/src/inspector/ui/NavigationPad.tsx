@@ -1,13 +1,15 @@
 import { type NavigationAction } from "@fiveway/core";
 import { clsx } from "clsx";
+import { createSignal } from "solid-js";
 
 import { useDevtoolsContext } from "../context.ts";
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Check, Undo2 } from "./icons.ts";
+import * as icon from "./icons.ts";
 
 import styles from "./NavigationPad.module.css";
 
 export function NavigationPad(props: { tree: string }) {
 	const devtools = useDevtoolsContext();
+	const [longPress, setLongPress] = createSignal(false);
 
 	const sendAction = (action: NavigationAction) => {
 		devtools.sendCommand({
@@ -18,60 +20,88 @@ export function NavigationPad(props: { tree: string }) {
 	};
 
 	return (
-		<div class={styles.navPad} id="fiveway-nav-pad" aria-label="Simulate navigation">
+		<div class={styles.root} aria-label="Simulate navigation">
 			<button
 				type="button"
-				class={clsx(styles.navButton, styles.navPadBack)}
-				title="Back"
-				aria-label="Back"
-				onClick={() => sendAction({ kind: "move", direction: "back" })}
+				class={clsx(styles.button, styles.bwd)}
+				title="Move backwards"
+				aria-label="Move backwards"
+				onClick={() => sendAction({ kind: "move", direction: "backwards", longpress: longPress() })}
 			>
-				<Undo2 size={16} />
+				<icon.ChevronsLeft size={16} />
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.navButton, styles.navPadUp)}
+				class={clsx(styles.button, styles.up)}
 				title="Move up"
 				aria-label="Move up"
-				onClick={() => sendAction({ kind: "move", direction: "up" })}
+				onClick={() => sendAction({ kind: "move", direction: "up", longpress: longPress() })}
 			>
-				<ArrowUp size={16} />
+				<icon.ArrowUp size={16} />
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.navButton, styles.navPadActivate)}
-				title="Activate"
-				aria-label="Activate"
-				onClick={() => sendAction({ kind: "activate" })}
+				class={clsx(styles.button, styles.fwd)}
+				title="Move forwards"
+				aria-label="Move forwards"
+				onClick={() => sendAction({ kind: "move", direction: "forwards", longpress: longPress() })}
 			>
-				<Check size={16} />
+				<icon.ChevronsRight size={16} />
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.navButton, styles.navPadLeft)}
+				class={clsx(styles.button, styles.left)}
 				title="Move left"
 				aria-label="Move left"
-				onClick={() => sendAction({ kind: "move", direction: "left" })}
+				onClick={() => sendAction({ kind: "move", direction: "left", longpress: longPress() })}
 			>
-				<ArrowLeft size={16} />
+				<icon.ArrowLeft size={16} />
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.navButton, styles.navPadRight)}
+				class={clsx(styles.button, styles.select)}
+				title="Activate"
+				aria-label="Activate"
+				onClick={() => sendAction({ kind: "activate", longpress: longPress() })}
+			>
+				<icon.Check size={16} />
+			</button>
+			<button
+				type="button"
+				class={clsx(styles.button, styles.right)}
 				title="Move right"
 				aria-label="Move right"
-				onClick={() => sendAction({ kind: "move", direction: "right" })}
+				onClick={() => sendAction({ kind: "move", direction: "right", longpress: longPress() })}
 			>
-				<ArrowRight size={16} />
+				<icon.ArrowRight size={16} />
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.navButton, styles.navPadDown)}
+				class={clsx(styles.button, styles.back)}
+				title="Back"
+				aria-label="Back"
+				onClick={() => sendAction({ kind: "move", direction: "back", longpress: longPress() })}
+			>
+				<icon.Undo2 size={16} />
+			</button>
+			<button
+				type="button"
+				class={clsx(styles.button, styles.down)}
 				title="Move down"
 				aria-label="Move down"
-				onClick={() => sendAction({ kind: "move", direction: "down" })}
+				onClick={() => sendAction({ kind: "move", direction: "down", longpress: longPress() })}
 			>
-				<ArrowDown size={16} />
+				<icon.ArrowDown size={16} />
+			</button>
+			<button
+				type="button"
+				class={clsx(styles.button, styles.longpress)}
+				title={longPress() ? "Long press mode on" : "Long press mode off"}
+				aria-label="Toggle long press mode"
+				aria-pressed={longPress()}
+				onClick={() => setLongPress((on) => !on)}
+			>
+				<icon.Timer size={16} />
 			</button>
 		</div>
 	);

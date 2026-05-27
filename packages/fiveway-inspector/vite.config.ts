@@ -1,5 +1,4 @@
 import { solidStart } from "@solidjs/start/config";
-import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
 import solid from "vite-plugin-solid";
 import { defineConfig } from "vite-plus";
@@ -16,7 +15,6 @@ export default defineConfig({
 						websocket: true,
 					},
 				}),
-				tailwindcss(),
 			]
 		: [],
 	resolve: {
@@ -26,7 +24,7 @@ export default defineConfig({
 		outDir: "dist/standalone",
 	},
 	pack: {
-		entry: ["src/inspector/inspector.tsx"],
+		entry: ["src/inspector/inspector.ts"],
 		platform: "browser",
 		dts: true,
 		exports: { packageJson: false, inlinedDependencies: false },

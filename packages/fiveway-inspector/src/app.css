@@ -1,24 +1,39 @@
-@import "tailwindcss";
-@plugin "daisyui";
+@import url("https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap");
+@import "./tokens.css";
 
-@theme {
+:root {
+	--color-primary: var(--rose-500);
+	--color-text: var(--gray-900);
+	--color-text-muted: var(--gray-500);
+	--color-text-subtle: color-mix(in srgb, var(--color-text) 60%, transparent);
+	--color-border: var(--gray-200);
+	--color-surface: var(--gray-50);
+	--color-bg: var(--white);
 	--font-sans:
 		"Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
 		"Segoe UI Symbol", "Noto Color Emoji";
+	--font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-@plugin "daisyui/theme" {
-	name: "light";
-	default: true;
-	--color-primary: oklch(64% 0.208 16.2);
-	--color-primary-content: oklch(99% 0 0);
-	--color-accent: oklch(52% 0.2 16.2);
-	--color-accent-content: oklch(99% 0 0);
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
 }
-@plugin "daisyui/theme" {
-	name: "dark";
-	--color-primary: oklch(64% 0.208 16.2);
-	--color-primary-content: oklch(99% 0 0);
-	--color-accent: oklch(52% 0.2 16.2);
-	--color-accent-content: oklch(99% 0 0);
+
+body {
+	margin: 0;
+	font-family: var(--font-sans);
+	color: var(--color-text);
+	background: var(--color-bg);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+a {
+	color: var(--color-primary);
+}
+
+a:hover {
+	text-decoration: underline;
 }

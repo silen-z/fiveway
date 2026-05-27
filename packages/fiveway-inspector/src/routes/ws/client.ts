@@ -29,7 +29,7 @@ export const GET = defineWebSocketHandler({
 		if (peer.context.reconnect) {
 			peer.publish("updates", JSON.stringify({ type: "fiveway:reload" }));
 		} else {
-			peer.send(JSON.stringify({ type: "fiveway:assignId", id: peer.namespace }));
+			peer.send(JSON.stringify({ type: "client:id", id: peer.namespace }));
 		}
 	},
 
@@ -38,7 +38,7 @@ export const GET = defineWebSocketHandler({
 	},
 
 	close(peer) {
-		peer.publish("updates", JSON.stringify({ type: "client-disconnected" }));
+		peer.publish("updates", JSON.stringify({ type: "client:disconnected" }));
 		unregisterClient(peer.namespace);
 	},
 });

@@ -11,9 +11,7 @@ export const InitMessage = v.object({
 	tabId: v.number(),
 });
 
-const HandlerDescription = v.object({
-	name: v.optional(v.string()),
-});
+const HandlerDescription = v.record(v.string(), v.unknown());
 
 const Node = v.object({
 	id: v.string(),
