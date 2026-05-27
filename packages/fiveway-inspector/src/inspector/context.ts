@@ -4,7 +4,6 @@ import {
 	type InspectorNode,
 } from "@fiveway/core/inspector";
 import { createContext, useContext, createEffect, createMemo, onCleanup } from "solid-js";
-import {} from "solid-js";
 import { createStore, produce } from "solid-js/store";
 
 export type ReloadMessage = { type: "fiveway:reload" };
@@ -19,7 +18,8 @@ export type InspectedTree = {
 	focus: string | null;
 	nodes: Record<string, InspectorNode>;
 	expanded: boolean;
-	inspected: string;
+	/** Explicitly selected node; `null` follows {@link InspectedTree.focus}. */
+	inspected: string | null;
 };
 
 export type InspectorState = {
@@ -29,11 +29,12 @@ export type InspectorState = {
 
 export type InspectorContext = {
 	trees: Record<string, InspectedTree>;
-	selectedTree: () => InspectedTree | null;
+	inspectedTree: () => InspectedTree | null;
+	inspectedNode: () => InspectorNode | null;
 	sendCommand: (command: InspectorCommand) => void;
 	toggleExpand: () => void;
 	selectTree: (label: string) => void;
-	inspectNode: (nodeId: string) => void;
+	inspectNode: (nodeId: string | null) => void;
 };
 
 export const devtoolsContext = createContext<InspectorContext>();
@@ -60,7 +61,7 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 					focus: null,
 					nodes: {},
 					expanded: false,
-					inspected: "#",
+					inspected: null,
 				});
 
 				if (!message.complete) {
@@ -73,8 +74,10 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 				"trees",
 				message.tree,
 				produce((tree) => {
-					if (message.focus != null) {
+					if (message.focus != null && message.focus !== tree.focus) {
 						tree.focus = message.focus;
+						tree.inspected = null;
+						handle.sendCommand({ kind: "inspectHandler", tree: tree.label, node: message.focus });
 					}
 
 					if (message.nodes != null) {
@@ -95,7 +98,7 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 		onCleanup(unsubscribe);
 	});
 
-	const selectedTree = createMemo(() => {
+	const inspectedTree = createMemo(() => {
 		const label = state.selected;
 		if (label == null) {
 			return Object.values(state.trees)[0] ?? null;
@@ -109,7 +112,7 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 	};
 
 	const toggleExpand = () => {
-		const tree = selectedTree();
+		const tree = inspectedTree();
 		if (tree == null) {
 			return;
 		}
@@ -117,19 +120,34 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 		setState("trees", tree.label, "expanded", (prev) => !prev);
 	};
 
-	const inspectNode = (nodeId: string) => {
-		const tree = selectedTree();
+	const inspectNode = (nodeId: string | null) => {
+		const tree = inspectedTree();
 		if (tree == null) {
 			return;
 		}
 
-		handle.sendCommand({ kind: "inspectHandler", tree: tree.label, node: nodeId });
+		if (nodeId !== null) {
+			handle.sendCommand({ kind: "inspectHandler", tree: tree.label, node: nodeId });
+		}
 		setState("trees", tree.label, "inspected", nodeId);
 	};
 
+	const inspectedNode = createMemo(() => {
+		const tree = inspectedTree();
+		if (tree == null) {
+			return null;
+		}
+
+		console.log(tree.inspected, tree.focus, "#");
+
+		const id = tree.inspected ?? tree.focus ?? "#";
+		return tree.nodes[id] ?? null;
+	});
+
 	return {
 		trees: state.trees,
-		selectedTree: selectedTree,
+		inspectedTree,
+		inspectedNode,
 		sendCommand: handle.sendCommand,
 		toggleExpand,
 		selectTree,

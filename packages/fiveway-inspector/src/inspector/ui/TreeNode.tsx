@@ -3,14 +3,7 @@ import { clsx } from "clsx";
 import { createMemo, createSignal, For, Show } from "solid-js";
 
 import { type InspectedTree, useDevtoolsContext } from "../context.ts";
-import {
-	ChevronDown,
-	ChevronRight,
-	CircleDot,
-	Focus,
-	FoldVertical,
-	UnfoldVertical,
-} from "./icons.ts";
+import * as icon from "./icons.ts";
 
 import styles from "./TreeNode.module.css";
 
@@ -29,7 +22,7 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 
 	const isExpanded = createMemo(() => props.tree.expanded || isNodeExpanded() || isNodeFocused());
 
-	const isInspected = createMemo(() => (props.tree.inspected ?? "#") === props.node);
+	const isInspected = createMemo(() => props.tree.inspected === props.node);
 
 	const childCount = createMemo(() => node()?.children.length ?? 0);
 
@@ -70,12 +63,12 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 						when={childCount() > 0}
 						fallback={
 							<div class={styles.nodeKindIcon} aria-hidden="true">
-								<CircleDot size={14} />
+								<icon.CircleDot size={14} />
 							</div>
 						}
 					>
 						<span class={styles.nodeChevron} aria-hidden="true">
-							{isExpanded() ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+							{isExpanded() ? <icon.ChevronDown size={14} /> : <icon.ChevronRight size={14} />}
 						</span>
 					</Show>
 
@@ -97,7 +90,7 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 							aria-label="Focus in app"
 							onClick={() => focusNode()}
 						>
-							<Focus size={14} />
+							<icon.Focus size={14} />
 						</button>
 					</Show>
 					<Show when={props.tree.focus === props.node}>
@@ -107,7 +100,7 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 							role="img"
 							aria-label="Focused in app"
 						>
-							<Focus size={14} />
+							<icon.Focus size={14} />
 						</span>
 					</Show>
 				</div>
@@ -136,7 +129,7 @@ function ExpandButton(props: { expanded: boolean; onToggle: () => void }) {
 			aria-label={label()}
 			onClick={() => props.onToggle()}
 		>
-			{props.expanded ? <FoldVertical size={14} /> : <UnfoldVertical size={14} />}
+			{props.expanded ? <icon.FoldVertical size={14} /> : <icon.UnfoldVertical size={14} />}
 		</button>
 	);
 }

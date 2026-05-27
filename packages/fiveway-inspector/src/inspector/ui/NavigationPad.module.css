@@ -1,44 +1,20 @@
-.navPad {
+.root {
 	box-sizing: border-box;
 	display: grid;
-	grid-template-columns: repeat(3, 28px);
+	grid-template-columns: repeat(5, 28px);
 	grid-template-rows: repeat(3, 28px);
 	grid-template-areas:
-		".    up     ."
-		"left select right"
-		".    down   back";
+		"bwd   up     fwd"
+		"left  select right"
+		"back  down   longpress";
 	gap: 4px;
 	justify-content: center;
 	padding: 12px 16px 8px;
-	border-bottom: 1px solid #e4e4e7;
+	border-bottom: 1px solid var(--gray-200);
 	font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
-.navPadBack {
-	grid-area: back;
-}
-
-.navPadUp {
-	grid-area: up;
-}
-
-.navPadActivate {
-	grid-area: select;
-}
-
-.navPadLeft {
-	grid-area: left;
-}
-
-.navPadRight {
-	grid-area: right;
-}
-
-.navPadDown {
-	grid-area: down;
-}
-
-.navButton {
+.button {
 	box-sizing: border-box;
 	display: inline-flex;
 	align-items: center;
@@ -46,13 +22,54 @@
 	width: 28px;
 	height: 28px;
 	padding: 0;
-	border: 1px solid #d4d4d8;
+	border: 1px solid var(--gray-300);
 	border-radius: 6px;
-	background: #fafafa;
+	background: var(--gray-50);
 	cursor: pointer;
-	color: #3f3f46;
+	color: var(--gray-700);
 }
 
-.navButton:hover {
-	background: #f4f4f5;
+.button:hover {
+	background: var(--gray-100);
+}
+
+.button[aria-pressed="true"] {
+	background: var(--gray-200);
+	color: var(--gray-900);
+}
+
+.bwd {
+	grid-area: bwd;
+}
+
+.up {
+	grid-area: up;
+}
+
+.fwd {
+	grid-area: fwd;
+}
+
+.left {
+	grid-area: left;
+}
+
+.select {
+	grid-area: select;
+}
+
+.right {
+	grid-area: right;
+}
+
+.back {
+	grid-area: back;
+}
+
+.down {
+	grid-area: down;
+}
+
+.longpress {
+	grid-area: longpress;
 }

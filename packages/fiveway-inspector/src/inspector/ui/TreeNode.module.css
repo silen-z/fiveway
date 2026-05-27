@@ -3,7 +3,7 @@
 	margin-top: 4px;
 
 	margin-left: 8px;
-	border-left: 1px solid #ccc;
+	border-left: 1px solid var(--gray-300);
 	padding-left: 8px;
 }
 
@@ -34,7 +34,7 @@
 	display: inline-flex;
 	flex-shrink: 0;
 	align-items: center;
-	color: #71717a;
+	color: var(--gray-500);
 }
 
 .nodeLabelText {
@@ -48,7 +48,7 @@
 	display: inline-flex;
 	flex-shrink: 0;
 	align-items: center;
-	color: #71717a;
+	color: var(--gray-500);
 }
 
 .node:hover .nodeLabelText {
@@ -81,24 +81,24 @@
 	width: 24px;
 	height: 24px;
 	padding: 0;
-	border: 1px solid #d4d4d8;
+	border: 1px solid var(--gray-300);
 	border-radius: 6px;
-	background: #fafafa;
+	background: var(--gray-50);
 	cursor: pointer;
-	color: #3f3f46;
+	color: var(--gray-700);
 }
 
 .nodeActionButton:hover {
-	background: #f4f4f5;
+	background: var(--gray-100);
 }
 
 .nodeActionButton[aria-pressed="true"] {
-	background: #e4e4e7;
-	color: #18181b;
+	background: var(--gray-200);
+	color: var(--gray-900);
 }
 
 .node[data-inspected="true"] .nodeLabel {
-	background: #f4f4f5;
+	background: var(--gray-100);
 }
 
 .node[data-root="false"]::before {
@@ -110,7 +110,7 @@
 	width: 5px;
 	height: 1px;
 
-	background: #ccc;
+	background: var(--gray-300);
 }
 
 .node[data-focused="true"] .nodeLabel {
@@ -118,7 +118,7 @@
 }
 
 .node[data-focused="true"][data-children="false"] .nodeLabel {
-	background: #eeeeee;
+	background: var(--gray-100);
 }
 
 .nodeFocusIndicator {
@@ -130,5 +130,5 @@
 	width: 24px;
 	height: 24px;
 	padding: 0;
-	color: #27272a;
+	color: var(--gray-800);
 }
