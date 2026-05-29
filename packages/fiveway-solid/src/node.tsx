@@ -81,7 +81,7 @@ export interface NavnodeHandle {
  * Solid primitive that creates a navigation node and returns a handle for it.
  * When creating container nodes, returned `Context` must be used to provide this node as parent to children nodes.
  *
- * @param id - The ID of the node. Can also be an accessor for reactive IDs.
+ * @param id - Local ID of the node. Can also be an accessor for reactive IDs.
  * @param handler - The handler for the node. Either a single handler or an array of handlers. If not provided, the node will use the `defaultHandler`.
  * @param options - The options for the node.
  *
@@ -101,7 +101,7 @@ export interface NavnodeHandle {
  * ```
  */
 export function createNavnode(
-	id: NodeId | Accessor<NodeId>,
+	id: string | Accessor<string>,
 	handler?: NavigationHandler | (NavigationHandler | undefined)[],
 	options: NavnodeOptions = {},
 ): NavnodeHandle {
