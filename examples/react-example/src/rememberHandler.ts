@@ -10,7 +10,7 @@ export function useRememberHandler() {
 	const [lastFocused, setLastFocused] = useState<NodeId | null>(null);
 
 	return useMemo(() => {
-		const handler: RememberHandler = (node, action, next) => {
+		const handler: RememberHandler = (action, { node, next }) => {
 			if (action.kind === "focus" && lastFocused !== null) {
 				try {
 					return next(lastFocused, action);

@@ -28,7 +28,7 @@ export interface FocusHandlerOptions {
 function createFocusHandler(options: FocusHandlerOptions = {}): NavigationHandler {
 	const focusWhenEmpty = options.focusWhenEmpty ?? true;
 
-	const focusHandler: NavigationHandler = (node, action, next) => {
+	const focusHandler: NavigationHandler = (action, { node, next }) => {
 		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 			describeHandler(action, {
 				name: "focus",
@@ -133,7 +133,7 @@ export const initialHandler: DataHandler<string> = createDataHandler("initial");
  *
  * There are multiple ways to escape capture like explicit `focusNode()` or extending further with a custom handler.
  */
-export const captureHandler: NavigationHandler = (node, action, next) => {
+export const captureHandler: NavigationHandler = (action, { node, next }) => {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 		describeHandler(action, { name: "capture" });
 	}

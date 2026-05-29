@@ -7,17 +7,21 @@ The handler function is defined like this:
 
 ```ts
 export type NavigationHandler = (
-	node: NavigationNode,
 	action: NavigationAction,
-	next: (id?: NodeId, action?: NavigationAction) => NodeId | null,
+	ctx: NavigationHandlerContext,
 ) => NodeId | null;
+
+export interface NavigationHandlerContext {
+	node: NavigationNode;
+	next: HandlerNext;
+}
 ```
 
 ### Parameters
 
-- **`node`** - the current node on which an action was executed
 - **`action`** - the action to handle (e.g., _move up_)
-- **`next`** - a function for passing the action to the next handler; it can optionally be given a different `NodeId` and action
+- **`ctx.node`** - the current node on which an action was executed
+- **`ctx.next`** - a function for passing the action to the next handler; it can optionally be given a different `NodeId` and action
 
 ### Return value
 
@@ -30,9 +34,8 @@ Here is an example of a handler that handles `focus` and `move` actions and pass
 
 ```ts
 function exampleHandler(
-	node: NavigationNode,
 	action: NavigationAction,
-	next: HandlerNext,
+	{ node, next }: NavigationHandlerContext,
 ): NodeId | null {
 	if (action.kind === "focus") {
 		// handle focus
@@ -63,7 +66,7 @@ import { defaultHandler } from "@fiveway/core";
 
 // defaultHandler is a basic composed handler
 // that can be extended with custom functionality
-const customHandler = defaultHandler.compose((node, action, next) => {
+const customHandler = defaultHandler.compose((action, { next }) => {
 	if (action.kind === "move" && action.direction === "up") {
 		console.log("moving up");
 	}

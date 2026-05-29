@@ -1,8 +1,7 @@
 import { type NavigationAction } from "../action.ts";
 import { describeHandler, INSPECT_QUERY_KEY, type HandlerDescription } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
-import { type NavigationNode } from "../tree/node.ts";
-import { type NavigationHandler } from "./handler.ts";
+import { type NavigationHandler, type NavigationHandlerContext } from "./handler.ts";
 
 /**
  * A navigation handler composed from multiple other handlers.
@@ -66,25 +65,28 @@ export function composeHandlers(
 }
 
 function createHandlerFromChain(chain: HandlerChainLink | null): ComposedHandler {
-	const composedHandler: ComposedHandler = (node, action, next) => {
+	const composedHandler: ComposedHandler = (action, ctx) => {
 		const executeLink = (
 			link: HandlerChainLink | null,
 			nextNode?: NodeId,
 			nextAction?: NavigationAction,
 		): NodeId | null => {
-			if (nextNode != null && nextNode !== node.id) {
-				return next(nextNode, nextAction ?? action);
+			if (nextNode != null && nextNode !== ctx.node.id) {
+				return ctx.next(nextNode, nextAction ?? action);
 			}
 
 			if (link == null) {
-				return next();
+				return ctx.next();
 			}
 
 			if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
-				describeLinkHandler(link.handler, node, action);
+				describeLinkHandler(link.handler, action, ctx);
 			}
 
-			return link.handler(node, nextAction ?? action, executeLink.bind(null, link.next));
+			return link.handler(nextAction ?? action, {
+				node: ctx.node,
+				next: executeLink.bind(null, link.next),
+			});
 		};
 
 		return executeLink(chain);
@@ -98,12 +100,12 @@ function createHandlerFromChain(chain: HandlerChainLink | null): ComposedHandler
 
 function describeLinkHandler(
 	handler: NavigationHandler,
-	node: NavigationNode,
 	action: NavigationAction,
+	ctx: NavigationHandlerContext,
 ): void {
 	if (action.kind === "query" && action.key === INSPECT_QUERY_KEY) {
 		const value: Array<HandlerDescription> = [];
-		handler(node, { kind: "query", key: INSPECT_QUERY_KEY, value }, () => null);
+		handler({ kind: "query", key: INSPECT_QUERY_KEY, value }, { node: ctx.node, next: () => null });
 		if (value.length === 0) {
 			describeHandler(action, { name: handler.name });
 		}

@@ -18,8 +18,8 @@ test("createNode", () => {
 });
 
 test("updateNode: handler", () => {
-	const handler1: NavigationHandler = (n, a, next) => next();
-	const handler2: NavigationHandler = (n, a, next) => next();
+	const handler1: NavigationHandler = (_, { next }) => next();
+	const handler2: NavigationHandler = (_, { next }) => next();
 
 	const { nodes } = createTestTree({
 		id: "test",

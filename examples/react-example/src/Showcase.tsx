@@ -127,8 +127,8 @@ export function Showcase() {
 						<ListExample
 							direction="horizontal"
 							handlers={[
-								(n, a, next) => {
-									if (a.kind === "move" && a.direction === "back") {
+								(action, { next }) => {
+									if (action.kind === "move" && action.direction === "back") {
 										nav.focus();
 										return null;
 									}

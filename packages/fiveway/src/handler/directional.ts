@@ -1,10 +1,9 @@
 import { type NavigationAction, type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId, childLocalId } from "../tree/id.ts";
-import { type NavigationNode } from "../tree/node.ts";
 import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
-import { type HandlerNext, parentHandler } from "./handler.ts";
+import { type NavigationHandlerContext, parentHandler } from "./handler.ts";
 // oxlint reports types used in JSDoc as unused
 // oxlint-disable-next-line
 import { type NavigationHandler } from "./handler.ts";
@@ -19,33 +18,26 @@ import { type NavigationHandler } from "./handler.ts";
  * @see {@link NavigationHandler}
  */
 export function verticalMovementHandler(
-	node: NavigationNode,
 	action: NavigationAction,
-	next: HandlerNext,
+	ctx: NavigationHandlerContext,
 ): NodeId | null {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 		describeHandler(action, { name: "vertical-movement" });
 	}
 
 	if (action.kind !== "move") {
-		return next();
+		return ctx.next();
 	}
 
 	if (action.direction === "up" || action.direction === "backwards") {
-		const previousId = findPreviousChild(node, (id) =>
-			next(id, { kind: "focus", direction: "up" }),
-		);
-
-		return previousId ?? next();
+		return findPreviousChild(ctx, "up") ?? ctx.next();
 	}
 
 	if (action.direction === "down" || action.direction === "forwards") {
-		const nextId = findNextChild(node, (id) => next(id, { kind: "focus", direction: "down" }));
-
-		return nextId ?? next();
+		return findNextChild(ctx, "down") ?? ctx.next();
 	}
 
-	return next();
+	return ctx.next();
 }
 
 function verticalFocusDirection(dir: NavigationDirection | "initial" | null) {
@@ -89,33 +81,26 @@ export const verticalHandler: ComposedHandler = composeHandlers([
  * @see {@link https://fiveway.dev/guide/built-in-handlers#directional-movement-handlers}
  */
 export function horizontalMovementHandler(
-	node: NavigationNode,
 	action: NavigationAction,
-	next: HandlerNext,
+	ctx: NavigationHandlerContext,
 ): NodeId | null {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 		describeHandler(action, { name: "horizontal-movement" });
 	}
 
 	if (action.kind !== "move") {
-		return next();
+		return ctx.next();
 	}
 
 	if (action.direction === "left" || action.direction === "backwards") {
-		const previousId = findPreviousChild(node, (id) =>
-			next(id, { kind: "focus", direction: "left" }),
-		);
-
-		return previousId ?? next();
+		return findPreviousChild(ctx, "left") ?? ctx.next();
 	}
 
 	if (action.direction === "right" || action.direction === "forwards") {
-		const nextId = findNextChild(node, (id) => next(id, { kind: "focus", direction: "right" }));
-
-		return nextId ?? next();
+		return findNextChild(ctx, "right") ?? ctx.next();
 	}
 
-	return next();
+	return ctx.next();
 }
 
 function horizontalFocusDirection(dir: NavigationDirection | "initial" | null) {
@@ -149,21 +134,21 @@ export const horizontalHandler: ComposedHandler = composeHandlers([
 	parentHandler,
 ]);
 
-function findNextChild(node: NavigationNode, check: (id: NodeId) => NodeId | null) {
-	const currentChildId = childLocalId(node.id, node.tree.focus);
+function findNextChild(ctx: NavigationHandlerContext, direction: NavigationDirection) {
+	const currentChildId = childLocalId(ctx.node.id, ctx.node.tree.focus);
 	if (currentChildId === null) {
 		return null;
 	}
 
-	const currentIndex = node.children.findIndex((c) => c.id === currentChildId);
+	const currentIndex = ctx.node.children.findIndex((c) => c.id === currentChildId);
 
-	for (let i = currentIndex + 1; i < node.children.length; i++) {
-		const child = node.children[i]!;
+	for (let i = currentIndex + 1; i < ctx.node.children.length; i++) {
+		const child = ctx.node.children[i]!;
 		if (!child.active) {
 			continue;
 		}
 
-		const nextId = check(child.id);
+		const nextId = ctx.next(child.id, { kind: "focus", direction });
 		if (nextId !== null) {
 			return nextId;
 		}
@@ -172,21 +157,21 @@ function findNextChild(node: NavigationNode, check: (id: NodeId) => NodeId | nul
 	return null;
 }
 
-function findPreviousChild(node: NavigationNode, check: (id: NodeId) => NodeId | null) {
-	const currentChildId = childLocalId(node.id, node.tree.focus);
+function findPreviousChild(ctx: NavigationHandlerContext, direction: NavigationDirection) {
+	const currentChildId = childLocalId(ctx.node.id, ctx.node.tree.focus);
 	if (currentChildId === null) {
 		return null;
 	}
 
-	const currentIndex = node.children.findIndex((c) => c.id === currentChildId);
+	const currentIndex = ctx.node.children.findIndex((c) => c.id === currentChildId);
 
 	for (let i = currentIndex - 1; i >= 0; i--) {
-		const child = node.children[i]!;
+		const child = ctx.node.children[i]!;
 		if (!child.active) {
 			continue;
 		}
 
-		const nextId = check(child.id);
+		const nextId = ctx.next(child.id, { kind: "focus", direction });
 		if (nextId !== null) {
 			return nextId;
 		}

@@ -29,7 +29,7 @@ describe("registerKeyboardListener", () => {
 
 	test("should call event.preventDefault() when event is mapped to action", () => {
 		const onAction = vi.fn<(action: NavigationAction) => void>();
-		const trackingHandler: NavigationHandler = (_, action, next) => {
+		const trackingHandler: NavigationHandler = (action, { next }) => {
 			onAction(action);
 			return next();
 		};
@@ -206,7 +206,7 @@ describe("registerKeyboardListener", () => {
 		const { tree } = createTestTree({
 			id: "disabled",
 			handler: [
-				(_, action, next) => {
+				(action, { next }) => {
 					onAction(action);
 					return next();
 				},

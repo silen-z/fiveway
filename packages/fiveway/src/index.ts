@@ -48,6 +48,7 @@ export {
 
 export {
 	type NavigationHandler,
+	type NavigationHandlerContext,
 	type HandlerNext,
 	defaultHandler,
 	containerHandler,
