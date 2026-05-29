@@ -79,7 +79,7 @@ const NULL_NODE = {} as CreatedNavigationNode;
  * React hook that creates a navigation node and returns a handle for it.
  * When creating container nodes, returned `Context` must be used to provide this node as parent to children nodes.
  *
- * @param id - The ID of the node.
+ * @param id - Local ID of the node.
  * @param handler - The handler for the node. Either a single handler or an array of handlers. If not provided, the node will use the `defaultHandler`.
  * @param options - The options for the node.
  *
@@ -99,7 +99,7 @@ const NULL_NODE = {} as CreatedNavigationNode;
  * ```
  */
 export function useNavnode(
-	id: NodeId,
+	id: string,
 	handler?: NavigationHandler | (NavigationHandler | undefined)[],
 	options: NavnodeOptions = {},
 ): NavnodeHandle {
@@ -109,7 +109,11 @@ export function useNavnode(
 	handler = Array.isArray(handler) ? composeHandlers(handler) : handler;
 
 	const nodeRef = useRef(NULL_NODE);
-	if (nodeRef.current === NULL_NODE || nodeRef.current.parent !== parent) {
+	if (
+		nodeRef.current === NULL_NODE ||
+		nodeRef.current.id !== id ||
+		nodeRef.current.parent !== parent
+	) {
 		nodeRef.current = createNode({
 			id,
 			parent,
