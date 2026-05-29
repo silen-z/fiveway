@@ -1,6 +1,8 @@
 {
 	"name": "@fiveway/inspector",
-	"version": "1.0.0-rc.3",
+	"version": "1.0.0",
+	"description": "inspector UI for fiveway",
+	"license": "ISC",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/silen-z/fiveway.git"

@@ -1,6 +1,8 @@
 {
 	"name": "@fiveway/react",
-	"version": "1.0.0-rc.3",
+	"version": "1.0.0",
+	"description": "library for web applications that need to support keyboard navigation and require precise control over what is focused.",
+	"license": "ISC",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/silen-z/fiveway.git"
