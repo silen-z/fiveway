@@ -1,8 +1,8 @@
 import { type QueryAction } from "../action.ts";
-import { executeHandler, type NavigationHandler } from "../handler/handler.ts";
+import { type NavigationHandler } from "../handler/handler.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
-import { type NavigationTree } from "../tree/tree.ts";
+import { dispatchAction, type NavigationTree } from "../tree/tree.ts";
 
 /**
  * Data handler factory that given a value produces a navigation handler that responds to query actions with the given value.
@@ -82,7 +82,7 @@ export function createDataHandler<T>(key: string, defaultValue?: T) {
 	dataHandlerFactory.key = key;
 	dataHandlerFactory.query = (tree: NavigationTree, id: NodeId) => {
 		const query: QueryAction = { kind: "query", key, value: null };
-		executeHandler(tree, id, query);
+		dispatchAction(tree, query, id);
 		return query.value as T | null;
 	};
 

@@ -95,4 +95,8 @@ export {
 	spatialMovementHandler,
 } from "./handler/spatial.ts";
 
-export { type DataHandler, createDataHandler } from "./handler/metadata.ts";
+export {
+	type DataHandler,
+	type DataHandlerWithDefault,
+	createDataHandler,
+} from "./handler/metadata.ts";

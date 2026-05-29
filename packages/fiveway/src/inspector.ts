@@ -1,8 +1,7 @@
-import { type NavigationAction } from "./action.ts";
-import { executeHandler } from "./handler/handler.ts";
+import { type NavigationAction, type QueryAction } from "./action.ts";
 import { type NodeId } from "./tree/id.ts";
 import { type NavigationNode } from "./tree/node.ts";
-import { type NavigationTree } from "./tree/tree.ts";
+import { dispatchAction, type NavigationTree } from "./tree/tree.ts";
 
 export type InspectorCommand =
 	| { kind: "dispatchAction"; tree: string; action: NavigationAction; node?: NodeId }
@@ -104,14 +103,14 @@ export function describeHandler(action: NavigationAction, info: HandlerDescripti
 }
 
 export function inspectHandler(tree: NavigationTree, id: NodeId): HandlerDescription[] {
-	const value = [] as HandlerDescription[];
-	executeHandler(tree, id, {
+	const action: QueryAction = {
 		kind: "query",
 		key: INSPECT_QUERY_KEY,
-		value,
-	});
+		value: [],
+	};
+	dispatchAction(tree, action, id);
 
-	return value;
+	return action.value as HandlerDescription[];
 }
 
 function flushQueue(): void {
