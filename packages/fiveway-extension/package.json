@@ -2,7 +2,12 @@
 	"name": "@fiveway/extension",
 	"version": "1.0.0",
 	"private": true,
-	"description": "fiveway devtools browser extension",
+	"description": "browser extension for fiveway",
+	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/silen-z/fiveway.git"
+	},
 	"type": "module",
 	"scripts": {
 		"dev": "vp dev",
