@@ -2,7 +2,6 @@ import { type NavigationAction } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId } from "../tree/id.ts";
 import { type NavigationNode } from "../tree/node.ts";
-import { type NavigationTree } from "../tree/tree.ts";
 import { activationHandler, type ActivateCallback } from "./activate.ts";
 import { composeHandlers, type ComposedHandler } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
@@ -56,22 +55,18 @@ export type HandlerNext = (id?: NodeId, action?: NavigationAction) => NodeId | n
  * Call `next()` to stop at the current node, `next(parentId)` to delegate to another node
  * (optionally with a different action).
  */
-export function executeHandler(
-	tree: NavigationTree,
-	nodeId: NodeId,
-	action: NavigationAction,
-): NodeId | null {
-	const node = tree.nodes.get(nodeId);
-	if (node == null || !node.connected) {
-		return null;
-	}
-
+export function executeHandler(node: NavigationNode, action: NavigationAction): NodeId | null {
 	const next: HandlerNext = (id, newAction) => {
 		if (id == null) {
 			return null;
 		}
 
-		return executeHandler(tree, id, newAction ?? action);
+		const nextNode = node.tree.nodes.get(id);
+		if (nextNode == null || !nextNode.connected) {
+			return null;
+		}
+
+		return executeHandler(nextNode, newAction ?? action);
 	};
 
 	return node.handler(action, { node, next });

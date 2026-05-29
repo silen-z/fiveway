@@ -344,7 +344,7 @@ export function focusNode(
 		direction: options.direction ?? null,
 	};
 
-	const resolvedId = executeHandler(tree, targetId, focusAction);
+	const resolvedId = executeHandler(node, focusAction);
 
 	if (resolvedId === null) {
 		return false;
@@ -374,16 +374,21 @@ export function focusNode(
  *
  * @param tree - navigation tree
  * @param action - navigation action to dispatch
- * @param node - ID to dispatch the action on. If not specified, the focused node is used.
+ * @param target - ID to dispatch the action on. If not specified, the focused node is used.
  */
 export function dispatchAction(
 	tree: NavigationTree,
 	action: NavigationAction,
-	node?: NodeId,
+	target?: NodeId,
 ): void {
-	const targetId = executeHandler(tree, node ?? tree.focus, action);
-	if (targetId !== null) {
-		focusNode(tree, targetId);
+	const node = tree.nodes.get(target ?? tree.focus);
+	if (node == null || !node.connected) {
+		return;
+	}
+
+	const focusId = executeHandler(node, action);
+	if (focusId !== null) {
+		focusNode(tree, focusId);
 	}
 }
 
