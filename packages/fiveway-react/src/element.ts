@@ -1,4 +1,5 @@
 import {
+	type NodeId,
 	type ComposedHandler,
 	composeHandlers,
 	registerFocusListener,
@@ -61,17 +62,30 @@ export function useFocusSync(): void {
 	const { tree } = useNavigationContext();
 
 	useEffect(() => {
+		let lastFocus: NodeId | null = null;
+
 		const el = elementHandler.query(tree, tree.focus);
 		if (el != null) {
+			lastFocus = tree.focus;
 			el.focus();
 		}
 
 		const handler = () => {
 			const el = elementHandler.query(tree, tree.focus);
 			if (el != null) {
+				lastFocus = tree.focus;
 				el.focus();
-			} else if (document.activeElement instanceof HTMLElement) {
+				return;
+			}
+
+			if (lastFocus === null || !(document.activeElement instanceof HTMLElement)) {
+				return;
+			}
+
+			const lastEl = elementHandler.query(tree, lastFocus);
+			if (lastEl !== null && lastEl === document.activeElement) {
 				document.activeElement.blur();
+				lastFocus = null;
 			}
 		};
 
