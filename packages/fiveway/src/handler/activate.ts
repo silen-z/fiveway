@@ -25,7 +25,7 @@ export const activationHandler: (onActivate: ActivateCallback) => NavigationHand
 	createActivationHandler;
 
 function createActivationHandler(onActivate: ActivateCallback): NavigationHandler {
-	const activationHandler: NavigationHandler = (_, action, next) => {
+	const activationHandler: NavigationHandler = (action, { next }) => {
 		if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 			describeHandler(action, { name: "activate" });
 		}

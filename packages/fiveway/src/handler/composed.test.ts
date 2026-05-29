@@ -11,9 +11,9 @@ test("composedHandler", () => {
 
 	const logHandler =
 		(msg: string): NavigationHandler =>
-		(n, a, next) => {
-			if (a.kind === "query" && a.key === "log") {
-				logs.push(n.id + ":" + msg);
+		(action, { node, next }) => {
+			if (action.kind === "query" && action.key === "log") {
+				logs.push(node.id + ":" + msg);
 			}
 			return next();
 		};

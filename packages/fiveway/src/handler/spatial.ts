@@ -28,7 +28,7 @@ export const spatialItemHandler: DataHandler<SpatialItem> = createDataHandler("s
  * @see {@link https://fiveway.dev/guide/built-in-handlers#spatial-handler}
  * @see {@link NavigationHandler}
  */
-export const spatialMovementHandler: NavigationHandler = (node, action, next) => {
+export const spatialMovementHandler: NavigationHandler = (action, { node, next }) => {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 		describeHandler(action, { name: "spatial" });
 	}

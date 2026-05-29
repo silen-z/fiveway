@@ -63,7 +63,7 @@ export function createDataHandler<T>(key: string): DataHandler<T>;
 export function createDataHandler<T>(key: string, defaultValue: T): DataHandlerWithDefault<T>;
 export function createDataHandler<T>(key: string, defaultValue?: T) {
 	const dataHandlerFactory = (value: unknown = defaultValue) => {
-		const dataHandler: NavigationHandler = (_, action, next) => {
+		const dataHandler: NavigationHandler = (action, { next }) => {
 			if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 				describeHandler(action, { name: "data", key });
 			}

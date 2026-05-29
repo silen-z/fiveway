@@ -13,7 +13,7 @@ export function VirtualListExample() {
 	const windowRange = offsetWindow(items.length, listPosition, 3);
 
 	const nav = useNavnode("virtual-list", [
-		(node, action, next) => {
+		(action, { node, next }) => {
 			if (action.kind === "focus") {
 				const item = items[listPosition];
 				if (item == null) {

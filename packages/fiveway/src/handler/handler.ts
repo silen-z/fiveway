@@ -8,29 +8,47 @@ import { composeHandlers, type ComposedHandler } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
 
 /**
- * Function passed to navigation handlers that can be used to pass action to the next handler in the chain.
+ * Navigation handler is a function that handles actions dispatched to navigation node
+ * and usually returns `NodeId` of the next node to focus.
+ *
+ * @see {@link https://fiveway.dev/guide/handlers} for more information about handlers.
+ * @see {@link NavigationAction} for available actions.
+ * @see {@link NavigationHandlerContext} for context passed to the handler.
+ * @see {@link HandlerNext} for passing actions to the next handler in the chain.
+ */
+export type NavigationHandler = (
+	action: NavigationAction,
+	ctx: NavigationHandlerContext,
+) => NodeId | null;
+
+/**
+ * Context passed to {@link NavigationHandler}.
+ *
+ * @see {@link HandlerNext}
+ */
+export interface NavigationHandlerContext {
+	/**
+	 * The node on which the action was executed.
+	 */
+	node: NavigationNode;
+
+	/**
+	 * `next` function used to pass actions to other handlers / nodes
+	 */
+	next: HandlerNext;
+}
+
+/**
+ * Function passed to navigation handler context that can be used to pass action to the next handler in the chain.
  * Can be also used to dispatch different action on arbitrary nodes.
  *
  * @param id - The ID of the next node to handle the action. When not provided, the action is passed to the current node.
  * @param action - The action to handle. When not provided, current action is used.
  *
  * @see {@link NavigationHandler} for more information about handlers.
+ * @see {@link NavigationHandlerContext} for context passed to the handler.
  */
 export type HandlerNext = (id?: NodeId, action?: NavigationAction) => NodeId | null;
-
-/**
- * Handler invoked on nodes when dispatching actions.
- *
- * Composite behavior is built with `composeHandlers` and specialized handlers.
- *
- * @see {@link NavigationAction} for available actions.
- * @see {@link HandlerNext} for passing actions to the next handler in the chain.
- */
-export type NavigationHandler = (
-	node: NavigationNode,
-	action: NavigationAction,
-	next: HandlerNext,
-) => NodeId | null;
 
 /**
  * Runs `action` through the handler chain starting at `nodeId`.
@@ -56,7 +74,7 @@ export function executeHandler(
 		return executeHandler(tree, id, newAction ?? action);
 	};
 
-	return node.handler(node, action, next);
+	return node.handler(action, { node, next });
 }
 
 /**
@@ -66,7 +84,10 @@ export function executeHandler(
  * @see {@link https://fiveway.dev/guide/built-in-handlers#parent-handler}
  * @see {@link NavigationHandler}
  */
-export const parentHandler: NavigationHandler = (node, action, next) => {
+export function parentHandler(
+	action: NavigationAction,
+	ctx: NavigationHandlerContext,
+): NodeId | null {
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 		describeHandler(action, { name: "parent" });
 	}
@@ -75,12 +96,12 @@ export const parentHandler: NavigationHandler = (node, action, next) => {
 		return null;
 	}
 
-	if (node.parent !== null) {
-		return next(node.parent);
+	if (ctx.node.parent !== null) {
+		return ctx.next(ctx.node.parent);
 	}
 
-	return next();
-};
+	return ctx.next();
+}
 
 /**
  * Basic composed navigation handler for nodes that can be focused. When not extended tt doesn't respond to any actions and passes them to parent.

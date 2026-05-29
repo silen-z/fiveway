@@ -16,7 +16,7 @@ type NavItemProps = {
 	handlers?: NavigationHandler[];
 };
 
-const goBackHandler: NavigationHandler = (_, action, next) => {
+const goBackHandler: NavigationHandler = (action, { next }) => {
 	if (action.kind === "move" && action.direction === "back") {
 		return "#";
 	}

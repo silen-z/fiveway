@@ -9,14 +9,16 @@ test("executeHandler", async () => {
 	createTestTree({ id: "one", handler });
 
 	expect(handler).toHaveBeenCalledWith(
-		expect.objectContaining({ id: "#/one" }),
 		expect.objectContaining({ kind: "focus" }),
-		expect.any(Function),
+		expect.objectContaining({
+			node: expect.objectContaining({ id: "#/one" }),
+			next: expect.any(Function),
+		}),
 	);
 });
 
 test("executeHandler: pass action to non-existent node", () => {
-	const handler: NavigationHandler = (n, a, next) => {
+	const handler: NavigationHandler = (_, { next }) => {
 		const nextId = next("#/non-existent");
 		expect(nextId).toBeNull();
 		return nextId;

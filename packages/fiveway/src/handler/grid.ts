@@ -1,11 +1,10 @@
 import { type NavigationAction, type NavigationDirection } from "../action.ts";
 import { describeHandler } from "../inspector.ts";
 import { type NodeId, childLocalId } from "../tree/id.ts";
-import { type NavigationNode } from "../tree/node.ts";
 import { traverseNodes } from "../tree/tree.ts";
 import { type ComposedHandler, composeHandlers } from "./composed.ts";
 import { focusHandler } from "./focus.ts";
-import { type HandlerNext, parentHandler } from "./handler.ts";
+import { type NavigationHandlerContext, parentHandler } from "./handler.ts";
 // oxlint reports types used in JSDoc as unused
 // oxlint-disable-next-line
 import { type NavigationHandler } from "./handler.ts";
@@ -55,10 +54,10 @@ export const gridItemHandler: DataHandler<GridItem> = createDataHandler("gridIte
  * @see {@link NavigationHandler}
  */
 export function gridMovementHandler(
-	node: NavigationNode,
 	action: NavigationAction,
-	next: HandlerNext,
+	ctx: NavigationHandlerContext,
 ): NodeId | null {
+	const { node, next } = ctx;
 	if (import.meta.env.FIVEWAY_INSPECTOR ?? import.meta.env.DEV) {
 		describeHandler(action, { name: "grid" });
 	}

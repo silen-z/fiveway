@@ -7,7 +7,7 @@ import { describeHandler, inspectHandler } from "./inspector.ts";
 test("handlerInfo", () => {
 	const { tree } = createTestTree({
 		id: "test",
-		handler: (_, action, next) => {
+		handler: (action, { next }) => {
 			describeHandler(action, { name: "test" });
 			return next();
 		},
@@ -17,7 +17,7 @@ test("handlerInfo", () => {
 });
 
 test("composed handler adds fallback info to link handlers", () => {
-	const handlerWithoutInfo: NavigationHandler = (_node, _action, next) => {
+	const handlerWithoutInfo: NavigationHandler = (_, { next }) => {
 		return next();
 	};
 

@@ -28,7 +28,7 @@ export function VirtualGridExample() {
 	const gridRange: [number, number] = [windowRange[0] * cols, (windowRange[1] + 1) * cols - 1];
 
 	const nav = useNavnode("virtual-grid", [
-		(node, action, next) => {
+		(action, { node, next }) => {
 			if (action.kind === "focus") {
 				const item = items[listPosition - (listPosition % cols)];
 				if (item == null) {
