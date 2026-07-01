@@ -1,5 +1,5 @@
 import solid from "vite-plugin-solid";
-import { defineProject, type Plugin } from "vite-plus";
+import { defineProject, type Plugin, type UserProjectConfigExport } from "vite-plus";
 import { playwright } from "vite-plus/test/browser-playwright";
 
 export default defineProject({
@@ -37,4 +37,4 @@ export default defineProject({
 			screenshotFailures: false,
 		},
 	},
-});
+} as UserProjectConfigExport);

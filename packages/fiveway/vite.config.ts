@@ -1,4 +1,4 @@
-import { defineProject } from "vite-plus";
+import { defineProject, type UserProjectConfigExport } from "vite-plus";
 import { playwright } from "vite-plus/test/browser-playwright";
 
 export default defineProject({
@@ -26,4 +26,4 @@ export default defineProject({
 		},
 		env: { FIVEWAY_INSPECTOR: "true" },
 	},
-});
+} as UserProjectConfigExport);

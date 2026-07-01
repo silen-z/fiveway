@@ -2,8 +2,8 @@
 	"private": true,
 	"type": "module",
 	"devDependencies": {
-		"@vitest/browser": "4.1.6",
-		"@vitest/coverage-v8": "4.1.6",
+		"@vitest/browser": "4.1.9",
+		"@vitest/coverage-v8": "4.1.9",
 		"playwright": "1.60.0",
 		"vite-plus": "catalog:"
 	},
