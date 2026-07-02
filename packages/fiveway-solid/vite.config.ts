@@ -1,8 +1,8 @@
 import solid from "vite-plugin-solid";
-import { defineProject, type Plugin, type UserProjectConfigExport } from "vite-plus";
+import { defineConfig, type Plugin } from "vite-plus";
 import { playwright } from "vite-plus/test/browser-playwright";
 
-export default defineProject({
+export default defineConfig({
 	plugins: [solid() as Plugin],
 	pack: [
 		// build with JSX preserved
@@ -37,4 +37,4 @@ export default defineProject({
 			screenshotFailures: false,
 		},
 	},
-} as UserProjectConfigExport);
+});

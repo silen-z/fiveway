@@ -1,7 +1,7 @@
-import { defineProject, type UserProjectConfigExport } from "vite-plus";
+import { defineConfig } from "vite-plus";
 import { playwright } from "vite-plus/test/browser-playwright";
 
-export default defineProject({
+export default defineConfig({
 	pack: {
 		platform: "neutral",
 		entry: ["src/index.ts", "src/dom.ts", "src/inspector.ts"],
@@ -26,4 +26,4 @@ export default defineProject({
 		},
 		env: { FIVEWAY_INSPECTOR: "true" },
 	},
-} as UserProjectConfigExport);
+});
