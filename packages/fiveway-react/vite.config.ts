@@ -1,8 +1,8 @@
 import react from "@vitejs/plugin-react";
-import { defineProject, type UserProjectConfigExport } from "vite-plus";
+import { defineConfig } from "vite-plus";
 import { playwright } from "vite-plus/test/browser-playwright";
 
-export default defineProject({
+export default defineConfig({
 	plugins: [react()],
 	pack: {
 		platform: "neutral",
@@ -21,4 +21,4 @@ export default defineProject({
 			screenshotFailures: false,
 		},
 	},
-} as UserProjectConfigExport);
+});
