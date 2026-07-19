@@ -1,11 +1,16 @@
 (() => {
 	const RETRY_INTERVAL = 5000;
 	const remoteUrl = new URL("/ws/client", document.currentScript.src);
-	remoteUrl.protocol = "ws:";
+
+	if (window.location.protocol === "https:") {
+		remoteUrl.protocol = "wss:";
+	} else {
+		remoteUrl.protocol = remoteUrl.protocol.replace("http", "ws");
+	}
 
 	let ws;
 
-	function connect() {
+	const connect = () => {
 		const clientId = window.sessionStorage.getItem("fiveway:clientId");
 		if (clientId != null) {
 			remoteUrl.searchParams.set("id", clientId);
@@ -34,7 +39,7 @@
 				connect();
 			}, RETRY_INTERVAL);
 		});
-	}
+	};
 
 	connect();
 
