@@ -10,7 +10,7 @@ export default defineConfig({
 	define: {
 		"import.meta.env.FIVEWAY_INSPECTOR": "true",
 		"import.meta.env.FIVEWAY_INSPECTOR_URL": JSON.stringify(
-			env.FIVEWAY_INSPECTOR_URL ?? "http://localhost:3030",
+			env.FIVEWAY_INSPECTOR_URL ?? "http://localhost:3003",
 		),
 	},
 	lint: {

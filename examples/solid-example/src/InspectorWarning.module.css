@@ -1,0 +1,14 @@
+.inspectorWarning {
+	padding: 4px 8px;
+	border-radius: 6px;
+	background: #fef1f2;
+	border: 1px solid var(--primary-color);
+	color: var(--primary-color);
+	font-size: 13px;
+}
+
+.inspectorWarning a {
+	color: inherit;
+	font-weight: 600;
+	text-decoration: underline;
+}
