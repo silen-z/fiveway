@@ -12,18 +12,17 @@ import {
 	composeHandlers,
 	type NavigationHandler,
 } from "@fiveway/core";
+import { type JSX } from "@solidjs/web";
 import {
 	type Accessor,
 	type Component,
-	type JSX,
 	type ParentProps,
 	createEffect,
 	createMemo,
-	onCleanup,
 	untrack,
 } from "solid-js";
 
-import { useNavigationContext, NavigationContext } from "./context.tsx";
+import { NavigationContext, useNavigationContext } from "./context.tsx";
 import { useIsFocused, useOnFocus } from "./hooks.ts";
 
 /**
@@ -114,30 +113,31 @@ export function createNavnode(
 	const nodeId = () => joinId(parent(), localId());
 
 	const node = createMemo(() => {
-		return createNode({
+		const n = createNode({
 			parent: parent(),
 			id: localId(),
 			handler: Array.isArray(handler) ? composeHandlers(handler) : handler,
 			order: untrack(() => options.order),
 		});
+
+		createEffect(
+			() => options.order,
+			(order) => updateNode(n, { order }),
+		);
+
+		return n;
 	});
 
-	createEffect(() => {
+	createEffect(node, (n) => {
 		// to resolve initial focus correctly, it needs to be held while child nodes get inserted
 		// child (and sibling) effects should run synchronously after this one
 		// after they are done Promise.resolve() should release the focus
 		const releaseFocus = holdFocus(tree);
-
-		const n = node();
-
-		createEffect(() => updateNode(n, { order: options.order }), { defer: true });
-
-		const cleanupNode = insertNode(tree, n);
-		onCleanup(cleanupNode);
-
 		if (releaseFocus) {
 			void Promise.resolve().then(releaseFocus);
 		}
+
+		return insertNode(tree, n);
 	});
 
 	const focus = (nodeId?: NodeId, options?: FocusNodeOptions) => {
@@ -161,9 +161,7 @@ export function createNavnode(
 
 	handle.Context = (props: ParentProps) => {
 		return (
-			<NavigationContext.Provider value={{ tree, parentNode: handle }}>
-				{props.children}
-			</NavigationContext.Provider>
+			<NavigationContext value={{ tree, parentNode: handle }}>{props.children}</NavigationContext>
 		);
 	};
 

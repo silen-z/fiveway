@@ -6,10 +6,9 @@ import {
 	gridItemHandler,
 	initialHandler,
 	useFocusSync,
-	useNavigationContext,
 	useOnFocusChange,
 } from "@fiveway/solid";
-import { activationHandler } from "@fiveway/solid";
+import { activationHandler, useNavigationContext } from "@fiveway/solid";
 
 import { ExampleBox } from "./ExampleBox.tsx";
 import { ListExample } from "./ListExample.tsx";

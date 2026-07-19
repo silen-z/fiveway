@@ -49,17 +49,36 @@ export function ClientTable(props: { clients: Client[] }) {
 	);
 }
 
+function safeClientUrl(url: string | null): string | null {
+	if (url == null) {
+		return null;
+	}
+
+	try {
+		const parsed = new URL(url);
+		if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+			return parsed.href;
+		}
+	} catch {
+		// invalid URL
+	}
+
+	return null;
+}
+
 function ClientRow(props: { client: Client }) {
+	const url = () => safeClientUrl(props.client.url);
+
 	return (
 		<tr>
 			<td>{props.client.title}</td>
 			<td>
-				{props.client.url ? (
-					<a target="_blank" href={props.client.url}>
-						{props.client.url}
+				{url() ? (
+					<a target="_blank" rel="noopener noreferrer" href={url()!}>
+						{url()}
 					</a>
 				) : (
-					<span>N/A</span>
+					<span>{props.client.url ?? "N/A"}</span>
 				)}
 			</td>
 			<td>{props.client.ip}</td>

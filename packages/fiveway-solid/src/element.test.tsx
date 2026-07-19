@@ -5,7 +5,7 @@ import {
 	verticalHandler,
 } from "@fiveway/core";
 import { elementHandler as elementDataHandler } from "@fiveway/core/dom";
-import { type JSX } from "solid-js";
+import { type JSX } from "@solidjs/web";
 import { test, expect } from "vitest";
 import { userEvent } from "vitest/browser";
 
@@ -28,7 +28,7 @@ test("createElementHandler registers element for querying", async () => {
 	const button = getByRole("button", { name: "item1" });
 
 	expect(tree.focus).toBe("#/app/item1");
-	expect(elementDataHandler.query(tree, "#/app/item1")).toBe(button.element());
+	expect(elementDataHandler.query(tree, "#/app/item1")).toBe(button);
 });
 
 test("createElementHandler exposes spatial position from element bounds", async () => {
