@@ -152,9 +152,6 @@ importers:
       '@fiveway/core':
         specifier: workspace:*
         version: link:../fiveway
-      '@fiveway/inspector':
-        specifier: workspace:*
-        version: 'link:'
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.9.14)
