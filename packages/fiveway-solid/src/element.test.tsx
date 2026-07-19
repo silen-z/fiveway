@@ -6,8 +6,8 @@ import {
 } from "@fiveway/core";
 import { elementHandler as elementDataHandler } from "@fiveway/core/dom";
 import { type JSX } from "solid-js";
-import { test, expect } from "vite-plus/test";
-import { userEvent } from "vite-plus/test/browser";
+import { test, expect } from "vitest";
+import { userEvent } from "vitest/browser";
 
 import { renderWithFocusLock } from "./_test/render.ts";
 import { NavigationRoot } from "./context.tsx";

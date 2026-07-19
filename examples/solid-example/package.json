@@ -9,12 +9,11 @@
 	},
 	"dependencies": {
 		"@fiveway/solid": "workspace:^",
-		"solid-js": "^1.9.13"
+		"solid-js": "^1.9.14"
 	},
 	"devDependencies": {
-		"solid-devtools": "^0.34.5",
 		"typescript": "catalog:",
-		"vite-plugin-solid": "^2.11.12",
+		"vite-plugin-solid": "^2.11.13",
 		"vite-plus": "catalog:"
 	}
 }

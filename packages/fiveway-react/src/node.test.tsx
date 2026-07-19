@@ -1,7 +1,7 @@
 import { createNavigationTree, itemHandler, verticalHandler } from "@fiveway/core";
-import { userEvent } from "vite-plus/test/browser";
 import { test, expect, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 
 import { NavigationRoot } from "./context.tsx";
 import { Navnode, useNavnode } from "./node.tsx";

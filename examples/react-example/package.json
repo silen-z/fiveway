@@ -9,13 +9,13 @@
 	},
 	"dependencies": {
 		"@fiveway/react": "workspace:^",
-		"react": "^19.2.6",
-		"react-dom": "^19.2.6"
+		"react": "^19.2.7",
+		"react-dom": "^19.2.7"
 	},
 	"devDependencies": {
-		"@types/react": "^19.2.14",
+		"@types/react": "^19.2.17",
 		"@types/react-dom": "^19.2.3",
-		"@vitejs/plugin-react": "^6.0.2",
+		"@vitejs/plugin-react": "^6.0.3",
 		"typescript": "catalog:",
 		"vite-plus": "catalog:"
 	}

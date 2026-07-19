@@ -2,12 +2,12 @@ import { type InspectorNode } from "@fiveway/core/inspector";
 import { Show } from "solid-js";
 
 import { useDevtoolsContext } from "../context.ts";
+import { HandlerInspector } from "./HandlerInspector.tsx";
 import * as icon from "./icons.ts";
-import { InspectedHandler } from "./InspectedHandler.tsx";
 
-import styles from "./InspectedNode.module.css";
+import styles from "./NodeInspector.module.css";
 
-export function InspectedNode(props: { node: InspectorNode; onClose: (() => void) | null }) {
+export function NodeInspector(props: { node: InspectorNode; onClose: (() => void) | null }) {
 	const devtools = useDevtoolsContext();
 
 	return (
@@ -31,7 +31,7 @@ export function InspectedNode(props: { node: InspectorNode; onClose: (() => void
 				<span class={styles.headerValue}>{props.node.id}</span>
 			</div>
 
-			<Show when={props.node.handler}>{(handler) => <InspectedHandler handler={handler()} />}</Show>
+			<Show when={props.node.handler}>{(handler) => <HandlerInspector handler={handler()} />}</Show>
 		</section>
 	);
 }

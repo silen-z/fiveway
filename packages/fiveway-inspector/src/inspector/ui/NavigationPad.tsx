@@ -1,5 +1,4 @@
 import { type NavigationAction } from "@fiveway/core";
-import { clsx } from "clsx";
 import { createSignal } from "solid-js";
 
 import { useDevtoolsContext } from "../context.ts";
@@ -23,7 +22,7 @@ export function NavigationPad(props: { tree: string }) {
 		<div class={styles.root} aria-label="Simulate navigation">
 			<button
 				type="button"
-				class={clsx(styles.button, styles.bwd)}
+				class={`${styles.button} ${styles.bwd}`}
 				title="Move backwards"
 				aria-label="Move backwards"
 				onClick={() => sendAction({ kind: "move", direction: "backwards", longpress: longPress() })}
@@ -32,7 +31,7 @@ export function NavigationPad(props: { tree: string }) {
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.button, styles.up)}
+				class={`${styles.button} ${styles.up}`}
 				title="Move up"
 				aria-label="Move up"
 				onClick={() => sendAction({ kind: "move", direction: "up", longpress: longPress() })}
@@ -41,7 +40,7 @@ export function NavigationPad(props: { tree: string }) {
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.button, styles.fwd)}
+				class={`${styles.button} ${styles.fwd}`}
 				title="Move forwards"
 				aria-label="Move forwards"
 				onClick={() => sendAction({ kind: "move", direction: "forwards", longpress: longPress() })}
@@ -50,7 +49,7 @@ export function NavigationPad(props: { tree: string }) {
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.button, styles.left)}
+				class={`${styles.button} ${styles.left}`}
 				title="Move left"
 				aria-label="Move left"
 				onClick={() => sendAction({ kind: "move", direction: "left", longpress: longPress() })}
@@ -59,7 +58,7 @@ export function NavigationPad(props: { tree: string }) {
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.button, styles.select)}
+				class={`${styles.button} ${styles.select}`}
 				title="Activate"
 				aria-label="Activate"
 				onClick={() => sendAction({ kind: "activate", longpress: longPress() })}
@@ -68,7 +67,7 @@ export function NavigationPad(props: { tree: string }) {
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.button, styles.right)}
+				class={`${styles.button} ${styles.right}`}
 				title="Move right"
 				aria-label="Move right"
 				onClick={() => sendAction({ kind: "move", direction: "right", longpress: longPress() })}
@@ -77,7 +76,7 @@ export function NavigationPad(props: { tree: string }) {
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.button, styles.back)}
+				class={`${styles.button} ${styles.back}`}
 				title="Back"
 				aria-label="Back"
 				onClick={() => sendAction({ kind: "move", direction: "back", longpress: longPress() })}
@@ -86,7 +85,7 @@ export function NavigationPad(props: { tree: string }) {
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.button, styles.down)}
+				class={`${styles.button} ${styles.down}`}
 				title="Move down"
 				aria-label="Move down"
 				onClick={() => sendAction({ kind: "move", direction: "down", longpress: longPress() })}
@@ -95,7 +94,7 @@ export function NavigationPad(props: { tree: string }) {
 			</button>
 			<button
 				type="button"
-				class={clsx(styles.button, styles.longpress)}
+				class={`${styles.button} ${styles.longpress}`}
 				title={longPress() ? "Long press mode on" : "Long press mode off"}
 				aria-label="Toggle long press mode"
 				aria-pressed={longPress()}

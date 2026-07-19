@@ -29,21 +29,19 @@
 		"@fiveway/core": "workspace:*",
 		"@fiveway/inspector": "workspace:*",
 		"@solidjs/meta": "^0.29.4",
-		"@solidjs/router": "^0.16.1",
-		"@solidjs/start": "2.0.0-alpha.2",
-		"crossws": "^0.4.5",
-		"solid-js": "^1.9.13"
+		"@solidjs/router": "^0.16.2",
+		"@solidjs/start": "2.0.0-beta.9",
+		"crossws": "^0.4.10",
+		"solid-js": "^1.9.14",
+		"uuid": "^14.0.1"
 	},
 	"devDependencies": {
-		"@tsdown/css": "0.22.0",
-		"clsx": "^2.1.1",
-		"lucide-solid": "^1.16.0",
-		"nitro": "3.0.260415-beta",
-		"solid-js": "^1.9.12",
+		"@tsdown/css": "0.22.9",
+		"lucide-solid": "^1.25.0",
+		"nitro": "3.0.260610-beta",
 		"typescript": "catalog:",
-		"uuid": "^14.0.0",
 		"vite": "catalog:",
-		"vite-plugin-solid": "^2.11.12",
+		"vite-plugin-solid": "^2.11.13",
 		"vite-plus": "catalog:"
 	},
 	"engines": {
