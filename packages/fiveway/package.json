@@ -26,9 +26,9 @@
 		"dev": "vp pack --watch"
 	},
 	"devDependencies": {
-		"@vitest/browser-playwright": "4.1.9",
+		"@vitest/browser-playwright": "catalog:",
 		"typescript": "catalog:",
 		"vite-plus": "catalog:",
-		"vitest": "4.1.9"
+		"vitest": "catalog:"
 	}
 }

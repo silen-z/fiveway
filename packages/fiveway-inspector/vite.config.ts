@@ -11,6 +11,9 @@ export default defineConfig({
 		? [
 				solidStart(),
 				nitro({
+					routeRules: {
+						"/connect": { cors: true },
+					},
 					features: {
 						websocket: true,
 					},
@@ -31,7 +34,7 @@ export default defineConfig({
 		plugins: [solid({ hot: false })],
 		deps: {
 			alwaysBundle: ["solid-js", "solid-js/web", "solid-js/store"],
-			onlyBundle: ["solid-js", "lucide-solid", "clsx"],
+			onlyBundle: ["solid-js", "lucide-solid"],
 		},
 	},
 });

@@ -6,9 +6,9 @@ import {
 } from "@fiveway/core";
 import { elementHandler as elementDataHandler } from "@fiveway/core/dom";
 import { type ReactNode } from "react";
-import { test, expect } from "vite-plus/test";
-import { userEvent } from "vite-plus/test/browser";
+import { test, expect } from "vitest";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 
 import { NavigationRoot } from "./context.tsx";
 import { useElementHandler, useFocusSync } from "./element.ts";

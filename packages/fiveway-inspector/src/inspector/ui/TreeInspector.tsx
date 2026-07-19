@@ -1,13 +1,43 @@
 import { isFocused } from "@fiveway/core";
-import { clsx } from "clsx";
 import { createMemo, createSignal, For, Show } from "solid-js";
 
 import { type InspectedTree, useDevtoolsContext } from "../context.ts";
 import * as icon from "./icons.ts";
+import { InspectorHeader } from "./InspectorHeader.tsx";
+import { NodeInspector } from "./NodeInspector.tsx";
 
-import styles from "./TreeNode.module.css";
+import styles from "./TreeInspector.module.css";
 
-export function TreeNode(props: { tree: InspectedTree; node: string }) {
+export function TreeInspector(props: { tree: InspectedTree }) {
+	const devtools = useDevtoolsContext();
+
+	return (
+		<div class={styles.inspector}>
+			<InspectorHeader tree={props.tree} />
+
+			<div class={styles.split}>
+				<div class={styles.treePane}>
+					<div class={styles.tree}>
+						<TreeNode tree={props.tree} node="#" />
+					</div>
+				</div>
+
+				<Show when={devtools.inspectedNode()}>
+					{(node) => (
+						<div class={styles.inspectedPane}>
+							<NodeInspector
+								node={node()}
+								onClose={props.tree.inspected != null ? () => devtools.inspectNode(null) : null}
+							/>
+						</div>
+					)}
+				</Show>
+			</div>
+		</div>
+	);
+}
+
+function TreeNode(props: { tree: InspectedTree; node: string }) {
 	const devtools = useDevtoolsContext();
 
 	const isRoot = () => props.node === "#";
@@ -85,7 +115,7 @@ export function TreeNode(props: { tree: InspectedTree; node: string }) {
 					<Show when={!isNodeFocused()}>
 						<button
 							type="button"
-							class={clsx(styles.nodeActionButton, styles.nodeActionButtonRevealOnHover)}
+							class={`${styles.nodeActionButton} ${styles.nodeActionButtonRevealOnHover}`}
 							title="Focus this node in the app"
 							aria-label="Focus in app"
 							onClick={() => focusNode()}
@@ -123,7 +153,7 @@ function ExpandButton(props: { expanded: boolean; onToggle: () => void }) {
 	return (
 		<button
 			type="button"
-			class={clsx(styles.nodeActionButton, styles.nodeActionButtonRevealOnHover)}
+			class={`${styles.nodeActionButton} ${styles.nodeActionButtonRevealOnHover}`}
 			title={label()}
 			aria-pressed={props.expanded}
 			aria-label={label()}

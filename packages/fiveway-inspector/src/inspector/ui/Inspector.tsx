@@ -1,15 +1,7 @@
 import { Show } from "solid-js";
 
-import {
-	type InspetorInit,
-	type InspectedTree,
-	createDevtoolsContext,
-	devtoolsContext,
-	useDevtoolsContext,
-} from "../context.ts";
-import { InspectedNode } from "./InspectedNode.tsx";
-import { InspectorHeader } from "./InspectorHeader.tsx";
-import { TreeNode } from "./TreeNode.tsx";
+import { type InspetorInit, createDevtoolsContext, devtoolsContext } from "../context.ts";
+import { TreeInspector } from "./TreeInspector.tsx";
 
 import "../../tokens.css";
 import styles from "./Inspector.module.css";
@@ -21,7 +13,7 @@ export function Inspector(props: { handle: InspetorInit }) {
 		<devtoolsContext.Provider value={devtools}>
 			<div class={styles.panel}>
 				<Show when={devtools.inspectedTree()} keyed>
-					{(tree) => <InspectedTree tree={tree} />}
+					{(tree) => <TreeInspector tree={tree} />}
 				</Show>
 				<Show when={Object.keys(devtools.trees).length === 0}>
 					<div class={styles.noTreesDetected} role="status" aria-live="polite" aria-busy="true">
@@ -31,34 +23,5 @@ export function Inspector(props: { handle: InspetorInit }) {
 				</Show>
 			</div>
 		</devtoolsContext.Provider>
-	);
-}
-
-function InspectedTree(props: { tree: InspectedTree }) {
-	const devtools = useDevtoolsContext();
-
-	return (
-		<div class={styles.inspector}>
-			<InspectorHeader tree={props.tree} />
-
-			<div class={styles.split}>
-				<div class={styles.treePane}>
-					<div class={styles.tree}>
-						<TreeNode tree={props.tree} node="#" />
-					</div>
-				</div>
-
-				<Show when={devtools.inspectedNode()}>
-					{(node) => (
-						<div class={styles.inspectedPane}>
-							<InspectedNode
-								node={node()}
-								onClose={props.tree.inspected != null ? () => devtools.inspectNode(null) : null}
-							/>
-						</div>
-					)}
-				</Show>
-			</div>
-		</div>
 	);
 }

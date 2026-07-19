@@ -1,4 +1,4 @@
-import { describe, test, expect } from "vite-plus/test";
+import { describe, test, expect } from "vitest";
 
 import { createTestTree } from "../_test/treeSpec.ts";
 import { defaultKeybinds } from "../dom.ts";

@@ -1,6 +1,6 @@
 import { createNavigationTree, itemHandler, verticalHandler } from "@fiveway/core";
-import { test, expect, vi } from "vite-plus/test";
-import { userEvent } from "vite-plus/test/browser";
+import { test, expect, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 
 import { renderWithFocusLock } from "./_test/render.ts";
 import { NavigationRoot } from "./context.tsx";

@@ -6,7 +6,7 @@ import { Dynamic } from "solid-js/web";
 import { type InspectedHandler, parseHandler } from "../handler.ts";
 import * as icon from "./icons.ts";
 
-import styles from "./InspectedHandler.module.css";
+import styles from "./HandlerInspector.module.css";
 
 const HANDLER_ICONS: Record<string, Component<{ size?: number; class?: string }>> = {
 	activate: icon.MousePointerClick,
@@ -30,7 +30,7 @@ function handlerIcon(handler: InspectedHandler) {
 	return HANDLER_ICONS[key] ?? icon.Puzzle;
 }
 
-export function InspectedHandler(props: { handler: HandlerDescription[] }) {
+export function HandlerInspector(props: { handler: HandlerDescription[] }) {
 	return (
 		<div class={styles.handlers}>
 			<For each={parseHandler(props.handler)}>

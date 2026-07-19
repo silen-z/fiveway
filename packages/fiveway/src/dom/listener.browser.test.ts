@@ -1,4 +1,4 @@
-import { describe, test, expect, onTestFinished, vi } from "vite-plus/test";
+import { describe, test, expect, onTestFinished, vi } from "vitest";
 
 import { createTestTree } from "../_test/treeSpec.ts";
 import { type NavigationAction } from "../action.ts";
