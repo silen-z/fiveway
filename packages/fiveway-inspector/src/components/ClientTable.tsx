@@ -55,7 +55,7 @@ function ClientRow(props: { client: Client }) {
 			<td>{props.client.title}</td>
 			<td>
 				{props.client.url ? (
-					<a target="_blank" href={props.client.url}>
+					<a target="_blank" rel="noopener" href={props.client.url}>
 						{props.client.url}
 					</a>
 				) : (
