@@ -13,6 +13,7 @@ import {
 } from "@fiveway/react";
 
 import { ExampleBox } from "./ExampleBox.tsx";
+import { InspectorWarning } from "./InspectorWarning.tsx";
 import { ListExample } from "./ListExample.tsx";
 import { NavItem } from "./NavItem.tsx";
 import { SpatialExample } from "./SpatialExample.tsx";
@@ -39,20 +40,20 @@ export function Showcase() {
 
 	return (
 		<nav.Context>
-			<div className={css.page}>
-				<header className={css.pageHeader}>
-					<div className={css.pageTitle}>
-						<h1>
-							<strong>fiveway</strong> / react
-						</h1>
-						<div className={css.titleLinks}>
-							<a href="https://fiveway.dev">Documentation</a>
-							<a href="https://github.com/silen-z/fiveway">GitHub</a>
-							<a href="https://bsky.app/profile/fiveway.dev">Bluesky</a>
-						</div>
+			<header className={css.pageHeader}>
+				<InspectorWarning />
+				<div className={css.pageTitle}>
+					<h1>
+						<strong>fiveway</strong> / react
+					</h1>
+					<div className={css.titleLinks}>
+						<a href="https://fiveway.dev">Documentation</a>
+						<a href="https://github.com/silen-z/fiveway">GitHub</a>
+						<a href="https://bsky.app/profile/fiveway.dev">Bluesky</a>
 					</div>
-				</header>
-
+				</div>
+			</header>
+			<div className={css.page}>
 				<div className={css.infoBox}>
 					<p>
 						<strong>fiveway</strong> is a TypeScript library for rich web applications that want to
