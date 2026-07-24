@@ -1,14 +1,24 @@
 .inspectorWarning {
-	padding: 4px 8px;
-	border-radius: 6px;
-	background: #fef1f2;
-	border: 1px solid var(--primary-color);
-	color: var(--primary-color);
-	font-size: 13px;
+	background: color-mix(in srgb, var(--primary-color) 10%, #fff);
+	border-bottom: 1px solid color-mix(in srgb, var(--primary-color) 20%, #e4e4e7);
+	padding: 8px 16px;
+	text-align: center;
+	font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+	.inspectorWarning {
+		padding: 8px 24px;
+		font-size: 1rem;
+	}
 }
 
 .inspectorWarning a {
-	color: inherit;
 	font-weight: 600;
+	color: var(--primary-color);
+	text-decoration: none;
+}
+
+.inspectorWarning a:hover {
 	text-decoration: underline;
 }

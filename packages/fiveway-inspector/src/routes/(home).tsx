@@ -1,6 +1,5 @@
 import { Title } from "@solidjs/meta";
 import { createAsync, type RouteDefinition } from "@solidjs/router";
-import { Show } from "solid-js";
 
 import {
 	ClientListSection,
@@ -8,7 +7,7 @@ import {
 	useClientsRefresh,
 	getClients,
 } from "../components/ClientTable.tsx";
-import { ConnectSnippet, getInspectorOrigin } from "../components/ConnectSnippet.tsx";
+import { ConnectInformation, getInspectorOrigin } from "../components/ConnectInformation.tsx";
 import { InspectorLayout } from "../components/InspectorLayout.tsx";
 
 export const route = {
@@ -25,21 +24,11 @@ export default function HomePage() {
 		<>
 			<Title>fiveway / inspector</Title>
 			<InspectorLayout>
-				<Show when={clients().length === 0}>
-					<ConnectSnippet origin={origin()!}>
-						No clients are connected. To connect, add this script to your app:
-					</ConnectSnippet>
-				</Show>
+				<ClientListSection>
+					<ClientTable clients={clients()!} />
 
-				<Show when={clients().length > 0}>
-					<ClientListSection>
-						<ClientTable clients={clients()!} />
-
-						<ConnectSnippet origin={origin()!}>
-							To connect another client, add this script to your app:
-						</ConnectSnippet>
-					</ClientListSection>
-				</Show>
+					<ConnectInformation origin={origin()!} />
+				</ClientListSection>
 			</InspectorLayout>
 		</>
 	);

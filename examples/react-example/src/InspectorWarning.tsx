@@ -13,8 +13,8 @@ export function InspectorWarning() {
 					<a href={inspectorAddress} target="_blank" rel="noreferrer">
 						{inspectorAddress}
 					</a>
-					. That means your interaction with this page is publicly visible. The inspector displays
-					navigation state and can manipulate it.
+					.<br /> That means your interaction with this page is publicly visible. The inspector
+					displays navigation state and can manipulate it.
 				</div>
 			)}
 		</>

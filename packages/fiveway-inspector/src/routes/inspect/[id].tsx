@@ -9,7 +9,7 @@ import {
 	useClientsRefresh,
 	getClients,
 } from "../../components/ClientTable.tsx";
-import { ConnectSnippet, getInspectorOrigin } from "../../components/ConnectSnippet.tsx";
+import { ConnectInformation, getInspectorOrigin } from "../../components/ConnectInformation.tsx";
 import { InspectorLayout } from "../../components/InspectorLayout.tsx";
 import { ClientId, PageBanner } from "../../components/PageBanner.tsx";
 import { PageMessage } from "../../components/PageMessage.tsx";
@@ -126,21 +126,11 @@ function ClientUnavailable(props: { clientId: string; clients: Client[] }) {
 					No client with ID <ClientId>{props.clientId}</ClientId> is connected.
 				</PageBanner>
 
-				<Show when={props.clients.length === 0}>
-					<ConnectSnippet origin={origin() ?? ""}>
-						No clients are connected. To connect, add this script to your app:
-					</ConnectSnippet>
-				</Show>
+				<ClientListSection>
+					<ClientTable clients={props.clients} />
 
-				<Show when={props.clients.length > 0}>
-					<ClientListSection>
-						<ClientTable clients={props.clients} />
-
-						<ConnectSnippet origin={origin() ?? ""}>
-							To connect another client, add this script to your app:
-						</ConnectSnippet>
-					</ClientListSection>
-				</Show>
+					<ConnectInformation origin={origin() ?? ""} />
+				</ClientListSection>
 			</InspectorLayout>
 		</>
 	);

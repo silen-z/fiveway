@@ -40,8 +40,8 @@ export function Showcase() {
 
 	return (
 		<nav.Context>
+			<InspectorWarning />
 			<header className={css.pageHeader}>
-				<InspectorWarning />
 				<div className={css.pageTitle}>
 					<h1>
 						<strong>fiveway</strong> / react

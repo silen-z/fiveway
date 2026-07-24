@@ -32,3 +32,10 @@
 	flex-direction: column;
 	gap: 24px;
 }
+
+.noClients {
+	margin: 0;
+	color: var(--color-text-muted);
+	font-size: 0.875rem;
+	text-align: center;
+}

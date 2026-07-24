@@ -39,8 +39,8 @@ export function Showcase() {
 
 	return (
 		<nav.Context>
+			<InspectorWarning />
 			<header class={css.pageHeader}>
-				<InspectorWarning />
 				<div class={css.pageTitle}>
 					<h1>
 						<strong>fiveway</strong> / solid
