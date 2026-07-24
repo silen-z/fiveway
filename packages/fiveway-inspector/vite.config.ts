@@ -11,9 +11,6 @@ export default defineConfig({
 		? [
 				solidStart(),
 				nitro({
-					routeRules: {
-						"/connect": { cors: true },
-					},
 					features: {
 						websocket: true,
 					},

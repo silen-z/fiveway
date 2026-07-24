@@ -32,20 +32,25 @@ export function ClientListSection(props: { children: JSX.Element }) {
 
 export function ClientTable(props: { clients: Client[] }) {
 	return (
-		<table class={styles.table}>
-			<thead>
-				<tr>
-					<th>Title</th>
-					<th>URL</th>
-					<th>IP</th>
-					<th>User Agent</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<For each={props.clients}>{(client) => <ClientRow client={client} />}</For>
-			</tbody>
-		</table>
+		<>
+			{props.clients.length === 0 && <p class={styles.noClients}>No clients are connected.</p>}
+			{props.clients.length > 0 && (
+				<table class={styles.table}>
+					<thead>
+						<tr>
+							<th>Title</th>
+							<th>URL</th>
+							<th>IP</th>
+							<th>User Agent</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<For each={props.clients}>{(client) => <ClientRow client={client} />}</For>
+					</tbody>
+				</table>
+			)}
+		</>
 	);
 }
 

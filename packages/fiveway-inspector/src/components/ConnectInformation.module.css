@@ -4,15 +4,27 @@
 	text-align: center;
 }
 
-.connectLead {
+.text {
 	margin: 0 0 12px;
 	color: var(--color-text-muted);
-	font-size: 0.9375rem;
+	font-size: 0.875rem;
 	line-height: 1.5;
 	text-wrap: balance;
 }
 
-.connectBox {
+.link {
+	font-weight: 600;
+	margin-inline: 4px;
+}
+
+.warning {
+	margin: 12px 0 0;
+	color: var(--color-text-muted);
+	font-size: 0.8125rem;
+	font-style: italic;
+}
+
+.box {
 	box-sizing: border-box;
 	width: fit-content;
 	max-width: 100%;
@@ -23,7 +35,7 @@
 	background: var(--color-surface);
 }
 
-.connectPre {
+.pre {
 	width: fit-content;
 	max-width: 100%;
 	margin: 0;

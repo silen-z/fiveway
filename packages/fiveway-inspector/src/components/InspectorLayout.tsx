@@ -12,6 +12,15 @@ export function InspectorLayout(props: { children: JSX.Element }) {
 							<strong class={styles.titleBrand}>fiveway</strong> / inspector
 						</h1>
 
+						<p class={styles.headerDescription}>
+							A debugging tool for{" "}
+							<a href="https://fiveway.dev" target="_blank" rel="noreferrer">
+								fiveway
+							</a>{" "}
+							navigation trees. Inspect the tree structure, visualize focus handlers, and simulate
+							keyboard navigation in real time.
+						</p>
+
 						<div class={styles.headerLinks}>
 							<a class={styles.headerLink} href="https://fiveway.dev">
 								Documentation
