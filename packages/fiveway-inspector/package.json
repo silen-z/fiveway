@@ -29,14 +29,14 @@
 		"@fiveway/core": "workspace:*",
 		"@solidjs/meta": "^0.29.4",
 		"@solidjs/router": "^0.16.2",
-		"@solidjs/start": "2.0.0-beta.9",
+		"@solidjs/start": "2.0.0-rc.2",
 		"crossws": "^0.4.10",
 		"solid-js": "^1.9.14",
 		"uuid": "^14.0.1"
 	},
 	"devDependencies": {
-		"@tsdown/css": "0.22.9",
-		"lucide-solid": "^1.25.0",
+		"@tsdown/css": "0.22.14",
+		"lucide-solid": "^1.26.0",
 		"nitro": "3.0.260610-beta",
 		"typescript": "catalog:",
 		"vite": "catalog:",
