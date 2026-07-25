@@ -9,26 +9,15 @@ allowBuilds:
 
 catalog:
   typescript: ^7.0.2
-  vite: npm:@voidzero-dev/vite-plus-core@0.2.5
-  vite-plus: 0.2.5
+  vite: npm:@voidzero-dev/vite-plus-core@0.2.6
+  vite-plus: 0.2.6
   vitest: 4.1.10
   "@vitest/browser": 4.1.10
   "@vitest/browser-playwright": 4.1.10
   "@vitest/coverage-v8": 4.1.10
 
 minimumReleaseAgeExclude:
-  - "@voidzero-dev/vite-plus-core@0.2.2"
-  - "@voidzero-dev/vite-plus-darwin-arm64@0.2.2"
-  - "@voidzero-dev/vite-plus-darwin-x64@0.2.2"
-  - "@voidzero-dev/vite-plus-linux-arm64-gnu@0.2.2"
-  - "@voidzero-dev/vite-plus-linux-arm64-musl@0.2.2"
-  - "@voidzero-dev/vite-plus-linux-x64-gnu@0.2.2"
-  - "@voidzero-dev/vite-plus-linux-x64-musl@0.2.2"
-  - "@voidzero-dev/vite-plus-win32-arm64-msvc@0.2.2"
-  - "@voidzero-dev/vite-plus-win32-x64-msvc@0.2.2"
-  - vite-plus@0.2.2
-  - vite-plugin-solid@2.11.13
-  - "@solidjs/start@2.0.0-beta.9"
+  - "@solidjs/start@2.0.0-rc.2"
 
 overrides:
   vite: "catalog:"
