@@ -1,5 +1,6 @@
 import { query } from "@solidjs/router";
 import { getRequestURL } from "@solidjs/start/http";
+import { For } from "solid-js";
 
 import styles from "./ConnectInformation.module.css";
 
@@ -9,10 +10,10 @@ export const getInspectorOrigin = query(async () => {
 	return getRequestURL().origin;
 }, "inspectorOrigin");
 
+const CONNECTED_SITES = parseConnectedSites(import.meta.env.VITE_CONNECTED_SITES ?? "");
+
 export const ConnectInformation =
-	import.meta.env.VITE_DEMO_INSTANCE === "true"
-		? DemoConnectInformation
-		: RegularConnectInformation;
+	CONNECTED_SITES.length > 0 ? ConnectedSitesConnectInformation : RegularConnectInformation;
 
 function RegularConnectInformation(props: { origin: string }) {
 	return (
@@ -23,7 +24,7 @@ function RegularConnectInformation(props: { origin: string }) {
 	);
 }
 
-function DemoConnectInformation(props: { origin: string }) {
+function ConnectedSitesConnectInformation(props: { origin: string }) {
 	return (
 		<section class={styles.connect} aria-label="Connect a client">
 			<p class={styles.text}>
@@ -31,12 +32,13 @@ function DemoConnectInformation(props: { origin: string }) {
 				instance:
 			</p>
 			<p class={styles.text}>
-				<a class={styles.link} href="https://react.fiveway.dev" target="_blank" rel="noreferrer">
-					React
-				</a>
-				<a class={styles.link} href="https://solid.fiveway.dev" target="_blank" rel="noreferrer">
-					Solid
-				</a>
+				<For each={CONNECTED_SITES}>
+					{(site) => (
+						<a class={styles.link} href={site.url} target="_blank" rel="noreferrer">
+							{site.label}
+						</a>
+					)}
+				</For>
 			</p>
 			<p class={styles.text}>or you can connect your own client using this script:</p>
 			<ScriptTag origin={props.origin} />
@@ -68,4 +70,27 @@ function ScriptTag(props: { origin: string }) {
 			</pre>
 		</div>
 	);
+}
+
+function parseConnectedSites(value: string) {
+	const sites: { label: string; url: string }[] = [];
+
+	for (const rawEntry of value.split(";")) {
+		const entry = rawEntry.trim();
+		if (entry.length === 0) {
+			continue;
+		}
+
+		const separator = entry.indexOf(":");
+		const label = entry.slice(0, separator).trim();
+		const url = entry.slice(separator + 1).trim();
+
+		if (label.length === 0 || !URL.canParse(url)) {
+			continue;
+		}
+
+		sites.push({ label, url });
+	}
+
+	return sites;
 }
