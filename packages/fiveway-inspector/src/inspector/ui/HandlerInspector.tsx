@@ -1,10 +1,9 @@
 import { type HandlerDescription } from "@fiveway/core/inspector";
-import { type Component } from "solid-js";
-import { For, Show } from "solid-js";
-import { Dynamic } from "solid-js/web";
+import { Dynamic } from "@solidjs/web";
+import { type Component, For, Show } from "solid-js";
 
 import { type InspectedHandler, parseHandler } from "../handler.ts";
-import * as icon from "./icons.ts";
+import * as icon from "./icons.tsx";
 
 import styles from "./HandlerInspector.module.css";
 

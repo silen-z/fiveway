@@ -1,7 +1,7 @@
 import { createSignal, For, Show } from "solid-js";
 
 import { type InspectedTree, useDevtoolsContext } from "../context.ts";
-import * as icon from "./icons.ts";
+import * as icon from "./icons.tsx";
 import { NavigationPad } from "./NavigationPad.tsx";
 
 import styles from "./InspectorHeader.module.css";
@@ -24,7 +24,7 @@ export function InspectorHeader(props: { tree: InspectedTree }) {
 						type="button"
 						class={styles.iconButton}
 						title={isNavPadOpen() ? "Hide navigation controls" : "Show navigation controls"}
-						aria-expanded={isNavPadOpen()}
+						aria-expanded={isNavPadOpen() ? "true" : "false"}
 						onClick={() => setNavPadOpen((o) => !o)}
 					>
 						<icon.Gamepad2 size={18} />

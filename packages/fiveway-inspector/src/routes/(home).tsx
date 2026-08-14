@@ -1,35 +1,23 @@
 import { Title } from "@solidjs/meta";
-import { createAsync, type RouteDefinition } from "@solidjs/router";
+import { createMemo } from "solid-js";
 
-import {
-	ClientListSection,
-	ClientTable,
-	useClientsRefresh,
-	getClients,
-} from "../components/ClientTable.tsx";
-import { ConnectInformation, getInspectorOrigin } from "../components/ConnectInformation.tsx";
+import { ClientListSection, ClientTable } from "../components/ClientTable.tsx";
+import { ConnectInformation } from "../components/ConnectInformation.tsx";
 import { InspectorLayout } from "../components/InspectorLayout.tsx";
-
-export const route = {
-	preload: () => Promise.all([getClients(), getInspectorOrigin()]),
-} satisfies RouteDefinition;
+import { liveClientList } from "../components/live-clients.ts";
 
 export default function HomePage() {
-	const clients = createAsync(() => getClients(), { initialValue: [] });
-	const origin = createAsync(() => getInspectorOrigin());
-
-	useClientsRefresh();
+	const clients = createMemo(() => liveClientList());
 
 	return (
-		<>
+		<InspectorLayout>
 			<Title>fiveway / inspector</Title>
-			<InspectorLayout>
-				<ClientListSection>
-					<ClientTable clients={clients()!} />
 
-					<ConnectInformation origin={origin()!} />
-				</ClientListSection>
-			</InspectorLayout>
-		</>
+			<ClientListSection>
+				<ClientTable clients={clients()} />
+
+				<ConnectInformation />
+			</ClientListSection>
+		</InspectorLayout>
 	);
 }

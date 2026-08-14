@@ -1,20 +1,14 @@
-import { MetaProvider } from "@solidjs/meta";
-import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start/router";
-import { Suspense } from "solid-js";
+import { createRouter } from "@solidjs/router";
+import { fileRoutes } from "@solidjs/router/fs";
+import { Loading } from "solid-js";
 
 import "./app.css";
+import { pageRoutes } from "virtual:file-routes";
+
+export const Router = createRouter({
+	routes: fileRoutes(pageRoutes),
+});
 
 export default function App() {
-	return (
-		<Router
-			root={(props) => (
-				<MetaProvider>
-					<Suspense>{props.children}</Suspense>
-				</MetaProvider>
-			)}
-		>
-			<FileRoutes />
-		</Router>
-	);
+	return <Router>{(props) => <Loading>{props.children}</Loading>}</Router>;
 }

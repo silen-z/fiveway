@@ -2,7 +2,7 @@ import { type NavigationAction } from "@fiveway/core";
 import { createSignal } from "solid-js";
 
 import { useDevtoolsContext } from "../context.ts";
-import * as icon from "./icons.ts";
+import * as icon from "./icons.tsx";
 
 import styles from "./NavigationPad.module.css";
 
@@ -97,7 +97,7 @@ export function NavigationPad(props: { tree: string }) {
 				class={`${styles.button} ${styles.longpress}`}
 				title={longPress() ? "Long press mode on" : "Long press mode off"}
 				aria-label="Toggle long press mode"
-				aria-pressed={longPress()}
+				aria-pressed={longPress() ? "true" : "false"}
 				onClick={() => setLongPress((on) => !on)}
 			>
 				<icon.Timer size={16} />

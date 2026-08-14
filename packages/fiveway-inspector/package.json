@@ -27,20 +27,22 @@
 	},
 	"dependencies": {
 		"@fiveway/core": "workspace:*",
-		"@solidjs/meta": "^0.29.4",
-		"@solidjs/router": "^0.16.2",
-		"@solidjs/start": "2.0.0-rc.2",
-		"crossws": "^0.4.10",
-		"solid-js": "^1.9.14",
-		"uuid": "^14.0.1"
+		"@solidjs/meta": "1.0.0-next.2",
+		"@solidjs/router": "2.0.0-next.24",
+		"@solidjs/web": "2.0.0-rc.8",
+		"chokidar": "^5.0.0",
+		"crossws": "^0.4.12",
+		"filesystem-routing": "0.3.1",
+		"h3": "2.0.1-rc.31",
+		"nitro": "3.0.260903-beta",
+		"solid-js": "2.0.0-rc.8",
+		"uuid": "^14.0.2"
 	},
 	"devDependencies": {
+		"@solidjs/vite-plugin": "3.0.0-next.43",
 		"@tsdown/css": "0.22.14",
-		"lucide-solid": "^1.26.0",
-		"nitro": "3.0.260610-beta",
 		"typescript": "catalog:",
 		"vite": "catalog:",
-		"vite-plugin-solid": "^2.11.13",
 		"vite-plus": "catalog:"
 	},
 	"engines": {

@@ -3,8 +3,7 @@ import {
 	type InspectorCommand,
 	type InspectorNode,
 } from "@fiveway/core/inspector";
-import { createContext, useContext, createEffect, createMemo, onCleanup } from "solid-js";
-import { createStore, produce } from "solid-js/store";
+import { createContext, useContext, createMemo, createStore, onSettled } from "solid-js";
 
 export type ReloadMessage = { type: "fiveway:reload" };
 
@@ -37,7 +36,7 @@ export type InspectorContext = {
 	inspectNode: (nodeId: string | null) => void;
 };
 
-export const devtoolsContext = createContext<InspectorContext>();
+export const DevtoolsContext = createContext<InspectorContext>();
 
 export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 	const [state, setState] = createStore<InspectorState>({
@@ -45,57 +44,72 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 		trees: {},
 	});
 
-	createEffect(() => {
+	onSettled(() => {
 		handle.sendCommand({ kind: "requestCompleteSnapshot", tree: "*" });
 
 		const unsubscribe = handle.subscribe((message) => {
 			if (message.type === "fiveway:reload") {
-				setState({ trees: {} });
+				setState((state) => {
+					state.trees = {};
+				});
 				handle.sendCommand({ kind: "requestCompleteSnapshot", tree: "*" });
 				return;
 			}
 
-			if (!(message.tree in state.trees)) {
-				setState("trees", message.tree, {
-					label: message.tree,
-					focus: null,
-					nodes: {},
-					expanded: false,
-					inspected: null,
-				});
+			const treeLabel = message.tree;
+			const existed = state.trees[treeLabel] != null;
 
-				if (!message.complete) {
-					handle.sendCommand({ kind: "requestCompleteSnapshot", tree: message.tree });
-					return;
+			setState((state) => {
+				if (state.trees[treeLabel] == null) {
+					state.trees[treeLabel] = {
+						label: treeLabel,
+						focus: null,
+						nodes: {},
+						expanded: false,
+						inspected: null,
+					};
 				}
+			});
+
+			if (!existed && !message.complete) {
+				handle.sendCommand({
+					kind: "requestCompleteSnapshot",
+					tree: treeLabel,
+				});
+				return;
 			}
 
-			setState(
-				"trees",
-				message.tree,
-				produce((tree) => {
-					if (message.focus != null && message.focus !== tree.focus) {
-						tree.focus = message.focus;
-						tree.inspected = null;
-						handle.sendCommand({ kind: "inspectHandler", tree: tree.label, node: message.focus });
-					}
+			setState((state) => {
+				const tree = state.trees[treeLabel];
+				if (tree == null) {
+					return;
+				}
 
-					if (message.nodes != null) {
-						for (const node of message.nodes) {
-							tree.nodes[node.id] = node;
-						}
-					}
+				if (message.focus != null && message.focus !== tree.focus) {
+					tree.focus = message.focus;
+					tree.inspected = null;
+					handle.sendCommand({
+						kind: "inspectHandler",
+						tree: tree.label,
+						node: message.focus,
+					});
+				}
 
-					if (message.removedNodes != null) {
-						for (const node of message.removedNodes) {
-							delete tree.nodes[node];
-						}
+				if (message.nodes != null) {
+					for (const node of message.nodes) {
+						tree.nodes[node.id] = node;
 					}
-				}),
-			);
+				}
+
+				if (message.removedNodes != null) {
+					for (const node of message.removedNodes) {
+						delete tree.nodes[node];
+					}
+				}
+			});
 		});
 
-		onCleanup(unsubscribe);
+		return unsubscribe;
 	});
 
 	const inspectedTree = createMemo(() => {
@@ -108,7 +122,9 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 	});
 
 	const selectTree = (label: string) => {
-		setState("selected", label);
+		setState((state) => {
+			state.selected = label;
+		});
 	};
 
 	const toggleExpand = () => {
@@ -117,7 +133,14 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 			return;
 		}
 
-		setState("trees", tree.label, "expanded", (prev) => !prev);
+		setState((state) => {
+			const target = state.trees[tree.label];
+			if (target == null) {
+				return;
+			}
+
+			target.expanded = !target.expanded;
+		});
 	};
 
 	const inspectNode = (nodeId: string | null) => {
@@ -127,9 +150,20 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 		}
 
 		if (nodeId !== null) {
-			handle.sendCommand({ kind: "inspectHandler", tree: tree.label, node: nodeId });
+			handle.sendCommand({
+				kind: "inspectHandler",
+				tree: tree.label,
+				node: nodeId,
+			});
 		}
-		setState("trees", tree.label, "inspected", nodeId);
+		setState((state) => {
+			const target = state.trees[tree.label];
+			if (target == null) {
+				return;
+			}
+
+			target.inspected = nodeId;
+		});
 	};
 
 	const inspectedNode = createMemo(() => {
@@ -138,14 +172,14 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 			return null;
 		}
 
-		console.log(tree.inspected, tree.focus, "#");
-
 		const id = tree.inspected ?? tree.focus ?? "#";
 		return tree.nodes[id] ?? null;
 	});
 
 	return {
-		trees: state.trees,
+		get trees() {
+			return state.trees;
+		},
 		inspectedTree,
 		inspectedNode,
 		sendCommand: handle.sendCommand,
@@ -156,9 +190,5 @@ export function createDevtoolsContext(handle: InspetorInit): InspectorContext {
 }
 
 export function useDevtoolsContext() {
-	const context = useContext(devtoolsContext);
-	if (context == null) {
-		throw new Error("devtoolsContext not provided");
-	}
-	return context;
+	return useContext(DevtoolsContext);
 }

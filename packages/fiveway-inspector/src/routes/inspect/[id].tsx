@@ -1,47 +1,31 @@
 import { type InspectorCommand, type InspectorMessage } from "@fiveway/core/inspector";
 import { Title } from "@solidjs/meta";
-import { createAsync, useParams, type RouteDefinition } from "@solidjs/router";
+import { useParams } from "@solidjs/router";
 import { createMemo, createSignal, Show } from "solid-js";
 
-import {
-	ClientListSection,
-	ClientTable,
-	useClientsRefresh,
-	getClients,
-} from "../../components/ClientTable.tsx";
-import { ConnectInformation, getInspectorOrigin } from "../../components/ConnectInformation.tsx";
+import { ClientListSection, ClientTable } from "../../components/ClientTable.tsx";
+import { ConnectInformation } from "../../components/ConnectInformation.tsx";
 import { InspectorLayout } from "../../components/InspectorLayout.tsx";
+import { liveClientList } from "../../components/live-clients.ts";
 import { ClientId, PageBanner } from "../../components/PageBanner.tsx";
 import { PageMessage } from "../../components/PageMessage.tsx";
 import { Inspector } from "../../inspector/ui/Inspector.tsx";
-import { type Client } from "../../server/bridge.ts";
+import { type Client } from "../../server/clients.ts";
 
 import styles from "./[id].module.css";
 
-export const route = {
-	preload: () => Promise.all([getClients(), getInspectorOrigin()]),
-} satisfies RouteDefinition;
-
 export default function InspectorPage() {
 	const params = useParams<{ id: string }>();
-	const clients = createAsync(() => getClients(), { initialValue: [] });
+	const clients = createMemo(() => liveClientList());
 
-	useClientsRefresh();
-
-	const client = createMemo<Client | null>(
-		(prev) => prev ?? clients().find((c) => c.id === params.id) ?? null,
-	);
+	const client = createMemo<Client | null>((prev) => {
+		return prev ?? clients().find((c) => c.id === params.id) ?? null;
+	});
 
 	return (
-		<>
-			<Title>fiveway / inspector · {client()?.url ?? params.id}</Title>
-			<Show
-				when={client()}
-				fallback={<ClientUnavailable clientId={params.id} clients={clients()} />}
-			>
-				{(activeClient) => <ConnectedInspector client={activeClient()} />}
-			</Show>
-		</>
+		<Show when={client()} fallback={<ClientUnavailable clientId={params.id} clients={clients()} />}>
+			{(activeClient) => <ConnectedInspector client={activeClient()} />}
+		</Show>
 	);
 }
 
@@ -49,17 +33,17 @@ function ConnectedInspector(props: { client: Client }) {
 	const handle = createInspectorConnection(props.client.id);
 
 	return (
-		<>
-			<main class={styles.inspectorMain}>
-				<Inspector handle={handle} />
+		<main class={styles.inspectorMain}>
+			<Title>fiveway / inspector · {props.client.url ?? props.client.id}</Title>
 
-				<Show when={handle.status() === "disconnected"}>
-					<PageMessage title="Client disconnected">
-						The client with ID <ClientId>{props.client.id}</ClientId> has disconnected.
-					</PageMessage>
-				</Show>
-			</main>
-		</>
+			<Inspector handle={handle} />
+
+			<Show when={handle.status() === "disconnected"}>
+				<PageMessage title="Client disconnected">
+					The client with ID <ClientId>{props.client.id}</ClientId> has disconnected.
+				</PageMessage>
+			</Show>
+		</main>
 	);
 }
 
@@ -72,8 +56,9 @@ function createInspectorConnection(id: string) {
 	);
 
 	return {
+		status,
 		subscribe: (callback: (message: InspectorMessage) => void) => {
-			ws = new WebSocket(`/ws/inspect?client=${id}`);
+			ws = new WebSocket(`/api/ws/inspect?client=${id}`);
 
 			ws.addEventListener("open", () => {
 				setStatus("connected");
@@ -112,13 +97,10 @@ function createInspectorConnection(id: string) {
 
 			ws.send(message);
 		},
-		status,
 	};
 }
 
 function ClientUnavailable(props: { clientId: string; clients: Client[] }) {
-	const origin = createAsync(() => getInspectorOrigin());
-
 	return (
 		<>
 			<InspectorLayout>
@@ -129,7 +111,7 @@ function ClientUnavailable(props: { clientId: string; clients: Client[] }) {
 				<ClientListSection>
 					<ClientTable clients={props.clients} />
 
-					<ConnectInformation origin={origin() ?? ""} />
+					<ConnectInformation />
 				</ClientListSection>
 			</InspectorLayout>
 		</>

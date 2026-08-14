@@ -1,30 +1,9 @@
-import { query, revalidate } from "@solidjs/router";
-import { createEffect, For, onCleanup, type JSX } from "solid-js";
+import { type JSX } from "@solidjs/web";
+import { For } from "solid-js";
 
-import { getActiveClients, type Client } from "../server/bridge.ts";
+import { type Client } from "../server/clients.ts";
 
 import styles from "./ClientTable.module.css";
-
-export const getClients = query(async () => {
-	"use server";
-
-	return getActiveClients();
-}, "clients");
-
-export function useClientsRefresh() {
-	createEffect(() => {
-		const eventSource = new EventSource("/sse/notify");
-		eventSource.addEventListener("message", async (event) => {
-			if (event.data === "notify") {
-				await revalidate(getClients.key);
-			}
-		});
-
-		onCleanup(() => {
-			eventSource.close();
-		});
-	});
-}
 
 export function ClientListSection(props: { children: JSX.Element }) {
 	return <div class={styles.listSection}>{props.children}</div>;

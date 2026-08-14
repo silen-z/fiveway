@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 
-import { type InspetorInit, createDevtoolsContext, devtoolsContext } from "../context.ts";
+import { type InspetorInit, createDevtoolsContext, DevtoolsContext } from "../context.ts";
 import { TreeInspector } from "./TreeInspector.tsx";
 
 import "../../tokens.css";
@@ -10,7 +10,7 @@ export function Inspector(props: { handle: InspetorInit }) {
 	const devtools = createDevtoolsContext(props.handle);
 
 	return (
-		<devtoolsContext.Provider value={devtools}>
+		<DevtoolsContext value={devtools}>
 			<div class={styles.panel}>
 				<Show when={devtools.inspectedTree()} keyed>
 					{(tree) => <TreeInspector tree={tree} />}
@@ -22,6 +22,6 @@ export function Inspector(props: { handle: InspetorInit }) {
 					</div>
 				</Show>
 			</div>
-		</devtoolsContext.Provider>
+		</DevtoolsContext>
 	);
 }

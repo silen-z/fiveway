@@ -1,6 +1,6 @@
 (() => {
 	const RETRY_INTERVAL = 5000;
-	const remoteUrl = new URL("/ws/client", document.currentScript.src);
+	const remoteUrl = new URL("/api/ws/client", document.currentScript.src);
 
 	if (window.location.protocol === "https:") {
 		remoteUrl.protocol = "wss:";
