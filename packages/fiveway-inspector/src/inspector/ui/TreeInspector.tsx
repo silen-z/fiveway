@@ -2,7 +2,7 @@ import { isFocused } from "@fiveway/core";
 import { createMemo, createSignal, For, Show } from "solid-js";
 
 import { type InspectedTree, useDevtoolsContext } from "../context.ts";
-import * as icon from "./icons.ts";
+import * as icon from "./icons.tsx";
 import { InspectorHeader } from "./InspectorHeader.tsx";
 import { NodeInspector } from "./NodeInspector.tsx";
 
@@ -155,7 +155,7 @@ function ExpandButton(props: { expanded: boolean; onToggle: () => void }) {
 			type="button"
 			class={`${styles.nodeActionButton} ${styles.nodeActionButtonRevealOnHover}`}
 			title={label()}
-			aria-pressed={props.expanded}
+			aria-pressed={props.expanded ? "true" : "false"}
 			aria-label={label()}
 			onClick={() => props.onToggle()}
 		>

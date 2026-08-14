@@ -1,6 +1,6 @@
 import { defineWebSocketHandler } from "nitro";
 
-export const GET = defineWebSocketHandler({
+export default defineWebSocketHandler({
 	upgrade(request) {
 		const url = new URL(request.url);
 		const client = url.searchParams.get("client");

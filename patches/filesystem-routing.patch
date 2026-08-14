@@ -1,0 +1,19 @@
+diff --git a/dist/vite/index.js b/dist/vite/index.js
+index b0e342f7f1ed9b1140b21d7898db41d298c78e54..11dedc1e53a23d697edab00706d512e21cf3de1b 100644
+--- a/dist/vite/index.js
++++ b/dist/vite/index.js
+@@ -222,12 +222,12 @@ export function fileRoutes(options = {}) {
+                         // plus the `src` lazy refs already expose.
+                         if (!codeSplitting) {
+                             return {
+-                                src: relative(root, buildId),
++                                src: normalizePath(relative(root, buildId)),
+                                 require: `_$() => (${js.addNamespaceImport(buildId)})$_`
+                             };
+                         }
+                         return {
+-                            src: relative(root, buildId),
++                            src: normalizePath(relative(root, buildId)),
+                             build: isBuild ? `_$() => import('${buildId}')$_` : undefined,
+                             import: `_$() => import('${buildId}')$_`
+                         };

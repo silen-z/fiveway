@@ -3,8 +3,6 @@ import { env } from "node:process";
 import solid from "vite-plugin-solid";
 import { defineConfig } from "vite-plus";
 
-console.log(env.FIVEWAY_INSPECTOR_URL);
-
 export default defineConfig({
 	build: { minify: false, target: "esnext" },
 	plugins: [solid()],

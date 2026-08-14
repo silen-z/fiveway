@@ -1,30 +1,62 @@
-import { query } from "@solidjs/router";
-import { getRequestURL } from "@solidjs/start/http";
-import { For } from "solid-js";
+import { dynamic, getRequestEvent } from "@solidjs/web";
+import { For, Loading } from "solid-js";
 
 import styles from "./ConnectInformation.module.css";
-
-export const getInspectorOrigin = query(async () => {
-	"use server";
-
-	return getRequestURL().origin;
-}, "inspectorOrigin");
 
 const CONNECTED_SITES = parseConnectedSites(import.meta.env.VITE_CONNECTED_SITES ?? "");
 
 export const ConnectInformation =
 	CONNECTED_SITES.length > 0 ? ConnectedSitesConnectInformation : RegularConnectInformation;
 
-function RegularConnectInformation(props: { origin: string }) {
+const getConnectSnippet = async () => {
+	"use server";
+
+	const event = getRequestEvent();
+	if (event == null) {
+		throw new Error("No request event");
+	}
+
+	const origin = new URL(event.request.url).origin;
+
+	return () => {
+		const src = `${origin}/connect.js`;
+
+		return (
+			<div class={styles.box}>
+				<pre class={styles.pre}>
+					<code class={styles.snippet}>
+						<span class={styles.punct}>&lt;</span>
+						<span class={styles.tag}>script</span>
+						<span> </span>
+						<span class={styles.attrName}>src</span>
+						<span class={styles.punct}>=</span>
+						<span class={styles.attrValue}>"{src}"</span>
+						<span class={styles.punct}>&gt;&lt;/</span>
+						<span class={styles.tag}>script</span>
+						<span class={styles.punct}>&gt;</span>
+					</code>
+				</pre>
+			</div>
+		);
+	};
+};
+
+function RegularConnectInformation() {
+	const ConnectSnippet = dynamic(() => getConnectSnippet());
+
 	return (
 		<section class={styles.connect} aria-label="Connect a client">
 			<p class={styles.text}>To connect a client, add this script to your app:</p>
-			<ScriptTag origin={props.origin} />
+			<Loading>
+				<ConnectSnippet />
+			</Loading>
 		</section>
 	);
 }
 
-function ConnectedSitesConnectInformation(props: { origin: string }) {
+function ConnectedSitesConnectInformation() {
+	const ConnectSnippet = dynamic(() => getConnectSnippet());
+
 	return (
 		<section class={styles.connect} aria-label="Connect a client">
 			<p class={styles.text}>
@@ -41,34 +73,14 @@ function ConnectedSitesConnectInformation(props: { origin: string }) {
 				</For>
 			</p>
 			<p class={styles.text}>or you can connect your own client using this script:</p>
-			<ScriptTag origin={props.origin} />
+			<Loading>
+				<ConnectSnippet />
+			</Loading>
 			<p class={styles.warning}>
 				Warning: this inspector instance is publicly accessible. Anyone can inspect your connected
 				client.
 			</p>
 		</section>
-	);
-}
-
-function ScriptTag(props: { origin: string }) {
-	const src = `${props.origin}/connect.js`;
-
-	return (
-		<div class={styles.box}>
-			<pre class={styles.pre}>
-				<code class={styles.snippet}>
-					<span class={styles.punct}>&lt;</span>
-					<span class={styles.tag}>script</span>
-					<span> </span>
-					<span class={styles.attrName}>src</span>
-					<span class={styles.punct}>=</span>
-					<span class={styles.attrValue}>"{src}"</span>
-					<span class={styles.punct}>&gt;&lt;/</span>
-					<span class={styles.tag}>script</span>
-					<span class={styles.punct}>&gt;</span>
-				</code>
-			</pre>
-		</div>
 	);
 }
 

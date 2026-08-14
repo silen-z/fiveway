@@ -3,7 +3,7 @@ import { Show } from "solid-js";
 
 import { useDevtoolsContext } from "../context.ts";
 import { HandlerInspector } from "./HandlerInspector.tsx";
-import * as icon from "./icons.ts";
+import * as icon from "./icons.tsx";
 
 import styles from "./NodeInspector.module.css";
 

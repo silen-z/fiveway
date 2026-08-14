@@ -1,9 +1,9 @@
 import { defineWebSocketHandler } from "nitro";
 import { v4 as uuidv4 } from "uuid";
 
-import { registerClient, unregisterClient } from "../../server/bridge.ts";
+import { registerClient, unregisterClient } from "../../../server/client-store.ts";
 
-export const GET = defineWebSocketHandler({
+export default defineWebSocketHandler({
 	upgrade(request) {
 		const url = new URL(request.url);
 		const id = url.searchParams.get("id");
@@ -13,8 +13,8 @@ export const GET = defineWebSocketHandler({
 
 		return { namespace: id, context: { reconnect: true } };
 	},
-	open(peer) {
-		registerClient({
+	async open(peer) {
+		await registerClient({
 			id: peer.namespace,
 			ip: peer.remoteAddress,
 			...getClientInfoFromRequest(peer.request),
@@ -33,9 +33,9 @@ export const GET = defineWebSocketHandler({
 		peer.publish("updates", message.text());
 	},
 
-	close(peer) {
+	async close(peer) {
 		peer.publish("updates", JSON.stringify({ type: "client:disconnected" }));
-		unregisterClient(peer.namespace);
+		await unregisterClient(peer.namespace);
 	},
 });
 

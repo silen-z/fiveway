@@ -1,5 +1,8 @@
-import { Navigate } from "@solidjs/router";
+import { useNavigate } from "@solidjs/router";
 
 export default function NotFound() {
-	return <Navigate href="/" />;
+	const navigate = useNavigate();
+
+	navigate("/", { replace: true });
+	return null;
 }

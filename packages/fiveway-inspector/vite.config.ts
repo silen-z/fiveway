@@ -1,27 +1,30 @@
-import { solidStart } from "@solidjs/start/config";
+import solid from "@solidjs/vite-plugin";
+import { fileRoutes } from "filesystem-routing/vite";
 import { nitro } from "nitro/vite";
-import solid from "vite-plugin-solid";
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
 	server: {
 		port: 3003,
 	},
+
 	plugins: !process.env.VITEST
 		? [
-				solidStart(),
+				solid({
+					start: true,
+					ssr: true,
+					serverFunctions: { components: true },
+				}),
+				fileRoutes(),
 				nitro({
-					features: {
-						websocket: true,
-					},
+					serverDir: "./src/routes",
+					features: { websocket: true },
+					serverEntry: false,
 				}),
 			]
 		: [],
-	resolve: {
-		dedupe: ["@solidjs/start"],
-	},
 	build: {
-		outDir: "dist/standalone",
+		outDir: ".output/public",
 	},
 	pack: {
 		entry: ["src/inspector/inspector.ts"],
@@ -30,8 +33,8 @@ export default defineConfig({
 		exports: { packageJson: false, inlinedDependencies: false },
 		plugins: [solid({ hot: false })],
 		deps: {
-			alwaysBundle: ["solid-js", "solid-js/web", "solid-js/store"],
-			onlyBundle: ["solid-js", "lucide-solid"],
+			alwaysBundle: ["solid-js", "@solidjs/web", "@solidjs/signals"],
+			onlyBundle: ["solid-js", "@solidjs/web", "@solidjs/signals"],
 		},
 	},
 });
