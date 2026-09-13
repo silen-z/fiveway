@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { expect, test } from "vite-plus/test";
 
 import { createTestTree } from "../_test/treeSpec.ts";
 import { createNode } from "./node.ts";

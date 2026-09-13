@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { expect, test } from "vite-plus/test";
 
 import { createTestTree } from "./_test/treeSpec.ts";
 import { defaultHandler, type NavigationHandler } from "./handler/handler.ts";

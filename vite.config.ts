@@ -42,7 +42,7 @@ export default defineConfig({
 	},
 
 	lint: {
-		plugins: ["unicorn", "typescript", "oxc", "import", "react", "vitest"],
+		plugins: ["unicorn", "typescript", "oxc", "import", "vitest"],
 		options: {
 			typeAware: true,
 			typeCheck: true,

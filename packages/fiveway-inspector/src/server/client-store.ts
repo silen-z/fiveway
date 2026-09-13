@@ -18,6 +18,6 @@ export async function listAllClients() {
 	return items.map((c) => c.value);
 }
 
-export function subscribeToClientChanges(callback: () => void) {
+export function subscribeToClientChanges(callback: () => void): Promise<() => void> {
 	return clientStorage.watch(callback);
 }

@@ -9,12 +9,11 @@ allowBuilds:
 
 catalog:
   typescript: ^7.0.2
-  vite: npm:@voidzero-dev/vite-plus-core@0.2.6
-  vite-plus: 0.2.6
-  vitest: 4.1.10
-  "@vitest/browser": 4.1.10
-  "@vitest/browser-playwright": 4.1.10
-  "@vitest/coverage-v8": 4.1.10
+  vite: npm:@voidzero-dev/vite-plus-core@0.3.1
+  vite-plus: 0.3.1
+  vitest: 4.1.11
+  "@vitest/browser-playwright": 4.1.11
+  "@vitest/coverage-v8": 4.1.11
 
 minimumReleaseAgeExclude:
   - "@solidjs/start@2.0.0-rc.2"
@@ -35,7 +34,8 @@ minimumReleaseAgeExclude:
   - "@solidjs/compiler@2.0.0-rc.3 || 2.0.0-rc.8"
 
 overrides:
-  vite: "catalog:"
+  vite@*: "catalog:"
+  vitest@*: "catalog:"
 
 patchedDependencies:
   filesystem-routing: patches/filesystem-routing.patch
@@ -43,5 +43,7 @@ patchedDependencies:
 peerDependencyRules:
   allowAny:
     - vite
+    - vitest
   allowedVersions:
     vite: "*"
+    vitest: "*"

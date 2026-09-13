@@ -16,13 +16,14 @@
 	"dependencies": {
 		"@fiveway/core": "workspace:^",
 		"@fiveway/inspector": "workspace:^",
-		"solid-js": "^1.9.14",
-		"valibot": "^1.4.2"
+		"solid-js": "^1.9.15",
+		"valibot": "^1.5.0"
 	},
 	"devDependencies": {
-		"@types/webextension-polyfill": "^0.12.5",
+		"@types/webextension-polyfill": "^0.12.6",
 		"typescript": "catalog:",
-		"vite-plugin-solid": "^2.11.13",
+		"vite": "catalog:",
+		"vite-plugin-solid": "^2.11.14",
 		"vite-plugin-web-extension": "^4.5.1",
 		"vite-plus": "catalog:",
 		"webextension-polyfill": "^0.12.0"
