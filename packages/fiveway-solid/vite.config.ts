@@ -1,9 +1,9 @@
 import solid from "vite-plugin-solid";
-import { defineConfig, type Plugin } from "vite-plus";
+import { defineConfig } from "vite-plus";
 import { playwright } from "vite-plus/test/browser-playwright";
 
 export default defineConfig({
-	plugins: [solid() as Plugin],
+	plugins: [solid()],
 	pack: [
 		// build with JSX preserved
 		{
@@ -24,7 +24,7 @@ export default defineConfig({
 			outDir: "dist/esm",
 			dts: true,
 			unbundle: true,
-			plugins: [solid() as Plugin],
+			plugins: [solid()],
 		},
 	],
 	test: {
