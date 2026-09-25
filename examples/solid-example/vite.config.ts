@@ -1,6 +1,6 @@
 import { env } from "node:process";
 
-import solid from "vite-plugin-solid";
+import solid from "@solidjs/vite-plugin";
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({

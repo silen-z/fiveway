@@ -1,7 +1,7 @@
 /* @refresh reload */
 
 import { createNavigationTree, NavigationRoot } from "@fiveway/solid";
-import { render } from "solid-js/web";
+import { render } from "@solidjs/web";
 
 import { Showcase } from "./Showcase.tsx";
 

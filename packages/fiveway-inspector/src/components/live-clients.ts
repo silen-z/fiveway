@@ -21,7 +21,7 @@ export const liveClientList = live(
 				yield listAllClients();
 			}
 		} finally {
-			await unsubscribe();
+			unsubscribe();
 		}
 	}),
 );
