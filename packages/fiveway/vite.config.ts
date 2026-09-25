@@ -15,15 +15,29 @@ export default defineConfig({
 	},
 
 	test: {
-		include: ["src/**/*.test.ts"],
-		includeSource: ["src/**/*.ts"],
-		browser: {
-			enabled: true,
-			provider: playwright(),
-			headless: true,
-			instances: [{ browser: "chromium" }],
-			screenshotFailures: false,
-		},
 		env: { FIVEWAY_INSPECTOR: "true" },
+		projects: [
+			{
+				test: {
+					name: "node",
+					include: ["src/**/*.test.ts"],
+					exclude: ["src/**/*.test.browser.ts"],
+					includeSource: ["src/**/*.ts"],
+				},
+			},
+			{
+				test: {
+					name: "browser",
+					include: ["src/**/*.test.browser.ts"],
+					browser: {
+						enabled: true,
+						provider: playwright(),
+						headless: true,
+						instances: [{ browser: "chromium" }],
+						screenshotFailures: false,
+					},
+				},
+			},
+		],
 	},
 });

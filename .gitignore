@@ -9,3 +9,4 @@ coverage
 .direnv
 flake.nix
 flake.lock
+.vitest/
