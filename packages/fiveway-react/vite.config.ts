@@ -13,12 +13,26 @@ export default defineConfig({
 		exports: { packageJson: false },
 	},
 	test: {
-		browser: {
-			enabled: true,
-			provider: playwright(),
-			headless: true,
-			instances: [{ browser: "chromium" }],
-			screenshotFailures: false,
-		},
+		projects: [
+			{
+				test: {
+					name: "node",
+					include: ["src/**/*.test.ts"],
+				},
+			},
+			{
+				test: {
+					name: "browser",
+					include: ["src/**/*.test.browser.tsx"],
+					browser: {
+						enabled: true,
+						provider: playwright(),
+						headless: true,
+						instances: [{ browser: "chromium" }],
+						screenshotFailures: false,
+					},
+				},
+			},
+		],
 	},
 });

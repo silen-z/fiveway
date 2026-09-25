@@ -43,11 +43,11 @@ test("useFocusedId returns focus path when scope contains focus", async () => {
 	));
 
 	expect(tree.focus).toBe("#/app/item1");
-	await expect.element(getByTestId("focused")).toHaveTextContent("#/app/item1");
+	await expect.element(getByTestId("focused")).toMatchTextContent("#/app/item1");
 
 	await userEvent.keyboard("{ArrowDown}");
 	expect(tree.focus).toBe("#/app/item2");
-	await expect.element(getByTestId("focused")).toHaveTextContent("#/app/item2");
+	await expect.element(getByTestId("focused")).toMatchTextContent("#/app/item2");
 });
 
 test("useFocusedId returns null when scope does not contain focus", async () => {
@@ -72,7 +72,7 @@ test("useFocusedId returns null when scope does not contain focus", async () => 
 	));
 
 	expect(tree.focus).toBe("#/root/app/item1");
-	await expect.element(getByTestId("focused")).toHaveTextContent("none");
+	await expect.element(getByTestId("focused")).toMatchTextContent("none");
 });
 
 test("useIsFocused reflects focus inside node", async () => {
@@ -94,8 +94,8 @@ test("useIsFocused reflects focus inside node", async () => {
 		</NavigationRoot>
 	));
 
-	const item1 = getByText("item1");
-	const item2 = getByText("item2");
+	const item1 = getByText("#/app/item1");
+	const item2 = getByText("#/app/item2");
 
 	expect(tree.focus).toBe("#/app/item1");
 	await expect.element(item1).toHaveClass("focused");

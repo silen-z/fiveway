@@ -28,13 +28,28 @@ export default defineConfig({
 		},
 	],
 	test: {
-		environment: "node", // not actually node, used to prevent JSDOM prompt when running tests
-		browser: {
-			enabled: true,
-			provider: playwright(),
-			headless: true,
-			instances: [{ browser: "chromium" }],
-			screenshotFailures: false,
-		},
+		projects: [
+			{
+				test: {
+					name: "node",
+					environment: "node", // not actually node, used to prevent JSDOM prompt when running tests
+					include: ["src/**/*.test.ts"],
+				},
+			},
+			{
+				test: {
+					name: "browser",
+					environment: "node", // not actually node, used to prevent JSDOM prompt when running tests
+					include: ["src/**/*.test.browser.tsx"],
+					browser: {
+						enabled: true,
+						provider: playwright(),
+						headless: true,
+						instances: [{ browser: "chromium" }],
+						screenshotFailures: false,
+					},
+				},
+			},
+		],
 	},
 });
